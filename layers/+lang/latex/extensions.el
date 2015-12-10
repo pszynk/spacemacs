@@ -10,7 +10,12 @@
 ;;
 ;;; License: GPLv3
 
-(setq latex-post-extensions '(emacs-builtin-reftex))
+(setq latex-post-extensions
+      '(
+        emacs-builtin-reftex
+        zathura
+       )
+      )
 
 (defun latex/init-emacs-builtin-reftex ()
   "Initialize reftex"
@@ -31,4 +36,30 @@
     "rs"    'reftex-search-document
     "rt"    'reftex-toc
     "rT"    'reftex-toc-recenter
-    "rv"    'reftex-view-crossref))
+    "rv"    'reftex-view-crossref)
+
+  (spacemacs/declare-prefix-for-mode 'latex-mode "mr" "reftex")
+  (spacemacs|diminish reftex-mode " Ʀ" " R")
+  )
+
+(defun latex/init-zathura ()
+  "Initialize zathura"
+
+  ;; (add-hook 'LaTeX-mode-hook
+  ;;           (lambda ()
+  ;;             (add-to-list 'TeX-view-program-list '("zathura" zathura-forward-search))
+  ;;             (add-to-list 'TeX-view-program-selection '(output-pdf "zathura"))
+  ;;             )
+  ;;           )
+  (use-package zathura
+    :defer t
+    :init
+    (add-hook 'LaTeX-mode-hook
+              (lambda ()
+                (add-to-list 'TeX-view-program-list '("zathura" zathura-forward-search))
+                (add-to-list 'TeX-view-program-selection '(output-pdf "zathura"))
+                )
+              )
+    )
+  :config
+  )

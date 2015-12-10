@@ -14,6 +14,7 @@
   '(
     auctex
     auctex-latexmk
+    latex-preview-pane
     company
     company-auctex
     evil-matchit
@@ -63,7 +64,6 @@
         "xfc" 'latex/font-small-caps
         "xff" 'latex/font-sans-serif
         "xfr" 'latex/font-serif)
-      (spacemacs/declare-prefix-for-mode 'tex-mode "mx" "tex/text")
       (spacemacs/declare-prefix-for-mode 'tex-mode "mx" "tex/fonts")
 
       ;; Key bindings for LaTeX
@@ -77,6 +77,8 @@
         ;; TeX-doc is a very slow function
         "hd" 'TeX-doc
         "i" 'LaTeX-insert-item
+
+        "P" 'latex-preview-pane-mode
         "pb" 'preview-buffer
         "pc" 'preview-clearout
         "pd" 'preview-document
@@ -100,7 +102,8 @@
         "xfn" 'latex/font-normal
         "xfr" 'latex/font-serif
         "xfu" 'latex/font-upright)
-      (spacemacs/declare-prefix-for-mode 'latex-mode "mx" "latex/text")
+      (spacemacs/declare-prefix-for-mode 'latex-mode "mh" "help")
+      (spacemacs/declare-prefix-for-mode 'latex-mode "mp" "preview")
       (spacemacs/declare-prefix-for-mode 'latex-mode "mx" "latex/fonts"))))
 
 (when (string= latex-build-command "LatexMk")
@@ -113,6 +116,14 @@
         (spacemacs|use-package-add-hook tex
           :post-config
           (auctex-latexmk-setup))))))
+
+
+(defun latex/init-latex-preview-pane ()
+  "Initialize latex-preview-pane package"
+  (use-package latex-preview-pane
+    :defer t
+    )
+  )
 
 (when (configuration-layer/layer-usedp 'auto-completion)
   (defun latex/post-init-company ()
