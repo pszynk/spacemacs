@@ -41,8 +41,7 @@
     :commands (spell-checking/change-dictionary)
     :init
     (progn
-      (spell-checking/add-flyspell-hook 'org-mode)
-      (spell-checking/add-flyspell-hook 'text-mode)
+      (spell-checking/add-flyspell-hook 'text-mode-hook)
       (when spell-checking-enable-by-default
         (add-hook 'prog-mode-hook 'flyspell-prog-mode))
 
