@@ -1,7 +1,6 @@
 ;;; packages.el --- shell packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -12,18 +11,24 @@
 
 (setq shell-packages
       '(
-        company
-        helm
-        multi-term
         (comint :location built-in)
-        shell
-        shell-pop
-        term
-        eshell
-        eshell-prompt-extras
+        company
         esh-help
+        (eshell :location built-in)
+        eshell-prompt-extras
+        eshell-z
+        helm
         magit
+        multi-term
+        (shell :location built-in)
+        shell-pop
+        smooth-scrolling
+        (term :location built-in)
+        xterm-color
         ))
+
+(defun shell/init-comint ()
+  (setq comint-prompt-read-only t))
 
 (defun shell/pre-init-company ()
   ;; support in eshell
@@ -52,16 +57,25 @@ the user activate the completion manually."
       (add-hook 'eshell-mode-hook
                 'spacemacs//eshell-switch-company-frontend))))
 
+(defun shell/init-esh-help ()
+  (use-package esh-help
+    :defer t
+    :init (add-hook 'eshell-mode-hook 'eldoc-mode)
+    :config (setup-esh-help-eldoc)))
+
 (defun shell/init-eshell ()
   (use-package eshell
     :defer t
     :init
     (progn
+      (spacemacs/register-repl 'eshell 'eshell)
       (setq eshell-cmpl-cycle-completions nil
             ;; auto truncate after 20k lines
             eshell-buffer-maximum-lines 20000
             ;; history size
             eshell-history-size 350
+            ;; no duplicates in history
+            eshell-hist-ignoredups t
             ;; buffer shorthand -> echo foo > #'buffer
             eshell-buffer-shorthand t
             ;; my prompt is easy enough to see
@@ -104,7 +118,21 @@ is achieved by adding the relevant text properties."
           (add-hook 'evil-insert-state-entry-hook
                     'spacemacs//eshell-auto-end nil t))
         (when (configuration-layer/package-usedp 'semantic)
-          (semantic-mode -1)))
+          (semantic-mode -1))
+        ;; Caution! this will erase buffer's content at C-l
+        (define-key eshell-mode-map (kbd "C-l") 'eshell/clear)
+        (define-key eshell-mode-map (kbd "C-d") 'eshell-delchar-or-maybe-eof))
+
+      (autoload 'eshell-delchar-or-maybe-eof "em-rebind")
+
+      ;; Defining a function like this makes it possible to type 'clear'
+      ;; in eshell and have it work
+      (defun eshell/clear ()
+        (interactive)
+        (let ((inhibit-read-only t))
+          (erase-buffer))
+        (eshell-send-input))
+
       (add-hook 'eshell-mode-hook 'spacemacs//init-eshell))
     :config
     (progn
@@ -138,12 +166,6 @@ is achieved by adding the relevant text properties."
         (kbd "C-k") 'eshell-previous-matching-input-from-input
         (kbd "C-j") 'eshell-next-matching-input-from-input))))
 
-(defun shell/init-esh-help ()
-  (use-package esh-help
-    :defer t
-    :init (add-hook 'eshell-mode-hook 'eldoc-mode)
-    :config (setup-esh-help-eldoc)))
-
 (defun shell/init-eshell-prompt-extras ()
   (use-package eshell-prompt-extras
     :commands epe-theme-lambda
@@ -151,39 +173,53 @@ is achieved by adding the relevant text properties."
     (setq eshell-highlight-prompt nil
           eshell-prompt-function 'epe-theme-lambda)))
 
-(defun shell/pre-init-helm ()
-  (spacemacs|use-package-add-hook helm
+(defun shell/init-eshell-z ()
+  (use-package eshell-z
+    :defer t
+    :init
+    (with-eval-after-load 'eshell
+      (require 'eshell-z))))
+
+(when (configuration-layer/layer-usedp 'spacemacs-helm)
+  (defun shell/pre-init-helm ()
+    (spacemacs|use-package-add-hook helm
+      :post-init
+      (progn
+        ;; eshell
+        (defun spacemacs/helm-eshell-history ()
+          "Correctly revert to insert state after selection."
+          (interactive)
+          (helm-eshell-history)
+          (evil-insert-state))
+        (defun spacemacs/helm-shell-history ()
+          "Correctly revert to insert state after selection."
+          (interactive)
+          (helm-comint-input-ring)
+          (evil-insert-state))
+        (defun spacemacs/init-helm-eshell ()
+          "Initialize helm-eshell."
+          ;; this is buggy for now
+          ;; (define-key eshell-mode-map (kbd "<tab>") 'helm-esh-pcomplete)
+          (spacemacs/set-leader-keys-for-major-mode 'eshell-mode
+            "H" 'spacemacs/helm-eshell-history)
+          (define-key eshell-mode-map
+            (kbd "M-l") 'spacemacs/helm-eshell-history))
+        (add-hook 'eshell-mode-hook 'spacemacs/init-helm-eshell)
+        ;;shell
+        (spacemacs/set-leader-keys-for-major-mode 'shell-mode
+          "H" 'spacemacs/helm-shell-history)))))
+
+(defun shell/pre-init-magit ()
+  (spacemacs|use-package-add-hook magit
     :post-init
-    (progn
-      ;; eshell
-      (defun spacemacs/helm-eshell-history ()
-        "Correctly revert to insert state after selection."
-        (interactive)
-        (helm-eshell-history)
-        (evil-insert-state))
-      (defun spacemacs/helm-shell-history ()
-        "Correctly revert to insert state after selection."
-        (interactive)
-        (helm-comint-input-ring)
-        (evil-insert-state))
-      (defun spacemacs/init-helm-eshell ()
-        "Initialize helm-eshell."
-        ;; this is buggy for now
-        ;; (define-key eshell-mode-map (kbd "<tab>") 'helm-esh-pcomplete)
-        (spacemacs/set-leader-keys-for-major-mode 'eshell-mode
-          "H" 'spacemacs/helm-eshell-history)
-        (define-key eshell-mode-map
-          (kbd "M-l") 'spacemacs/helm-eshell-history))
-      (add-hook 'eshell-mode-hook 'spacemacs/init-helm-eshell)
-      ;;shell
-      (spacemacs/set-leader-keys-for-major-mode 'shell-mode
-        "H" 'spacemacs/helm-shell-history))))
+    (defalias 's 'magit-status)))
 
 (defun shell/init-multi-term ()
   (use-package multi-term
     :defer t
     :init
     (progn
+      (spacemacs/register-repl 'multi-term 'multi-term)
       (spacemacs/set-leader-keys "ast" 'shell-pop-multi-term)
       (defun multiterm (_)
         "Wrapper to be able to call multi-term from shell-pop"
@@ -208,10 +244,8 @@ is achieved by adding the relevant text properties."
           (projectile-with-default-dir (projectile-project-root) (multi-term)))
         (spacemacs/set-leader-keys "p$t" 'projectile-multi-term-in-root)))))
 
-(defun shell/init-comint ()
-  (setq comint-prompt-read-only t))
-
 (defun shell/init-shell ()
+  (spacemacs/register-repl 'shell 'shell)
   (defun shell-comint-input-sender-hook ()
     "Check certain shell commands.
  Executes the appropriate behavior for certain commands."
@@ -225,8 +259,10 @@ is achieved by adding the relevant text properties."
              ;; Check for man command and execute it.
              ((string-match "^[ \t]*man[ \t]*" command)
               (comint-send-string proc "\n")
-              (setq command (replace-regexp-in-string "^[ \t]*man[ \t]*" "" command))
-              (setq command (replace-regexp-in-string "[ \t]+$" "" command))
+              (setq command (replace-regexp-in-string
+                             "^[ \t]*man[ \t]*" "" command))
+              (setq command (replace-regexp-in-string
+                             "[ \t]+$" "" command))
               (funcall 'man command))
              ;; Send other commands to the default handler.
              (t (comint-simple-send proc command))))))
@@ -263,7 +299,8 @@ is achieved by adding the relevant text properties."
         (when (ignore-errors (get-buffer-process (current-buffer)))
           (set-process-sentinel (get-buffer-process (current-buffer))
                                 (lambda (proc change)
-                                  (when (string-match "\\(finished\\|exited\\)" change)
+                                  (when (string-match "\\(finished\\|exited\\)"
+                                                      change)
                                     (kill-buffer (process-buffer proc))
                                     (delete-window))))))
       (add-hook 'term-mode-hook 'ansi-term-handle-close)
@@ -284,7 +321,15 @@ is achieved by adding the relevant text properties."
         "ast" 'shell-pop-ansi-term
         "asT" 'shell-pop-term))))
 
+(defun shell/post-init-smooth-scrolling ()
+  (spacemacs/add-to-hooks 'spacemacs//unset-scroll-margin
+                          '(eshell-mode-hook
+                            comint-mode-hook
+                            term-mode-hook)))
+
 (defun shell/init-term ()
+  (spacemacs/register-repl 'term 'term)
+  (spacemacs/register-repl 'term 'ansi-term)
   (defun term-send-tab ()
     "Send tab in term mode."
     (interactive)
@@ -303,7 +348,19 @@ is achieved by adding the relevant text properties."
     (kbd "C-k") 'term-send-up
     (kbd "C-j") 'term-send-down))
 
-(defun shell/pre-init-magit ()
-  (spacemacs|use-package-add-hook magit
-    :post-init
-    (defalias 's 'magit-status)))
+(defun shell/init-xterm-color ()
+  (use-package xterm-color
+    :init
+    (progn
+      ;; Comint and Shell
+      (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter)
+      (setq comint-output-filter-functions
+            (remove 'ansi-color-process-output comint-output-filter-functions))
+      (setq font-lock-unfontify-region-function 'xterm-color-unfontify-region)
+      (with-eval-after-load 'esh-mode
+        (add-hook 'eshell-mode-hook
+                  (lambda () (setq xterm-color-preserve-properties t)))
+        (add-hook 'eshell-preoutput-filter-functions 'xterm-color-filter)
+        (setq eshell-output-filter-functions
+              (remove 'eshell-handle-ansi-color
+                      eshell-output-filter-functions))))))

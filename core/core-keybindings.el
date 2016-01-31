@@ -1,7 +1,6 @@
 ;;; core-keybindings.el --- Spacemacs Core File
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -106,24 +105,41 @@ pairs. For example,
 
 (defalias 'evil-leader/set-key 'spacemacs/set-leader-keys)
 
+(defun spacemacs//acceptable-leader-p (key)
+  "Return t if key is a string and non-empty."
+  (and (stringp key) (not (string= key ""))))
+
 (defun spacemacs//init-leader-mode-map (mode map &optional minor)
   "Check for MAP-prefix. If it doesn't exist yet, use `bind-map'
 to create it and bind it to `dotspacemacs-major-mode-leader-key'
 and `dotspacemacs-major-mode-emacs-leader-key'. If MODE is a
 minor-mode, the third argument should be non nil."
-  (let ((prefix (intern (format "%s-prefix" map))))
+  (let* ((prefix (intern (format "%s-prefix" map)))
+         (leader1 (when (spacemacs//acceptable-leader-p
+                         dotspacemacs-major-mode-leader-key)
+                    dotspacemacs-major-mode-leader-key))
+         (leader2 (when (spacemacs//acceptable-leader-p
+                         dotspacemacs-leader-key)
+                    (concat dotspacemacs-leader-key
+                            (unless minor " m"))))
+         (emacs-leader1 (when (spacemacs//acceptable-leader-p
+                               dotspacemacs-major-mode-emacs-leader-key)
+                          dotspacemacs-major-mode-emacs-leader-key))
+         (emacs-leader2 (when (spacemacs//acceptable-leader-p
+                               dotspacemacs-emacs-leader-key)
+                          (concat dotspacemacs-emacs-leader-key
+                                  (unless minor " m"))))
+         (leaders (delq nil (list leader1 leader2)))
+         (emacs-leaders (delq nil (list emacs-leader1 emacs-leader2))))
     (or (boundp prefix)
         (progn
           (eval
            `(bind-map ,map
               :prefix-cmd ,prefix
               ,(if minor :minor-modes :major-modes) (,mode)
-              :keys (,dotspacemacs-major-mode-emacs-leader-key
-                     ,(concat dotspacemacs-emacs-leader-key
-                              (unless minor " m")))
-              :evil-keys (,dotspacemacs-major-mode-leader-key
-                          ,(concat dotspacemacs-leader-key
-                                   (unless minor " m")))))
+              :keys ,emacs-leaders
+              :evil-keys ,leaders
+              :evil-states (normal motion visual evilified)))
           (boundp prefix)))))
 
 (defun spacemacs/set-leader-keys-for-major-mode (mode key def &rest bindings)

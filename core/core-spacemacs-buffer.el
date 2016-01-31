@@ -1,7 +1,6 @@
 ;;; core-spacemacs-buffer.el --- Spacemacs Core File
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -37,10 +36,14 @@ version the release note it displayed")
     (define-key map [backtab] 'widget-backward)
     (define-key map (kbd "RET") 'widget-button-press)
     (define-key map [down-mouse-1] 'widget-button-click)
+    (define-key map "q" 'quit-window)
     map)
   "Keymap for spacemacs buffer mode.")
 
-(define-derived-mode spacemacs-buffer-mode special-mode "Spacemacs buffer"
+(with-eval-after-load 'evil
+  (evil-make-overriding-map spacemacs-buffer-mode-map 'motion))
+
+(define-derived-mode spacemacs-buffer-mode fundamental-mode "Spacemacs buffer"
   "Spacemacs major mode for startup screen.
 
 \\<spacemacs-buffer-mode-map>
@@ -48,13 +51,14 @@ version the release note it displayed")
   :group 'spacemacs
   :syntax-table nil
   :abbrev-table nil
-  (setq truncate-lines t)
+  (setq buffer-read-only t
+        truncate-lines t)
   (page-break-lines-mode)
   ;; needed to make tab work correctly in terminal
   (evil-define-key 'motion spacemacs-buffer-mode-map (kbd "C-i") 'widget-forward)
   ;; motion state since this is a special mode
   (unless (eq dotspacemacs-editing-style 'emacs)
-    (add-to-list 'evil-motion-state-modes 'spacemacs-buffer-mode)))
+    (evil-set-initial-state 'spacemacs-buffer-mode 'motion)))
 
 (defun spacemacs-buffer/insert-banner-and-buttons ()
   "Choose a banner according to `dotspacemacs-startup-banner'and insert it
@@ -144,7 +148,7 @@ If ALL is non-nil then truly all banners can be selected."
            (size (image-size spec))
            (width (car size))
            (left-margin (floor (- spacemacs-buffer--banner-length width) 2)))
-      (beginning-of-buffer)
+      (goto-char (point-min))
       (insert "\n")
       (insert (make-string (- left-margin 1) ?\ ))
       (insert-image spec)
@@ -181,9 +185,9 @@ CAPTION is the title of the note.
 TAG-STRING is the label of the button for additional action.
 HELP-STRING is the help message of the button for additional action."
   (save-excursion
-    (beginning-of-buffer)
+    (goto-char (point-min))
     (search-forward "Search in Spacemacs\]")
-    (next-line)
+    (forward-line)
     (let* ((note (concat "\n" (spacemacs//render-framed-text file
                                                              spacemacs-buffer--banner-length
                                                              caption))))
@@ -452,14 +456,14 @@ HPADDING is the horizontal spacing betwee the content line and the frame border.
                  :help-echo "Open the Spacemacs Github page in your browser."
                  :mouse-face 'highlight
                  :follow-link "\C-m"
-                 "https://github.com/syl20bnr/spacemacs")
+                 "http://spacemacs.org")
   (insert " ")
   (widget-create 'url-link
                  :tag (propertize "Documentation" 'face 'font-lock-keyword-face)
                  :help-echo "Open the Spacemacs documentation in your browser."
                  :mouse-face 'highlight
                  :follow-link "\C-m"
-                 "https://github.com/syl20bnr/spacemacs/blob/master/doc/DOCUMENTATION.org")
+                 "http://spacemacs.org/doc/DOCUMENTATION.html")
   (insert " ")
   (widget-create 'url-link
                  :tag (propertize "Gitter Chat" 'face 'font-lock-keyword-face)
@@ -501,12 +505,19 @@ HPADDING is the horizontal spacing betwee the content line and the frame border.
                  :follow-link "\C-m"
                  )
   (insert " ")
-  (widget-create 'url-link
-                 :tag (propertize "Search in Spacemacs" 'face 'font-lock-function-name-face)
-                 :help-echo "Find Spacemacs package and layer configs using helm-spacemacs."
-                 :action (lambda (&rest ignore) (call-interactively 'helm-spacemacs))
-                 :mouse-face 'highlight
-                 :follow-link "\C-m")
+  (if (configuration-layer/layer-usedp 'spacemacs-helm)
+      (widget-create 'url-link
+                     :tag (propertize "Search in Spacemacs" 'face 'font-lock-function-name-face)
+                     :help-echo "Find Spacemacs package and layer configs using helm-spacemacs-help."
+                     :action (lambda (&rest ignore) (call-interactively 'helm-spacemacs-help))
+                     :mouse-face 'highlight
+                     :follow-link "\C-m")
+    (widget-create 'url-link
+                   :tag (propertize "Search in Spacemacs" 'face 'font-lock-function-name-face)
+                   :help-echo "Find Spacemacs package and layer configs using helm-spacemacs-help."
+                   :action (lambda (&rest ignore) (call-interactively 'ivy-spacemacs-help))
+                   :mouse-face 'highlight
+                   :follow-link "\C-m"))
   (insert "\n\n"))
 
 (defun spacemacs-buffer//insert-file-list (list-display-name list)
@@ -555,9 +566,10 @@ HPADDING is the horizontal spacing betwee the content line and the frame border.
                   (spacemacs//insert--shortcut "r" "Recent Files:")
                   (insert list-separator)))
                ((eq el 'bookmarks)
-                (helm-mode)
+                (when (configuration-layer/layer-usedp 'spacemacs-helm) (helm-mode))
+                (require 'bookmark)
                 (when (spacemacs-buffer//insert-bookmark-list "Bookmarks:" (bookmark-all-names))
-                  (spacemacs//insert--shortcut "m" "Bookmarks:")
+                  (spacemacs//insert--shortcut "b" "Bookmarks:")
                   (insert list-separator)))
                ((eq el 'projects)
                 (projectile-mode)
@@ -592,20 +604,26 @@ already exist, and switch to it."
               (spacemacs-buffer/set-mode-line spacemacs--default-mode-line)
               (force-mode-line-update)
               (spacemacs-buffer-mode))
-          (add-hook 'emacs-startup-hook
-                    (lambda ()
-                      (with-current-buffer (get-buffer spacemacs-buffer-name)
-                        (when dotspacemacs-startup-lists
-                          (spacemacs-buffer/insert-startupify-lists))
-                        (if configuration-layer-error-count
-                            (spacemacs-buffer/set-mode-line
-                             (format (concat "%s error(s) at startup! "
-                                             "Spacemacs may not be able to operate properly.")
-                                     configuration-layer-error-count))
-                          (spacemacs-buffer/set-mode-line spacemacs--default-mode-line))
-                        (force-mode-line-update)
-                        (spacemacs-buffer-mode)
-                        (spacemacs-buffer/goto-link-line))) t)))))
+          (add-hook
+           'emacs-startup-hook
+           (lambda ()
+             (with-current-buffer (get-buffer spacemacs-buffer-name)
+               (when dotspacemacs-startup-lists
+                 (spacemacs-buffer/insert-startupify-lists))
+               (if configuration-layer-error-count
+                   (progn
+                     (spacemacs-buffer-mode)
+                     (spacemacs-buffer/set-mode-line
+                      (format
+                       (concat "%s error(s) at startup! "
+                               "Spacemacs may not be able to operate properly.")
+                       configuration-layer-error-count))
+                     (face-remap-add-relative 'mode-line
+                                              '((:background "red") mode-line)))
+                 (spacemacs-buffer/set-mode-line spacemacs--default-mode-line)
+                 (spacemacs-buffer-mode))
+               (force-mode-line-update)
+               (spacemacs-buffer/goto-link-line))) t)))))
   (spacemacs-buffer/goto-link-line)
   (switch-to-buffer spacemacs-buffer-name)
   (spacemacs//redisplay))

@@ -1,7 +1,6 @@
 ;;; packages.el --- Themes Mega-Pack Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -20,6 +19,7 @@
     anti-zenburn-theme
     ;; contains errors
     ; badger-theme
+    badwolf-theme
     birds-of-paradise-plus-theme
     bubbleberry-theme
     busybee-theme
@@ -34,6 +34,7 @@
     darkmine-theme
     darktooth-theme
     django-theme
+    dracula-theme
     espresso-theme
     farmhouse-theme
     firebelly-theme
@@ -57,6 +58,7 @@
     minimal-theme
     moe-theme
     molokai-theme
+    monokai-theme
     monochrome-theme
     mustang-theme
     naquadah-theme

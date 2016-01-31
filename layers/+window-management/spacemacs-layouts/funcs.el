@@ -1,7 +1,6 @@
 ;;; funcs.el --- Spacemacs Layouts Layer functions File
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -118,6 +117,22 @@ perspectives does."
                       (projectile-switch-project-by-name project)))))))
    :buffer "*Projectile Layouts*"))
 
+(defun spacemacs/ivy-persp-switch-project (arg)
+  (interactive "P")
+  (ivy-read "Switch to Project Perspective:"
+            (if (projectile-project-p)
+                (cons (abbreviate-file-name (projectile-project-root))
+                      (projectile-relevant-known-projects))
+              projectile-known-projects)
+            :action (lambda (project)
+                      (let ((persp-reset-windows-on-nil-window-conf t))
+                        (persp-switch project)
+                        (let ((projectile-completion-system 'ivy))
+                          (projectile-switch-project-by-name project))))
+            )
+
+  )
+
 ;; Autosave ----------------------------------------------------------------
 
 (defun spacemacs//layout-autosave ()
@@ -163,9 +178,10 @@ If the perspective doesn't have a workspace, create one."
   "Update and save current frame's eyebrowse workspace to its perspective.
 Parameter _NEW-PERSP-NAME is ignored, and exists only for compatibility with
 `persp-before-switch-functions'."
-  (eyebrowse--update-window-config-element
-   (eyebrowse--current-window-config (eyebrowse--get 'current-slot)
-                                     (eyebrowse--get 'current-tag)))
+  (let* ((current-slot (eyebrowse--get 'current-slot))
+         (current-tag (nth 2 (assoc current-slot (eyebrowse--get 'window-configs)))))
+    (eyebrowse--update-window-config-element
+     (eyebrowse--current-window-config current-slot current-tag)))
   (spacemacs/save-eyebrowse-for-perspective))
 
 (defun spacemacs/save-eyebrowse-for-perspective (&optional frame)
@@ -182,6 +198,6 @@ FRAME defaults to the current frame."
 (defun spacemacs/layout-workspaces-micro-state ()
   "Launches the workspaces micro state, if defined."
   (interactive)
-  (if (fboundp 'spacemacs/workspaces-micro-state)
-      (call-interactively 'spacemacs/workspaces-micro-state)
+  (if (fboundp 'spacemacs/workspaces-transient-state/body)
+      (call-interactively 'spacemacs/workspaces-transient-state/body)
     (message "You need the eyebrowse layer to use this feature.")))

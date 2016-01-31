@@ -1,7 +1,6 @@
 ;;; packages.el --- Eyebrowse Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -27,7 +26,7 @@
       (defun spacemacs/workspaces-ms-rename ()
         "Rename a workspace and get back to micro-state."
         (interactive)
-        (eyebrowse-rename-window-config (eyebrowse--get 'current-slot))
+        (eyebrowse-rename-window-config (eyebrowse--get 'current-slot) nil)
         (spacemacs/workspaces-micro-state))
 
       (defun spacemacs//workspaces-ms-get-slot-name (window-config)
@@ -39,34 +38,17 @@
             caption)))
 
       (defun spacemacs//workspaces-ms-get-window-configs ()
-        "Return the list of window configs. Depends on value of
-`eyebrowse-place-zero-at-the-end'."
+        "Return the list of window configs."
         (--sort (if (eq (car other) 0)
                     t
                   (< (car it) (car other)))
                 (eyebrowse--get 'window-configs)))
 
-      (defun spacemacs//workspaces-ms-documentation ()
-        "Return the docstring for the workspaces micro-state."
-        (let* ((current-slot (eyebrowse--get 'current-slot))
-               (window-configs (spacemacs//workspaces-ms-get-window-configs)))
-          (concat
-           "<" (if window-configs
-                   (concat
-                    (mapconcat 'spacemacs//workspaces-ms-get-slot-name
-                               window-configs "> <") ">")
-                 (when eyebrowse-display-help
-                   (concat
-                    "\n[0-9] to create/switch to a workspace, "
-                    "[n] next, [p/N] previous, [TAB] back and forth, [c] close, "
-                    "[r] rename"))))))
-
-      (spacemacs|define-micro-state workspaces
-        :doc (spacemacs//workspaces-ms-documentation)
-        :use-minibuffer t
-        ;; This binding is effectively overridden by init-persp-mode, which runs
-        ;; after this function. This should be transparent to the user.
-        :evil-leader "lw"
+      (spacemacs|define-transient-state workspaces
+        :title "Workspaces Transient State"
+        :doc "
+[_0_.._9_] switch to workspace  [_n_/_p_] next/prev  [_[tab]_] last  [_c_] close  [_r_] rename"
+        :doc (concat (spacemacs//workspaces-ms-documentation))
         :bindings
         ("0" eyebrowse-switch-to-window-config-0)
         ("1" eyebrowse-switch-to-window-config-1)
@@ -87,4 +69,9 @@
         ("N" eyebrowse-prev-window-config)
         ("p" eyebrowse-prev-window-config)
         ("r" spacemacs/workspaces-ms-rename :exit t)
-        ("w" eyebrowse-switch-to-window-config :exit t)))))
+        ("w" eyebrowse-switch-to-window-config :exit t))
+
+      ;; The layouts layer defines this keybinding inside a microstate
+      ;; thus this is only needed if that layer is not used
+      (unless (configuration-layer/layer-usedp 'spacemacs-layouts)
+        (spacemacs/set-leader-keys "lw" 'spacemacs/workspaces-transient-state/body)))))

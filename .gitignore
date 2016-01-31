@@ -42,7 +42,7 @@ python-*-docs-html
 /.cask/
 
 # Private directory
-private/*
+private/
 !private/README.md
 !private/snippets/
 !private/local/

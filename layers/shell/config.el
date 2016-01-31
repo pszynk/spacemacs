@@ -1,7 +1,6 @@
 ;;; config.el --- shell configuration File for Spacemacs
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -14,6 +13,9 @@
 
 ;; move point to the end of buffer on new output
 (setq comint-move-point-for-output t)
+
+;; Add shell buffers to useful buffers list
+(push "\\*\\(ansi-term\\|eshell\\|shell\\|terminal\.\+\\)\\*" spacemacs-useful-buffers-regexp)
 
 ;; Variables
 

@@ -1,7 +1,6 @@
 ;;; packages.el --- Emacs Lisp Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -19,26 +18,30 @@
         (emacs-lisp :location built-in)
         evil
         flycheck
-        ielm
+        (ielm :location built-in)
         macrostep
         semantic
         smartparens
         srefactor
         ))
 
-(use-package ielm
-  :config
-  (progn
+(defun emacs-lisp/init-ielm ()
+  (use-package ielm
+    :defer t
+    :init
+    (progn
+      (spacemacs/register-repl 'ielm 'ielm)
+      (dolist (mode '(emacs-lisp-mode lisp-interaction-mode))
+        (spacemacs/declare-prefix-for-mode mode "ms" "ielm")
+        (spacemacs/set-leader-keys-for-major-mode mode
+          "si" 'ielm)))
+    :config
     (defun ielm-indent-line ()
       (interactive)
       (let ((current-point (point)))
         (save-restriction
           (narrow-to-region (search-backward-regexp "^ELISP>") (goto-char current-point))
-          (lisp-indent-line))))
-    (dolist (mode '(emacs-lisp-mode lisp-interaction-mode))
-      (spacemacs/declare-prefix-for-mode mode "ms" "ielm")
-      (spacemacs/set-leader-keys-for-major-mode mode
-        "si" 'ielm))))
+          (lisp-indent-line))))))
 
 (defun emacs-lisp/post-init-company ()
   (spacemacs|add-company-hook ielm-mode)
@@ -104,25 +107,23 @@
     :init
     (progn
       (evil-define-key 'normal macrostep-keymap "q" 'macrostep-collapse-all)
-      (spacemacs|define-micro-state macrostep
-        :doc "[e] expand [c] collapse [n/N] next/previous [q] quit"
-        :disable-evil-leader t
-        :persistent t
-        :evil-leader-for-mode (emacs-lisp-mode . "dm")
+      (spacemacs|define-transient-state macrostep
+        :title "MacroStep Transient State"
+        :doc "\n[_e_] expand [_c_] collapse [_n_/_N_] next/previous [_q_] quit"
+        :foreign-keys run
         :bindings
         ("e" macrostep-expand)
         ("c" macrostep-collapse)
         ("n" macrostep-next-macro)
         ("N" macrostep-prev-macro)
-        ("q" macrostep-collapse-all :exit t)))))
+        ("q" macrostep-collapse-all :exit t))
+      (spacemacs/set-leader-keys-for-major-mode 'emacs-lisp-mode
+        "dm" 'spacemacs/macrostep-transient-state/body))))
 
 (defun emacs-lisp/post-init-evil ()
-  (spacemacs/add-to-hook 'emacs-lisp-mode
-                         '(lambda ()
-                            (spacemacs|define-text-object ";"
-                                                          "elisp-comment"
-                                                          ";; "
-                                                          ""))))
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda ()
+              (spacemacs|define-text-object ";" "elisp-comment" ";; " ""))))
 
 (defun emacs-lisp/post-init-flycheck ()
   ;; Don't activate flycheck by default in elisp

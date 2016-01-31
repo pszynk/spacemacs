@@ -1,7 +1,6 @@
 ;;; core-spacemacs.el --- Spacemacs Core File
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -18,6 +17,8 @@
 (defconst spacemacs-checkversion-branch "master"
   "Name of the branch used to check for new version.")
 
+(defvar dotspacemacs-check-for-update)
+(defvar spacemacs-version)
 ;; new version variables
 (defvar spacemacs-new-version nil
   "If non-nil a new Spacemacs version is available.")
@@ -207,7 +208,7 @@ version and the NEW version."
       (with-current-buffer proc-buffer
         (prog1
             (when (buffer-string)
-                (end-of-buffer)
+                (goto-char (point-max))
                 (forward-line -1)
                 (replace-regexp-in-string
                  "\n$" ""
@@ -295,7 +296,7 @@ Returns the output of git status --porcelain."
   "Returns an integer from the version list.
 Example: (1 42 3) = 1 042 003"
   (let ((i -1))
-    (reduce '+ (mapcar (lambda (n) (setq i (1+ i)) (* n (expt 10 (* i 3))))
+    (cl-reduce '+ (mapcar (lambda (n) (setq i (1+ i)) (* n (expt 10 (* i 3))))
                        (reverse version)))))
 
 (provide 'core-release-management)

@@ -9,17 +9,15 @@
  - [[Key bindings][Key bindings]]
 
 * Description
-This layer adds support for Ansible-flavored YAML buffers.
+This layer adds support for Ansible-flavored YAML buffers and Jinja2 templates.
 
 * Install
-To use this contribution add it to your =~/.spacemacs=
-
-#+BEGIN_SRC emacs-lisp
-  (setq-default dotspacemacs-configuration-layers '(ansible))
-#+END_SRC
+To use this configuration layer, add it to your =~/.spacemacs=. You will need to
+add =ansible= to the existing =dotspacemacs-configuration-layers= list in this
+file.
 
 * Key bindings
 
 | Key Binding | Description                              |
 |-------------+------------------------------------------|
-| ~SPC m a ?~ | looks up documentation using [[https://github.com/lunaryorn/ansible-doc.el][ansible-doc]] |
+| ~SPC m h a~ | looks up documentation using [[https://github.com/lunaryorn/ansible-doc.el][ansible-doc]] |

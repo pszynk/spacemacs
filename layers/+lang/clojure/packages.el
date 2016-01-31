@@ -17,8 +17,9 @@
     :init
     (add-hook 'clojure-mode-hook (lambda () (require 'align-cljlet)))
     :config
-    (spacemacs/set-leader-keys-for-major-mode 'clojure-mode
-      "fl" 'align-cljlet)))
+    (dolist (mode '(clojure-mode clojurescript-mode))
+      (spacemacs/set-leader-keys-for-major-mode mode
+        "fl" 'align-cljlet))))
 
 (defun clojure/init-cider ()
   (use-package cider
@@ -40,8 +41,8 @@
       (with-eval-after-load 'golden-ratio
         (push 'cider-popup-buffer-quit-function golden-ratio-extra-commands))
       ;; add support for evil
-      (push 'cider-stacktrace-mode evil-motion-state-modes)
-      (push 'cider-popup-buffer-mode evil-motion-state-modes)
+      (evil-set-initial-state 'cider-stacktrace-mode 'motion)
+      (evil-set-initial-state 'cider-popup-buffer-mode 'motion)
 
       (defun spacemacs//cider-eval-in-repl-no-focus (form)
         "Insert FORM in the REPL buffer and eval it."
@@ -358,28 +359,7 @@ If called with a prefix argument, uses the other-window instead."
 
       (when clojure-enable-fancify-symbols
         (dolist (m '(clojure-mode clojurescript-mode clojurec-mode clojurex-mode))
-          (clojure/fancify-symbols m)))
-
-      (define-clojure-indent
-        ;; Compojure
-        (ANY 2)
-        (DELETE 2)
-        (GET 2)
-        (HEAD 2)
-        (POST 2)
-        (PUT 2)
-        (context 2)
-        (defroutes 'defun)
-        ;; Cucumber
-        (After 1)
-        (Before 1)
-        (Given 2)
-        (Then 2)
-        (When 2)
-        ;; Schema
-        (s/defrecord 2)
-        ;; test.check
-        (for-all 'defun)))))
+          (clojure/fancify-symbols m))))))
 
 (defun clojure/pre-init-popwin ()
   (spacemacs|use-package-add-hook popwin

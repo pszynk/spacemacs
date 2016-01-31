@@ -1,7 +1,6 @@
 ;;; core-funcs.el --- Spacemacs Core File
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -9,6 +8,11 @@
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; License: GPLv3
+
+(defvar configuration-layer--protected-packages)
+(defvar dotspacemacs-filepath)
+(defvar spacemacs-repl-list '()
+  "List of all registered REPLs.")
 
 (defun spacemacs/load-or-install-protected-package (pkg &optional log file-to-load)
   "Load PKG package, and protect it against being deleted as an orphan.
@@ -49,7 +53,7 @@ FILE-TO-LOAD is an explicit file to load after the installation."
   "Return the directory of PKG. Return nil if not found."
   (let ((elpa-dir (concat user-emacs-directory "elpa/")))
     (when (file-exists-p elpa-dir)
-      (let ((dir (reduce (lambda (x y) (if x x y))
+      (let ((dir (cl-reduce (lambda (x y) (if x x y))
                          (mapcar (lambda (x)
                                    (when (string-match
                                           (concat "/"
@@ -145,19 +149,23 @@ Supported properties:
         (evil-leader-for-mode (spacemacs/mplist-get props :evil-leader-for-mode))
         (global-key (spacemacs/mplist-get props :global-key))
         (def-key (spacemacs/mplist-get props :define-key)))
-    `((unless (null ',evil-leader)
-        (dolist (key ',evil-leader)
-          (spacemacs/set-leader-keys key ',func)))
-      (unless (null ',evil-leader-for-mode)
-        (dolist (val ',evil-leader-for-mode)
+    (append
+     (when evil-leader
+       `((dolist (key ',evil-leader)
+            (spacemacs/set-leader-keys key ',func))))
+
+     (when evil-leader-for-mode
+       `((dolist (val ',evil-leader-for-mode)
           (spacemacs/set-leader-keys-for-major-mode
-            (car val) (cdr val) ',func)))
-      (unless (null ',global-key)
-        (dolist (key ',global-key)
-          (global-set-key (kbd key) ',func)))
-      (unless (null ',def-key)
-        (dolist (val ',def-key)
-          (define-key (eval (car val)) (kbd (cdr val)) ',func))))))
+            (car val) (cdr val) ',func))))
+
+     (when global-key
+       `((dolist (key ',global-key)
+          (global-set-key (kbd key) ',func))))
+
+     (when def-key
+       `((dolist (val ',def-key)
+          (define-key (eval (car val)) (kbd (cdr val)) ',func)))))))
 
 (defun spacemacs/view-org-file (file &optional anchor-text expand-scope)
   "Open the change log for the current version."
@@ -173,9 +181,9 @@ Supported properties:
 
   (cond
    ((eq expand-scope 'subtree)
-    (show-subtree))
+    (outline-show-subtree))
    ((eq expand-scope 'all)
-    (show-all))
+    (outline-show-all))
    (t nil))
 
   ;; Make ~SPC ,~ work, reference:
@@ -231,6 +239,7 @@ result, incrementing passed-tests and total-tests."
 ;; hide mode line
 ;; from http://bzg.fr/emacs-hide-mode-line.html
 (defvar-local hidden-mode-line-mode nil)
+(defvar-local hide-mode-line nil)
 (define-minor-mode hidden-mode-line-mode
   "Minor mode to hide the mode-line in the current buffer."
   :init-value nil
@@ -253,5 +262,19 @@ result, incrementing passed-tests and total-tests."
      (concat "Hidden Mode Line Mode enabled.  "
              "Use M-x hidden-mode-line-mode to make the mode-line appear."))))
 
-(provide 'core-funcs)
+(defun spacemacs/recompile-elpa ()
+  "Recompile packages in elpa directory. Useful if you switch
+Emacs versions."
+  (interactive)
+  (byte-recompile-directory package-user-dir nil t))
 
+(defun spacemacs/register-repl (feature repl-func &optional tag)
+  "Register REPL-FUNC to the global list of REPLs SPACEMACS-REPL-LIST.
+FEATURE will be loaded before running the REPL, in case it is not already
+loaded. If TAG is non-nil, it will be used as the string to show in the helm
+buffer."
+  (push `(,(or tag (symbol-name repl-func))
+          . (,feature . ,repl-func))
+        spacemacs-repl-list))
+
+(provide 'core-funcs)

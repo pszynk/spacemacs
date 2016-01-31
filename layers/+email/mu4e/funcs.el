@@ -1,7 +1,6 @@
-;;; funcs.el --- mu4e Layer extensions File for Spacemacs
+;;; funcs.el --- mu4e Layer functions File for Spacemacs
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -18,9 +17,9 @@
                      (mu4e-message-field mu4e-compose-parent-message :maildir)))
                 (string-match "/\\(.*?\\)/" maildir)
                 (match-string 1 maildir))
-            (helm-comp-read
-             "Compose with account:"
-             (mapcar (lambda (var) (car var)) mu4e-account-alist))))
+            (funcall mu4e-completing-read-function
+                     "Compose with account:"
+                     (mapcar (lambda (var) (car var)) mu4e-account-alist))))
          (account-vars (cdr (assoc account mu4e-account-alist))))
     (if account-vars
         (mu4e//map-set account-vars)

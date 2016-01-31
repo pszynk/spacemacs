@@ -12,35 +12,9 @@
 
 (setq latex-post-extensions
       '(
-        emacs-builtin-reftex
         zathura
        )
       )
-
-(defun latex/init-emacs-builtin-reftex ()
-  "Initialize reftex"
-
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-  (setq reftex-plug-into-AUCTeX '(nil nil t t t))
-
-  (spacemacs/set-leader-keys-for-major-mode 'latex-mode
-    "rc"    'reftex-citation
-    "rg"    'reftex-grep-document
-    "ri"    'reftex-index-selection-or-word
-    "rI"    'reftex-display-index
-    "r TAB" 'reftex-index
-    "rl"    'reftex-label
-    "rp"    'reftex-index-phrase-selection-or-word
-    "rP"    'reftex-index-visit-phrases-buffer
-    "rr"    'reftex-reference
-    "rs"    'reftex-search-document
-    "rt"    'reftex-toc
-    "rT"    'reftex-toc-recenter
-    "rv"    'reftex-view-crossref)
-
-  (spacemacs/declare-prefix-for-mode 'latex-mode "mr" "reftex")
-  (spacemacs|diminish reftex-mode " Ʀ" " R")
-  )
 
 (defun latex/init-zathura ()
   "Initialize zathura"

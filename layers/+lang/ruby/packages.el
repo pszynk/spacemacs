@@ -1,7 +1,6 @@
 ;;; packages.el --- Ruby Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -17,6 +16,7 @@
         company
         evil-matchit
         flycheck
+        popwin
         rbenv
         robe
         rspec-mode
@@ -54,7 +54,7 @@
 
 (defun ruby/init-chruby ()
   (use-package chruby
-    :if (equal 'chruby 'ruby-version-manager)
+    :if (equal ruby-version-manager 'chruby)
     :defer t
     :init
     (progn
@@ -91,14 +91,19 @@
   (spacemacs/add-flycheck-hook 'ruby-mode-hook)
   (spacemacs/add-flycheck-hook 'enh-ruby-mode-hook))
 
+(defun ruby/post-init-popwin ()
+  (push '("*rspec-compilation*" :dedicated t :position bottom :stick t :noselect t :height 0.4)
+        popwin:special-display-config))
+
 (defun ruby/init-rbenv ()
   (use-package rbenv
-    :if (equal 'rbenv 'ruby-version-manager)
+    :if (equal ruby-version-manager 'rbenv)
     :defer t
     :init
     (progn
       (defun spacemacs//enable-rbenv ()
         "Enable rbenv, use .ruby-version if exists."
+        (require 'rbenv)
         (let ((version-file-path (rbenv--locate-file ".ruby-version")))
           (global-rbenv-mode)
           ;; try to use the ruby defined in .ruby-version
@@ -146,15 +151,8 @@
 (defun ruby/init-rspec-mode ()
   (use-package rspec-mode
     :defer t
-    :init
-    (progn
-      (defun spacemacs//ruby-enable-rspec-mode ()
-        "Conditionally enable `rspec-mode'"
-        (when (eq 'rspec ruby-test-runner)
-          (rspec-mode)))
-      (spacemacs/add-to-hooks
-       'spacemacs//ruby-enable-rspec-mode '(ruby-mode-hook
-                                            enh-ruby-mode-hook)))
+    ;; there is no :init block to add the hooks since rspec-mode
+    ;; setup the hook via an autoload
     :config
     (progn
       (spacemacs|hide-lighter rspec-mode)
@@ -235,7 +233,7 @@
 
 (defun ruby/init-rvm ()
   (use-package rvm
-    :if (equal 'rvm 'ruby-version-manager)
+    :if (equal ruby-version-manager 'rvm)
     :defer t
     :init
     (progn

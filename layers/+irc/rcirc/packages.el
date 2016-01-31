@@ -4,6 +4,7 @@
     company-emoji
     emoji-cheat-sheet-plus
     flyspell
+    (helm-rcirc :location local)
     persp-mode
     rcirc
     rcirc-color
@@ -24,11 +25,21 @@
 (defun rcirc/post-init-flyspell ()
   (spell-checking/add-flyspell-hook 'rcirc-mode-hook))
 
+(when (configuration-layer/layer-usedp 'spacemacs-helm)
+  (defun rcirc/init-helm-rcirc ()
+    (use-package helm-rcirc
+      :commands helm-rcirc-auto-join-channels
+      :init
+      (spacemacs/set-leader-keys "irc" 'helm-rcirc-auto-join-channels))))
+
 (defun rcirc/post-init-persp-mode ()
   (spacemacs|define-custom-layout "@RCIRC"
     :binding "i"
     :body
-    (call-interactively 'spacemacs/rcirc))
+    (progn
+      (add-hook 'rcirc-mode-hook #'(lambda ()
+                                     (persp-add-buffer (current-buffer))))
+      (call-interactively 'spacemacs/rcirc)))
   ;; do not save rcirc buffers
   (spacemacs|use-package-add-hook persp-mode
     :post-config
@@ -72,7 +83,7 @@
          (rcirc-enable-authinfo-support (spacemacs//rcirc-with-authinfo arg))
          (rcirc-enable-znc-support (spacemacs//rcirc-with-znc arg))
          (t (rcirc arg))))
-      (push 'rcirc-mode evil-insert-state-modes))
+      (evil-set-initial-state 'rcirc-mode 'insert))
     :config
     (progn
       ;; (set-input-method "latin-1-prefix")

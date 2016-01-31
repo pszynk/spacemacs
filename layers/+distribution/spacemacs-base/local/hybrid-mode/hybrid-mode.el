@@ -1,8 +1,9 @@
 ;;; hybrid-mode.el --- Put one foot in the church of Emacs
 
-;; Copyright (C) 2014-2015 syl20bnr
+;; Copyright (C) 2012-2016 Sylvain Benner & Contributors
 ;;
-;; Author: Justin Burkett <justin@burkett.cc>, Chris Ewald <chrisewald@gmail.com>
+;; Authors: Justin Burkett <justin@burkett.cc>
+;;          Chris Ewald <chrisewald@gmail.com>
 ;; Keywords: convenience editing
 ;; Created: 12 Aug 2015
 ;; Version: 1.00
@@ -29,6 +30,15 @@
 ;;; Code:
 
 (require 'evil)
+
+(defvar hybrid-mode-default-state-backup evil-default-state
+  "Backup of `evil-default-state'.")
+
+(defcustom hybrid-mode-default-state 'normal
+  "Value of `evil-default-state' for hybrid-mode. Set to hybrid
+to start in hybrid state (emacs bindings) by default."
+  :group 'spacemacs
+  :type 'symbol)
 
 (evil-define-state hybrid
   "Emacs/insert state for hybrid mode."
@@ -74,8 +84,12 @@ with `evil-hybrid-state-map'."
   :lighter " hybrid"
   :group 'spacemacs
   (if hybrid-mode
-      (setf (symbol-function 'evil-insert-state)
-            (symbol-function 'evil-hybrid-state))
+      (progn
+        (setq hybrid-mode-default-state-backup evil-default-state
+              evil-default-state hybrid-mode-default-state)
+        (setf (symbol-function 'evil-insert-state)
+              (symbol-function 'evil-hybrid-state)))
+    (setq evil-default-state hybrid-mode-default-state-backup)
     (setf (symbol-function 'evil-insert-state)
           (symbol-function 'hybrid-mode--evil-insert-state-backup))))
 

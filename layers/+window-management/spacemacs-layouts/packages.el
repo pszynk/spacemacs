@@ -1,7 +1,6 @@
 ;;; packages.el --- Spacemacs Layouts Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -16,7 +15,9 @@
                                       :repo "syl20bnr/persp-mode.el"
                                       :branch "fix-emacsclient-crash"))
         spaceline
-        eyebrowse))
+        eyebrowse
+        helm
+        swiper))
 
 (defun spacemacs-layouts/init-persp-mode ()
   (use-package persp-mode
@@ -46,9 +47,12 @@
         "Timer for layouts auto-save.")
 
       (defun spacemacs/jump-to-last-layout ()
-        "Open the previously selected layout."
+        "Open the previously selected layout, if it exists."
         (interactive)
-        (persp-switch spacemacs--last-selected-layout))
+        (unless (eq 'non-existent
+                    (gethash spacemacs--last-selected-layout
+                             *persp-hash* 'non-existent))
+          (persp-switch spacemacs--last-selected-layout)))
 
       ;; Perspectives micro-state -------------------------------------------
 
@@ -59,8 +63,11 @@
               (logxor spacemacs--layouts-ms-doc-toggle 1)))
 
       (defun spacemacs//layout-format-name (name pos)
-        "Format the layout name given by NAME for display in  mode-line."
-        (let* ((string-name (format "%s" name))
+        "Format the layout name given by NAME for display in mode-line."
+        (let* ((layout-name (if (file-directory-p name)
+                                (file-name-nondirectory (directory-file-name name))
+                              name))
+               (string-name (format "%s" layout-name))
                (current (equal name (spacemacs//current-layout-name)))
                (caption (concat (number-to-string (if (eq 9 pos) 0 (1+ pos)))
                                 ":" string-name)))
@@ -71,27 +78,27 @@
       (defvar spacemacs--layouts-ms-documentation
         "
   [?]                  toggle this help
-  [0,9]                go to nth layout
-  [tab]                last layout
-  [a]                  add a buffer from another layout
+  [0,9]                switch to nth layout
+  [tab]                switch to the last
   [A]                  add all buffers from another layout
-  [b]                  select a buffer of the current layout
-  [c]                  close layout (buffers are not closed)
-  [C]                  close other layout(s) (buffers are not closed)
+  [a]                  add all the buffers from another layout in the current one
+  [b]                  select a buffer in the current layout
+  [c]                  close the current layout and keep its buffers
+  [C]                  close the other layouts and keep their buffers
   [h]                  go to default layout
-  [l]                  jump to a layout
-  [L]                  load saved layouts
-  [n] or [C-l]         next layout
-  [N] or [p] or [C-h]  previous layout
-  [o]                  custom layouts
+  [l]                  select/create a layout with helm
+  [L]                  load layouts from file
+  [n] or [C-l]         next layout in list
+  [N] or [p] or [C-h]  previous layout in list
+  [o]                  open a custom layout
   [r]                  remove current buffer from layout
-  [R]                  rename or create layout
+  [R]                  rename current layout
   [s]                  save all layouts
   [S]                  save layouts by names
   [t]                  show a buffer without adding it to current layout
-  [w]                  workspaces micro-state
-  [x]                  kill layout and its buffers
-  [X]                  kill other layout(s) and their buffers")
+  [w]                  workspaces micro-state (needs eyebrowse layer enabled)
+  [x]                  kill current layout with its buffers
+  [X]                  kill other layouts with their buffers")
 
       (defun spacemacs//layouts-ms-doc ()
         "Return the docstring for the layouts micro-state."
@@ -107,10 +114,9 @@
                   (when (equal 1 spacemacs--layouts-ms-doc-toggle)
                     spacemacs--layouts-ms-documentation))))
 
-      (spacemacs|define-micro-state layouts
-        :doc (spacemacs//layouts-ms-doc)
-        :use-minibuffer t
-        :evil-leader "l"
+      (spacemacs|define-transient-state layouts
+        :title "Layouts Transient State"
+        :doc (concat (spacemacs//layouts-ms-doc))
         :bindings
         ;; need to exit in case number doesn't exist
         ("?" spacemacs//layouts-ms-toggle-doc)
@@ -148,6 +154,7 @@
         ("w" spacemacs/layout-workspaces-micro-state :exit t)
         ("x" spacemacs/layouts-ms-kill)
         ("X" spacemacs/layouts-ms-kill-other :exit t))
+      (spacemacs/set-leader-keys "l" 'spacemacs/layouts-transient-state/body)
 
       (defun spacemacs/layout-switch-by-pos (pos)
         "Switch to perspective of position POS."
@@ -168,7 +175,7 @@
                  ,(format "Switch to layout %s." i)
                  (interactive)
                  (spacemacs/layout-switch-by-pos ,(if (eq 0 i) 9 (1- i)))
-                 (spacemacs/layouts-micro-state))))
+                 (spacemacs/layouts-transient-state/body))))
 
       (defun spacemacs/layout-goto-default ()
         "Go to `dotspacemacs-default-layout-name` layout"
@@ -180,7 +187,7 @@
         "Rename a layout and get back to the perspectives micro-state."
         (interactive)
         (call-interactively 'persp-rename)
-        (spacemacs/layouts-micro-state))
+        (spacemacs/layouts-transient-state/body))
 
       (defun spacemacs/layouts-ms-close ()
         "Kill current perspective"
@@ -190,7 +197,7 @@
       (defun spacemacs/layouts-ms-close-other ()
         (interactive)
         (call-interactively 'spacemacs/helm-persp-close)
-        (spacemacs/layouts-micro-state))
+        (spacemacs/layouts-transient-state/body))
 
       (defun spacemacs/layouts-ms-kill ()
         "Kill current perspective"
@@ -200,7 +207,7 @@
       (defun spacemacs/layouts-ms-kill-other ()
         (interactive)
         (call-interactively 'spacemacs/helm-persp-kill)
-        (spacemacs/layouts-micro-state))
+        (spacemacs/layouts-transient-state/body))
 
       (defun spacemacs/layouts-ms-last ()
         "Switch to the last active perspective"
@@ -263,7 +270,7 @@ Available PROPS:
         "Update the custom-perspectives microstate and then activate it."
         (interactive)
         (spacemacs//update-custom-layouts)
-        (spacemacs/custom-layouts-micro-state))
+        (spacemacs/custom-layouts-transient-state/body))
 
       (defun spacemacs//custom-layouts-ms-documentation ()
         "Return the docstring for the custom perspectives micro-state."
@@ -285,9 +292,8 @@ format so they are supported by the
                    (name (cdr custom-persp))
                    (func-name (spacemacs//custom-layout-func-name name)))
               (push (list binding func-name) bindings)))
-          (eval `(spacemacs|define-micro-state custom-layouts
-                   :doc (spacemacs//custom-layouts-ms-documentation)
-                   :use-minibuffer t
+          (eval `(spacemacs|define-transient-state custom-layouts
+                   :doc (concat (spacemacs//custom-layouts-ms-documentation))
                    :bindings
                    ,@bindings))))
       )
@@ -307,3 +313,11 @@ format so they are supported by the
   (add-hook 'persp-before-switch-functions #'spacemacs/update-eyebrowse-for-perspective)
   (add-hook 'eyebrowse-post-window-switch-hook #'spacemacs/save-eyebrowse-for-perspective)
   (add-hook 'persp-activated-hook #'spacemacs/load-eyebrowse-for-perspective))
+
+(defun spacemacs-layouts/post-init-helm ()
+  (spacemacs/set-leader-keys
+    "pl" 'spacemacs/helm-persp-switch-project))
+
+(defun spacemacs-layouts/post-init-swiper ()
+  (spacemacs/set-leader-keys
+    "pl" 'spacemacs/ivy-persp-switch-project))

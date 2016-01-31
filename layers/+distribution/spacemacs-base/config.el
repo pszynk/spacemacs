@@ -1,7 +1,6 @@
 ;;; config.el --- Spacemacs Base Layer configuration File
 ;;
-;; Copyright (c) 2012-2014 Sylvain Benner
-;; Copyright (c) 2014-2015 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -28,10 +27,10 @@
                                        ("fe"  "emacs(spacemacs)")
                                        ("fv"  "variables")
                                        ("g"   "git/versions-control")
-                                       ("h"   "helm/help/highlight")
+                                       ("h"   "help")
                                        ("hd"  "help-describe")
                                        ("i"   "insertion")
-                                       ("j"   "join/split")
+                                       ("j"   "jump/join/split")
                                        ("k"   "lisp")
                                        ("kd"  "delete")
                                        ("kD"  "delete-backward")
@@ -40,7 +39,7 @@
                                        ("p"   "projects")
                                        ("p$"  "projects/shell")
                                        ("q"   "quit")
-                                       ("r"   "registers/rings")
+                                       ("r"   "registers/rings/resume")
                                        ("Re"  "elisp")
                                        ("Rp"  "pcre")
                                        ("s"   "search/symbol")
@@ -87,7 +86,7 @@
 ;; Regexp for useful and useless buffers for smarter buffer switching
 (defvar spacemacs-useless-buffers-regexp '("*\.\+")
   "Regexp used to determine if a buffer is not useful.")
-(defvar spacemacs-useful-buffers-regexp '("\\*\\(scratch\\|terminal\.\+\\|ansi-term\\|eshell\\)\\*")
+(defvar spacemacs-useful-buffers-regexp '("\\*scratch\\*")
   "Regexp used to define buffers that are useful despite matching
 `spacemacs-useless-buffers-regexp'.")
 
@@ -204,6 +203,15 @@ or lists of these.")
 ;; UI
 ;; ---------------------------------------------------------------------------
 
+(defface face-of-god
+  `((t (:background "SkyBlue2"
+                    :foreground ,(face-background 'mode-line)
+                    :box ,(face-attribute 'mode-line :box)
+                    :inherit 'mode-line)))
+  "Face to use when `evil-mode' is disabled or `evil-state' is
+nil."
+  :group 'spacemacs)
+
 ;; important for golden-ratio to better work
 (setq window-combination-resize t)
 ;; fringes
@@ -247,9 +255,7 @@ or lists of these.")
 ;; scratch buffer empty
 (setq initial-scratch-message nil)
 ;; don't create backup~ files
-(setq backup-by-copying t
-      make-backup-files nil
-      create-lockfiles nil)
+(setq make-backup-files nil)
 
 ;; Auto-save file
 (setq auto-save-default (not (null dotspacemacs-auto-save-file-location)))
