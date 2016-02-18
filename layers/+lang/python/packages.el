@@ -16,13 +16,13 @@
     company-anaconda
     cython-mode
     eldoc
-    evil-jumper
     evil-matchit
     flycheck
     helm-cscope
     helm-pydoc
     hy-mode
     (nose :location local)
+    live-py-mode
     pip-requirements
     pyenv-mode
     (pylookup :location local)
@@ -50,10 +50,14 @@
         "hh" 'anaconda-mode-show-doc
         "gg" 'anaconda-mode-find-definitions
         "ga" 'anaconda-mode-find-assignments
+        "gb" 'anaconda-mode-go-back
         "gu" 'anaconda-mode-find-references)
       (evilified-state-evilify anaconda-mode-view-mode anaconda-mode-view-mode-map
         (kbd "q") 'quit-window)
-      (spacemacs|hide-lighter anaconda-mode))))
+      (spacemacs|hide-lighter anaconda-mode)
+
+      (defadvice anaconda-mode-goto (before python/anaconda-mode-goto activate)
+        (evil-jumper--push)))))
 
 (when (configuration-layer/layer-usedp 'auto-completion)
   (defun python/post-init-company ()
@@ -83,17 +87,17 @@
         "gu" 'anaconda-mode-usages))))
 
 (defun python/post-init-eldoc ()
-  (add-hook 'python-mode-hook 'eldoc-mode))
-
-(defun python/post-init-evil-jumper ()
-  (defadvice anaconda-mode-goto (before python/anaconda-mode-goto activate)
-    (evil-jumper--push)))
+  (defun spacemacs//init-eldoc-python-mode ()
+    (eldoc-mode)
+    (when (configuration-layer/package-usedp 'anaconda-mode)
+      (anaconda-eldoc-mode)))
+  (add-hook 'python-mode-hook 'spacemacs//init-eldoc-python-mode))
 
 (defun python/post-init-evil-matchit ()
   (add-hook `python-mode-hook `turn-on-evil-matchit-mode))
 
 (defun python/post-init-flycheck ()
-  (spacemacs/add-flycheck-hook 'python-mode-hook))
+  (spacemacs/add-flycheck-hook 'python-mode))
 
 (when (configuration-layer/layer-usedp 'spacemacs-helm)
   (defun python/pre-init-helm-cscope ()
@@ -111,6 +115,14 @@
 (defun python/init-hy-mode ()
   (use-package hy-mode
     :defer t))
+
+(defun python/init-live-py-mode ()
+  (use-package live-py-mode
+    :defer t
+    :commands live-py-mode
+    :init
+    (spacemacs/set-leader-keys-for-major-mode 'python-mode
+      "l" 'live-py-mode)))
 
 (defun python/init-nose ()
   (use-package nose
@@ -215,6 +227,8 @@
     :defer t
     :init
     (progn
+      (spacemacs/register-repl 'python 'python-start-or-switch-repl "python")
+
       (defun python-default ()
         (setq mode-name "Python"
               tab-width 4
@@ -315,6 +329,7 @@
       (spacemacs/declare-prefix-for-mode 'python-mode "mv" "pyenv")
       (spacemacs/declare-prefix-for-mode 'python-mode "mV" "pyvenv")
       (spacemacs/set-leader-keys-for-major-mode 'python-mode
+        "'"  'python-start-or-switch-repl
         "cc" 'spacemacs/python-execute-file
         "cC" 'spacemacs/python-execute-file-focus
         "db" 'python-toggle-breakpoint

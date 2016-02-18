@@ -180,8 +180,8 @@ auto-save the file in-place, `cache' to auto-save the file to another
 file stored in the cache directory and `nil' to disable auto-saving.
 Default value is `cache'.")
 
-(defvar dotspacemacs-enable-paste-micro-state t
-  "If non nil the paste micro-state is enabled. While enabled pressing `p`
+(defvar dotspacemacs-enable-paste-transient-state t
+  "If non nil the paste transient-state is enabled. While enabled pressing `p`
 several times cycle between the kill ring content.'")
 
 (defvar dotspacemacs-which-key-delay 0.4
@@ -221,13 +221,20 @@ can be toggled through `toggle-transparency'.")
 transparency level of a frame when it's inactive or deselected. Transparency
 can be toggled through `toggle-transparency'.")
 
+(defvar dotspacemacs-show-transient-state-title t
+  "If non nil show the titles of transient states.")
+
+(defvar dotspacemacs-show-transient-state-color-guide t
+  "If non nil show the color guide hint for transient state keys.")
+
 (defvar dotspacemacs-mode-line-unicode-symbols t
   "If non nil unicode symbols are displayed in the mode-line (eg. for lighters)")
 
 (defvar dotspacemacs-smooth-scrolling t
-  "If non nil smooth scrolling (native-scrolling) is enabled. Smooth scrolling
-overrides the default behavior of Emacs which recenters the point when
-it reaches the top or bottom of the screen.")
+  "If non nil smooth scrolling (native-scrolling) is enabled.
+Smooth scrolling overrides the default behavior of Emacs which
+recenters point when it reaches the top or bottom of the
+screen.")
 
 (defvar dotspacemacs-line-numbers nil
   "If non nil line numbers are turned on in all `prog-mode' and `text-mode'
@@ -238,6 +245,11 @@ derivatives. If set to `relative', also turns on relative line numbers.")
 
 (defvar dotspacemacs-smartparens-strict-mode nil
   "If non-nil smartparens-strict-mode will be enabled in programming modes.")
+
+(defvar dotspacemacs-smart-closing-parenthesis nil
+  "If non-nil pressing the closing parenthesis `)' key in insert mode passes
+  over any automatically added closing parenthesis, bracket, quote, etc…
+  This can be temporary disabled by pressing `C-q' before `)'. (default nil)")
 
 (defvar dotspacemacs-highlight-delimiters 'all
   "Select a scope to highlight delimiters. Possible values are `any',
@@ -266,7 +278,7 @@ NOT USED FOR NOW :-)")
 
 (defvar dotspacemacs-startup-lists '(recents projects)
   "List of items to show in the startup buffer. If nil it is disabled.
-Possible values are: `recents' `bookmarks' `projects'.")
+Possible values are: `recents' `bookmarks' `projects' `agenda' `todos'.")
 
 (defvar dotspacemacs-startup-recent-list-size 5
   "Number of recent files to show in the startup buffer. Ignored if
@@ -534,7 +546,7 @@ error recovery."
     (lambda (x) (member x '(all any current nil)))
     'dotspacemacs-highlight-delimiters "is one of \'all, \'any, \'current or nil")
    (spacemacs//test-list
-    (lambda (x) (member x '(recents bookmarks projects)))
+    (lambda (x) (member x '(recents bookmarks projects todos agenda)))
     'dotspacemacs-startup-lists (concat "includes only \'recents, "
                                         "\'bookmarks or \'projects"))
    (spacemacs//test-var 'stringp 'dotspacemacs-leader-key "is a string")

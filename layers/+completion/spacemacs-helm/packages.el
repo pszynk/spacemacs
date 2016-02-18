@@ -58,14 +58,14 @@
       (add-hook 'helm-minibuffer-set-up-hook 'helm-hide-minibuffer-maybe)
 
       ;; fuzzy matching setting
-      (setq helm-M-x-fuzzy-match t
-            helm-apropos-fuzzy-match t
-            helm-file-cache-fuzzy-match t
-            helm-imenu-fuzzy-match t
-            helm-lisp-fuzzy-completion t
-            helm-recentf-fuzzy-match t
-            helm-semantic-fuzzy-match t
-            helm-buffers-fuzzy-matching t)
+      (with-eval-after-load 'helm-source
+        (defun spacemacs//helm-make-source (f &rest args)
+          (let ((source-type (cadr args))
+                (props (cddr args)))
+            (unless (eq source-type 'helm-source-async)
+              (plist-put props :fuzzy-match t)))
+          (apply f args))
+        (advice-add 'helm-make-source :around #'spacemacs//helm-make-source))
 
       ;; Use helm to provide :ls, unless ibuffer is used
       (unless (configuration-layer/package-usedp 'ibuffer)
@@ -188,6 +188,7 @@
         "fL"   'helm-locate
         "fr"   'helm-recentf
         "fb"   'helm-filtered-bookmarks
+        "hdd"  'helm-apropos
         "hdF"  'spacemacs/helm-faces
         "hi"   'helm-info-at-point
         "hm"   'helm-man-woman
@@ -287,14 +288,14 @@
 
       (defun spacemacs//helm-cleanup ()
         "Cleanup some helm related states when quitting."
-        ;; deactivate any running transient map (micro-state)
+        ;; deactivate any running transient map (transient-state)
         (setq overriding-terminal-local-map nil))
       (add-hook 'helm-cleanup-hook 'spacemacs//helm-cleanup)
 
       (defface spacemacs-helm-navigation-ms-face
         `((t :background ,(face-attribute 'error :foreground)
              :foreground "black"))
-        "Face for helm heder when helm micro-state is activated."
+        "Face for helm heder when helm transient-state is activated."
         :group 'spacemacs))
 
     :config
@@ -386,7 +387,7 @@ Removes the automatic guessing of the initial value based on thing at point. "
       (add-hook 'helm-mode-hook 'simpler-helm-bookmark-keybindings)
 
       ;; helm navigation on hjkl
-      (defun spacemacs//hjkl-completion-navigation (&optional arg)
+      (defun spacemacs//helm-hjkl-navigation (&optional arg)
         "Set navigation in helm on `jklh'.
 ARG non nil means Vim like movements."
         (cond
@@ -398,18 +399,21 @@ ARG non nil means Vim like movements."
           (define-key helm-map (kbd "C-h") 'helm-next-source)
           (define-key helm-map (kbd "C-S-h") 'describe-key)
           (define-key helm-map (kbd "C-l") (kbd "RET"))
-          (dolist (keymap (list helm-find-files-map helm-read-file-map))
-            (define-key keymap (kbd "C-l") 'helm-execute-persistent-action)
-            (define-key keymap (kbd "C-h") 'helm-find-files-up-one-level)
-            (define-key keymap (kbd "C-S-h") 'describe-key)))
+          (with-eval-after-load 'helm-files
+            (dolist (keymap (list helm-find-files-map helm-read-file-map))
+              (define-key keymap (kbd "C-l") 'helm-execute-persistent-action)
+              (define-key keymap (kbd "C-h") 'helm-find-files-up-one-level)
+              (define-key keymap (kbd "C-S-h") 'describe-key))))
          (t
           (define-key helm-map (kbd "C-j") 'helm-execute-persistent-action)
           (define-key helm-map (kbd "C-k") 'helm-delete-minibuffer-contents)
           (define-key helm-map (kbd "C-h") nil)
           (define-key helm-map
             (kbd "C-l") 'helm-recenter-top-bottom-other-window))))
-      (spacemacs//hjkl-completion-navigation
-       (member dotspacemacs-editing-style '(vim hybrid)))
+      (add-hook 'spacemacs--hjkl-completion-navigation-functions
+                'spacemacs//helm-hjkl-navigation)
+      (run-hook-with-args 'spacemacs--hjkl-completion-navigation-functions
+                          (member dotspacemacs-editing-style '(vim hybrid)))
 
       (defun spacemacs/helm-edit ()
         "Switch in edit mode depending on the current helm buffer."
@@ -419,7 +423,7 @@ ARG non nil means Vim like movements."
           (helm-ag-edit))))
 
       (defun spacemacs//helm-navigation-ms-on-enter ()
-        "Initialization of helm micro-state."
+        "Initialization of helm transient-state."
         ;; faces
         (spacemacs//helm-navigation-ms-set-face)
         (setq spacemacs--helm-navigation-ms-face-cookie-minibuffer
@@ -428,7 +432,7 @@ ARG non nil means Vim like movements."
                'spacemacs-helm-navigation-ms-face)))
 
       (defun spacemacs//helm-navigation-ms-set-face ()
-        "Set the face for helm header in helm navigation micro-state"
+        "Set the face for helm header in helm navigation transient-state"
         (with-helm-window
           (setq spacemacs--helm-navigation-ms-face-cookie-header
                 (face-remap-add-relative
@@ -436,7 +440,7 @@ ARG non nil means Vim like movements."
                  'spacemacs-helm-navigation-ms-face))))
 
       (defun spacemacs//helm-navigation-ms-on-exit ()
-        "Action to perform when exiting helm micro-state."
+        "Action to perform when exiting helm transient-state."
         (with-helm-window
           (face-remap-remove-relative
            spacemacs--helm-navigation-ms-face-cookie-header))
@@ -452,7 +456,7 @@ ARG non nil means Vim like movements."
                    (intern)
                    (helm-select-nth-action ,(1- n))))))
 
-      (defun spacemacs/helm-micro-state-select-action ()
+      (defun spacemacs/helm-transient-state-select-action ()
         (interactive)
         (call-interactively 'helm-select-action)
         (spacemacs//helm-navigation-ms-set-face))
@@ -481,7 +485,7 @@ ARG non nil means Vim like movements."
         ("TAB" helm-select-action :exit t)
         ("<RET>" helm-maybe-exit-minibuffer :exit t)
         ;; ("?" nil :doc (spacemacs//helm-navigation-ms-full-doc))
-        ("a" spacemacs/helm-micro-state-select-action)
+        ("a" spacemacs/helm-transient-state-select-action)
         ("e" spacemacs/helm-edit)
         ("g" helm-beginning-of-buffer)
         ("G" helm-end-of-buffer)
@@ -884,6 +888,7 @@ Search for a search tool in the order provided by `dotspacemacs-search-tools'."
         "pb"  'helm-projectile-switch-to-buffer
         "pd"  'helm-projectile-find-dir
         "pf"  'helm-projectile-find-file
+        "pF"  'helm-projectile-find-file-dwim
         "ph"  'helm-projectile
         "pp"  'helm-projectile-switch-project
         "pr"  'helm-projectile-recentf
@@ -947,8 +952,7 @@ Search for a search tool in the order provided by `dotspacemacs-search-tools'."
         "sS"    'spacemacs/helm-swoop-region-or-symbol
         "s C-s" 'helm-multi-swoop-all)
       (defadvice helm-swoop (before add-evil-jump activate)
-        (when (configuration-layer/package-usedp 'evil-jumper)
-          (evil-set-jump))))))
+        (evil-set-jump)))))
 
 (defun spacemacs-helm/init-helm-themes ()
   (use-package helm-themes

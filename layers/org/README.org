@@ -22,6 +22,7 @@
      - [[Emphasis][Emphasis]]
      - [[Tagging][Tagging]]
      - [[Navigating in calendar][Navigating in calendar]]
+   - [[Capture buffers and src blocks][Capture buffers and src blocks]]
    - [[Org agenda][Org agenda]]
    - [[Pomodoro][Pomodoro]]
    - [[Presentation][Presentation]]
@@ -268,6 +269,19 @@ You can tweak the bullets displayed in the org buffer in the function
 | ~M-J~       | One year forward   |
 | ~M-K~       | One year backward  |
 
+** Capture buffers and src blocks
+=org-capture-mode= and =org-src-mode= both support the confirm and abort
+conventions.
+
+| Key Binding                                  | Description                            |
+|----------------------------------------------+----------------------------------------|
+| ~SPC m <dotspacemacs-major-mode-leader-key>~ | confirm in =org-capture-mode=          |
+| ~SPC m '~                                    | confirm in =org-src-mode=              |
+| ~SPC m c~                                    | confirm                                |
+| ~SPC m a~                                    | abort                                  |
+| ~SPC m k~                                    | abort                                  |
+| ~SPC m r~                                    | org-capture-refile in org-capture-mode |
+
 ** Org agenda
 The evilified org agenda supports, the following bindings:
 
@@ -300,7 +314,7 @@ The evilified org agenda supports, the following bindings:
 | ~SPC m p~   | starts a pomodoro |
 
 ** Presentation
-org-present must be activated explicitly by typing: ~SPC : org-present~
+org-present must be activated explicitly by typing: ~SPC SPC org-present~
 
 | Key Binding | Description    |
 |-------------+----------------|

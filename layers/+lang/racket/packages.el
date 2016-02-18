@@ -16,12 +16,14 @@
   ;; company-quickhelp calls it. Note hook is appendended for proper ordering.
   (add-hook 'company-mode-hook
             '(lambda ()
-               (when (equal major-mode 'racket-mode)
+               (when (and (equal major-mode 'racket-mode)
+                          (bound-and-true-p company-quickhelp-mode))
                  (company-quickhelp-mode -1))) t))
 
 (defun racket/init-racket-mode ()
   (use-package racket-mode
     :defer t
+    :init (spacemacs/register-repl 'racket-mode 'racket-repl "racket")
     :config
     (progn
       ;; smartparens configuration
@@ -79,6 +81,7 @@
         ;; insert
         "il" 'racket-insert-lambda
         ;; REPL
+        "'"  'racket-repl
         "sb" 'racket-run
         "sB" 'spacemacs/racket-run-and-switch-to-repl
         "se" 'racket-send-last-sexp

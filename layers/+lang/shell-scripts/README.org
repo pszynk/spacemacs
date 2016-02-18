@@ -5,6 +5,7 @@
 
 * Table of Contents                                         :TOC_4_org:noexport:
  - [[Description][Description]]
+   - [[Features][Features]]
  - [[Install][Install]]
  - [[Key Bindings][Key Bindings]]
 
@@ -18,6 +19,9 @@ Supported scripting files:
 
 *Note:* For Windows scripting see the layer =windows-scripts=
 
+** Features
+- Auto-completion using [[https://github.com/Alexander-Miller/company-shell][company-shell]]
+
 * Install
 To use this configuration layer, add it to your =~/.spacemacs=. You will need to
 add =shell-scripts= to the existing =dotspacemacs-configuration-layers= list in this
@@ -25,4 +29,7 @@ file.
 
 * Key Bindings
 
-None for now.
+| Key Binding | Description                                               |
+|-------------+-----------------------------------------------------------|
+| ~SPC m \~   | insert end-of-line backslashes to the lines in the region |
+

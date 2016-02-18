@@ -47,6 +47,10 @@
             ahs-idle-interval 0.25
             ahs-inhibit-face-list nil)
 
+      ;; since we are creating our own maps,
+      ;; prevent the default keymap from getting created
+      (setq auto-highlight-symbol-mode-map (make-sparse-keymap))
+
       (spacemacs|add-toggle automatic-symbol-highlight
         :status (timerp ahs-idle-timer)
         :on (progn
@@ -150,15 +154,13 @@
             (progn
               (spacemacs/integrate-evil-search t)
               (spacemacs/ahs-highlight-now-wrapper)
-              (when (configuration-layer/package-usedp 'evil-jumper)
-                (evil-set-jump))
+              (evil-set-jump)
               (spacemacs/symbol-highlight-transient-state/body)
               (ahs-forward))
           (progn
             (spacemacs/integrate-evil-search nil)
             (spacemacs/ahs-highlight-now-wrapper)
-            (when (configuration-layer/package-usedp 'evil-jumper)
-              (evil-set-jump))
+            (evil-set-jump)
             (spacemacs/symbol-highlight-transient-state/body)
             (ahs-backward))))
 
@@ -229,15 +231,20 @@
 
       (defun ahs-to-iedit ()
         (interactive)
-        (if (configuration-layer/package-usedp 'evil-iedit-state)
-            (evil-iedit-state/iedit-mode)
-          (ahs-edit-mode t)))
+        (cond
+         ((and (not (eq dotspacemacs-editing-style 'emacs))
+               (configuration-layer/package-usedp 'evil-iedit-state))
+          (evil-iedit-state/iedit-mode))
+         ((and (eq dotspacemacs-editing-style 'emacs)
+               (configuration-layer/package-usedp 'iedit))
+          (iedit-mode))
+         (t (ahs-edit-mode t))))
 
       (spacemacs|define-transient-state symbol-highlight
         :title "Symbol Highlight Transient State"
         :doc "
-%s(symbol-highlight-doc)  [_n_] forward [_N_ or p] backward   [_R_] restart      [_e_] iedit       [_b_] search buffers
-%s(make-string (length (symbol-highlight-doc)) 32)  [_d_/_D_] fwd/bwd definition [_r_] change range [_/_] search proj [_f_] search files"
+%s(symbol-highlight-doc)  [_n_/_N_/_p_] next/prev/prev   [_R_] restart      [_e_] iedit       [_b_] search buffers
+%s(make-string (length (symbol-highlight-doc)) 32)  [_d_/_D_]^^   next/prev def'n  [_r_] change range [_/_] search proj [_f_] search files"
         :before-exit (spacemacs//ahs-ms-on-exit)
         :bindings
         ("d" ahs-forward-definition)

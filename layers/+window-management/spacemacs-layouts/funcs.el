@@ -115,23 +115,7 @@ perspectives does."
                     (persp-switch project)
                     (let ((projectile-completion-system 'helm))
                       (projectile-switch-project-by-name project)))))))
-   :buffer "*Projectile Layouts*"))
-
-(defun spacemacs/ivy-persp-switch-project (arg)
-  (interactive "P")
-  (ivy-read "Switch to Project Perspective:"
-            (if (projectile-project-p)
-                (cons (abbreviate-file-name (projectile-project-root))
-                      (projectile-relevant-known-projects))
-              projectile-known-projects)
-            :action (lambda (project)
-                      (let ((persp-reset-windows-on-nil-window-conf t))
-                        (persp-switch project)
-                        (let ((projectile-completion-system 'ivy))
-                          (projectile-switch-project-by-name project))))
-            )
-
-  )
+   :buffer "*Helm Projectile Layouts*"))
 
 ;; Autosave ----------------------------------------------------------------
 
@@ -195,8 +179,8 @@ FRAME defaults to the current frame."
     (set-persp-parameter
      'eyebrowse-last-slot (eyebrowse--get 'last-slot frame) persp)))
 
-(defun spacemacs/layout-workspaces-micro-state ()
-  "Launches the workspaces micro state, if defined."
+(defun spacemacs/layout-workspaces-transient-state ()
+  "Launches the workspaces transient state, if defined."
   (interactive)
   (if (fboundp 'spacemacs/workspaces-transient-state/body)
       (call-interactively 'spacemacs/workspaces-transient-state/body)

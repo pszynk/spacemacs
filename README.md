@@ -1,5 +1,5 @@
 <a name="top"></a>
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/syl20bnr/spacemacs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/syl20bnr/spacemacs.svg)](https://travis-ci.org/syl20bnr/spacemacs)   [![Made with Spacemacs](https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg)](http://github.com/syl20bnr/spacemacs)  [![Buy A Drink](https://img.shields.io/badge/Paypal-Buy%20a%20Drink-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ESFVNPKP4Y742) [![Recommend Spacemacs](https://img.shields.io/badge/Slant-Recommend-ff69b4.svg)](http://www.slant.co/topics/12/~what-are-the-best-programming-text-editors)[![Twitter][]](http://www.twitter.com/spacemacs)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/syl20bnr/spacemacs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/syl20bnr/spacemacs.svg)](https://travis-ci.org/syl20bnr/spacemacs)   [![Made with Spacemacs](https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg)](http://github.com/syl20bnr/spacemacs)  [![Buy A Drink](https://img.shields.io/badge/Paypal-Buy%20a%20Drink-blue.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ESFVNPKP4Y742) [![Recommend Spacemacs](https://img.shields.io/badge/Slant-Recommend-ff69b4.svg)](http://www.slant.co/topics/12/~what-are-the-best-programming-text-editors) [![ZenHub](https://raw.githubusercontent.com/ZenHubIO/support/master/zenhub-badge.png)](https://zenhub.io) [![Twitter][]](http://www.twitter.com/spacemacs)
 ***
 <p align="center"><img src="/doc/img/title2.png" alt="Spacemacs"/></p>
 <p align="center">
@@ -38,6 +38,8 @@
         - [OS X](#os-x)
         - [Windows](#windows)
 - [Install](#install)
+    - [Default installation](#default-installation)
+    - [Installation alongside another configuration](#installation-alongside-another-configuration)
     - [Spacemacs logo](#spacemacs-logo)
 - [Update](#update)
     - [Automatic update (on master branch)](#automatic-update-on-master-branch)
@@ -123,6 +125,10 @@ You should install the "emacs" package, not the "xemacs" package.
 XEmacs is an old fork of Emacs. The X in its name is unrelated to X11.
 Both Emacs and XEmacs have graphical support.
 
+**Note:** Ubuntu LTS 12.04 and 14.04 repositories have only Emacs 24.3
+available. You are advised to [build from source](https://www.gnu.org/software/emacs/manual/html_node/efaq/Installing-Emacs.html) Emacs 24.4 or greater, as most packages require
+this version. The same may be true for other distributions as well.
+
 ### OS X
 
 We recommend the homebrew [emacs-mac-port][] formula:
@@ -175,6 +181,8 @@ For efficient searches we recommend to install `pt` ([the platinum searcher][]).
 
 # Install
 
+## Default installation
+
 1. If you have an existing Emacs configuration, back it up first:
 
    ```sh
@@ -214,6 +222,21 @@ For efficient searches we recommend to install `pt` ([the platinum searcher][]).
 If the mode-line turns red then be sure to visit the
 [troubleshooting][troubleshoot] guide and consult the [FAQ][FAQ.org].
 
+## Installation alongside another configuration
+
+To try out Spacemacs (or any other Emacs configuration you desire) without
+having to go through the trouble of backing up you `~/.emacs.d` directory and
+then cloning the new configuration:
+
+```sh
+mkdir ~/spacemacs
+git clone git@github.com:syl20bnr/spacemacs.git ~/spacemacs/.emacs.d
+HOME=~/spacemacs emacs
+```
+
+Note: If you're on Fish shell, you will need to modify the last command to: `env
+HOME=$HOME/spacemacs emacs`
+
 ## Spacemacs logo
 
 If you are using Ubuntu and Unity then you can add the Spacemacs logo by
@@ -247,7 +270,7 @@ Click on the arrow to update Spacemacs to the last version.
 
 ```sh
 git fetch
-git reset --hard <tag version which you are updating to> 
+git reset --hard <tag version which you are updating to>
 ```
 
 ## On develop branch
@@ -345,7 +368,6 @@ Thank you!
 [DOCUMENTATION.org]: doc/DOCUMENTATION.org
 [QUICK_START.org]: doc/QUICK_START.org
 [FAQ.org]: doc/FAQ.org
-[HOWTOs.org]: doc/HOWTOs.org
 [VIMUSERS.org]: doc/VIMUSERS.org
 [dotfile]: doc/DOCUMENTATION.org#dotfile-configuration
 [troubleshoot]: doc/DOCUMENTATION.org#troubleshoot

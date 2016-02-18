@@ -41,7 +41,8 @@
         "bi" 'bundle-install
         "bs" 'bundle-console
         "bu" 'bundle-update
-        "bx" 'bundle-exec))))
+        "bx" 'bundle-exec
+        "bo" 'bundle-open))))
 
 (when (configuration-layer/layer-usedp 'auto-completion)
   (defun ruby/post-init-company ()
@@ -88,8 +89,8 @@
     (add-hook hook `turn-on-evil-matchit-mode)))
 
 (defun ruby/post-init-flycheck ()
-  (spacemacs/add-flycheck-hook 'ruby-mode-hook)
-  (spacemacs/add-flycheck-hook 'enh-ruby-mode-hook))
+  (spacemacs/add-flycheck-hook 'ruby-mode)
+  (spacemacs/add-flycheck-hook 'enh-ruby-mode))
 
 (defun ruby/post-init-popwin ()
   (push '("*rspec-compilation*" :dedicated t :position bottom :stick t :noselect t :height 0.4)
@@ -122,6 +123,7 @@
     :defer t
     :init
     (progn
+      (spacemacs/register-repl 'robe 'robe-start "robe")
       (dolist (hook '(ruby-mode-hook enh-ruby-mode-hook))
         (add-hook hook 'robe-mode))
       (when (configuration-layer/layer-usedp 'auto-completion)
@@ -136,6 +138,7 @@
         (spacemacs/declare-prefix-for-mode mode "mh" "ruby/docs")
         (spacemacs/declare-prefix-for-mode mode "ms" "ruby/repl")
         (spacemacs/set-leader-keys-for-major-mode mode
+          "'" 'robe-start
           ;; robe mode specific
           "gg" 'robe-jump
           "hd" 'robe-doc
@@ -158,15 +161,17 @@
       (spacemacs|hide-lighter rspec-mode)
       (dolist (mode '(ruby-mode enh-ruby-mode))
         (spacemacs/set-leader-keys-for-major-mode mode
-          "ta" 'rspec-verify-all
-          "tb" 'rspec-verify
-          "tc" 'rspec-verify-continue
-          "te" 'rspec-toggle-example-pendingness
-          "tf" 'rspec-verify-method
-          "tl" 'rspec-run-last-failed
-          "tm" 'rspec-verify-matching
-          "tr" 'rspec-rerun
-          "tt" 'rspec-verify-single)))))
+          "ta"    'rspec-verify-all
+          "tb"    'rspec-verify
+          "tc"    'rspec-verify-continue
+          "te"    'rspec-toggle-example-pendingness
+          "tf"    'rspec-verify-method
+          "tl"    'rspec-run-last-failed
+          "tm"    'rspec-verify-matching
+          "tr"    'rspec-rerun
+          "tt"    'rspec-verify-single
+          "t~"    'rspec-toggle-spec-and-target-find-example
+          "t TAB" 'rspec-toggle-spec-and-target)))))
 
 (defun ruby/init-rubocop ()
   (use-package rubocop
@@ -188,6 +193,7 @@
 (defun ruby/init-ruby-mode ()
   (use-package ruby-mode
     :defer t
+    :mode "Puppetfile"
     :config
     (progn
       (spacemacs/set-leader-keys-for-major-mode 'ruby-mode

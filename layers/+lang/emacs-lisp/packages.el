@@ -34,6 +34,7 @@
       (dolist (mode '(emacs-lisp-mode lisp-interaction-mode))
         (spacemacs/declare-prefix-for-mode mode "ms" "ielm")
         (spacemacs/set-leader-keys-for-major-mode mode
+          "'" 'ielm
           "si" 'ielm)))
     :config
     (defun ielm-indent-line ()
@@ -128,7 +129,7 @@
 (defun emacs-lisp/post-init-flycheck ()
   ;; Don't activate flycheck by default in elisp
   ;; because of too much false warnings
-  ;; (spacemacs/add-flycheck-hook 'emacs-lisp-mode-hook)
+  ;; (spacemacs/add-flycheck-hook 'emacs-lisp-mode)
 
   ;; Make flycheck recognize packages in loadpath
   ;; i.e (require 'company) will not give an error now
@@ -178,8 +179,8 @@ Requires smartparens because all movement is done using
       (call-interactively 'eval-last-sexp)))
 
   (defun spacemacs/eval-current-symbol-sp ()
-    "Call `eval-last-sexp' on the symbol underneath the
-point. Requires smartparens because all movement is done using
+    "Call `eval-last-sexp' on the symbol around point. Requires
+smartparens because all movement is done using
 `sp-forward-symbol'."
     (interactive)
     (require 'smartparens)

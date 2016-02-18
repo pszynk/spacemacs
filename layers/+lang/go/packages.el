@@ -10,7 +10,7 @@
         ))
 
 (defun go/post-init-flycheck ()
-  (spacemacs/add-flycheck-hook 'go-mode-hook))
+  (spacemacs/add-flycheck-hook 'go-mode))
 
 (defun go/init-go-mode()
   (when (memq window-system '(mac ns x))
@@ -100,7 +100,9 @@
       :if (configuration-layer/package-usedp 'company)
       :defer t
       :init
-      (push 'company-go company-backends-go-mode))))
+      (progn
+        (setq company-go-show-annotation t)
+        (push 'company-go company-backends-go-mode)))))
 
 (defun go/init-go-oracle()
   (let ((go-path (getenv "GOPATH")))

@@ -107,7 +107,6 @@
 (spacemacs/set-leader-keys
   "hdb" 'describe-bindings
   "hdc" 'describe-char
-  "hdd" 'helm-apropos
   "hdf" 'describe-function
   "hdk" 'describe-key
   "hdl" 'spacemacs/describe-last-keys
@@ -218,14 +217,16 @@
   :documentation "Display the fringe in GUI mode."
   :evil-leader "Tf")
 (spacemacs|add-toggle fullscreen-frame
-  :status nil
+  :status (memq (frame-parameter nil 'fullscreen) '(fullscreen fullboth))
   :on (spacemacs/toggle-frame-fullscreen)
+  :off (spacemacs/toggle-frame-fullscreen)
   :documentation "Display the current frame in full screen."
   :evil-leader "TF")
 (spacemacs|add-toggle maximize-frame
   :if (version< "24.3.50" emacs-version)
-  :status nil
+  :status (eq (frame-parameter nil 'fullscreen) 'maximized)
   :on (toggle-frame-maximized)
+  :off (toggle-frame-maximized)
   :documentation "Maximize the current frame."
   :evil-leader "TM")
 (spacemacs|add-toggle mode-line
@@ -294,8 +295,9 @@
   "w2"  'spacemacs/layout-double-columns
   "w3"  'spacemacs/layout-triple-columns
   "wb"  'spacemacs/switch-to-minibuffer-window
-  "wc"  'delete-window
-  "wd"  'spacemacs/toggle-current-window-dedication
+  "wd"  'delete-window
+  "wD"  'ace-delete-window
+  "wt"  'spacemacs/toggle-current-window-dedication
   "wf"  'follow-mode
   "wH"  'evil-window-move-far-left
   "w <S-left>"  'evil-window-move-far-left
@@ -331,18 +333,19 @@
 (defalias 'count-region 'count-words-region)
 
 (spacemacs/set-leader-keys
-  "xaa" 'align
-  "xar" 'spacemacs/align-repeat
-  "xam" 'spacemacs/align-repeat-math-oper
-  "xa." 'spacemacs/align-repeat-decimal
-  "xa," 'spacemacs/align-repeat-comma
-  "xa;" 'spacemacs/align-repeat-semicolon
-  "xa:" 'spacemacs/align-repeat-colon
-  "xa=" 'spacemacs/align-repeat-equal
   "xa&" 'spacemacs/align-repeat-ampersand
-  "xa|" 'spacemacs/align-repeat-bar
   "xa(" 'spacemacs/align-repeat-left-paren
   "xa)" 'spacemacs/align-repeat-right-paren
+  "xa," 'spacemacs/align-repeat-comma
+  "xa." 'spacemacs/align-repeat-decimal
+  "xa:" 'spacemacs/align-repeat-colon
+  "xa;" 'spacemacs/align-repeat-semicolon
+  "xa=" 'spacemacs/align-repeat-equal
+  "xaa" 'align
+  "xac" 'align-current
+  "xam" 'spacemacs/align-repeat-math-oper
+  "xar" 'spacemacs/align-repeat
+  "xa|" 'spacemacs/align-repeat-bar
   "xc"  'count-region
   "xdw" 'delete-trailing-whitespace
   "xjc" 'set-justification-center
@@ -358,19 +361,23 @@
   "xU"  'upcase-region
   "xu"  'downcase-region
   "xwc" 'spacemacs/count-words-analysis)
-;; google translate -----------------------------------------------------------
-(spacemacs/set-leader-keys
-  "xgl" 'spacemacs/set-google-translate-languages)
 ;; shell ----------------------------------------------------------------------
 (with-eval-after-load 'shell
   (evil-define-key 'insert comint-mode-map [up] 'comint-previous-input)
   (evil-define-key 'insert comint-mode-map [down] 'comint-next-input))
 
+;; ivy/helm keys --------------------------------------------------------------
+
+(defvar spacemacs--hjkl-completion-navigation-functions nil
+  "Hook to adjust hjkl keys for completion (helm/ivy) navigation.
+Each function in the hook is run with a single argument, which
+when true should disable the hjkl keys.")
+
 ;; ---------------------------------------------------------------------------
-;; Micro-states
+;; Transient-states
 ;; ---------------------------------------------------------------------------
 
-;; Buffer micro state
+;; Buffer transient state
 
 (spacemacs|define-transient-state buffer
   :title "Buffer Selection Transient State"
@@ -382,9 +389,9 @@
   ("q" nil "quit" :exit t))
 (spacemacs/set-leader-keys "b." 'spacemacs/buffer-transient-state/body)
 
-;; end of Buffer micro state
+;; end of Buffer transient state
 
-;; Window Manipulation Micro State
+;; Window Manipulation Transient State
 
 (defun spacemacs/shrink-window-horizontally (delta)
   "Wrap `spacemacs/shrink-window-horizontally'."
@@ -415,8 +422,8 @@ Select^^^^               Move^^^^              Split^^                Resize^^  
 [_j_/_k_] down/up        [_J_/_K_] down/up     [_s_] vertical         [_[_] shrink horizontally    [_q_] quit
 [_h_/_l_] left/right     [_h_/_l_] left/right  [_S_] vert & follow    [_]_] enlarge horizontally   [_u_] restore prev layout
 [_0_-_9_] window N       [_R_]^^   rotate      [_v_] horizontal       [_{_] shrink vertically      [_U_] restore next layout
-[_w_]^^   other window   ^^^^                  [_V_] horiz & follow   [_}_] enlarge vertically     [_c_] close current
-[_o_]^^   other frame    ^^^^                  ^^                     ^^                           [_C_] close other
+[_w_]^^   other window   ^^^^                  [_V_] horiz & follow   [_}_] enlarge vertically     [_d_] close current
+[_o_]^^   other frame    ^^^^                  ^^                     ^^                           [_D_] close other
 ^^^^                     ^^^^                  ^^                     ^^                           [_g_] golden-ratio %`golden-ratio-mode
 "
   :bindings
@@ -437,8 +444,8 @@ Select^^^^               Move^^^^              Split^^                Resize^^  
   ("]" spacemacs/enlarge-window-horizontally)
   ("{" spacemacs/shrink-window)
   ("}" spacemacs/enlarge-window)
-  ("c" delete-window)
-  ("C" delete-other-windows)
+  ("d" delete-window)
+  ("D" delete-other-windows)
   ("g" spacemacs/toggle-golden-ratio)
   ("h" evil-window-left)
   ("<left>" evil-window-left)
@@ -468,9 +475,9 @@ Select^^^^               Move^^^^              Split^^                Resize^^  
 (spacemacs/set-leader-keys "w."
   'spacemacs/window-manipulation-transient-state/body)
 
-;; end of Window Manipulation Micro State
+;; end of Window Manipulation Transient State
 
-;; text Manipulation Micro State
+;; text Manipulation Transient State
 
 (defun spacemacs/scale-up-or-down-font-size (direction)
   "Scale the font. If DIRECTION is positive or zero the font is scaled up,
@@ -509,9 +516,9 @@ otherwise it is scaled down."
   ("q" nil :exit t))
 (spacemacs/set-leader-keys "zx" 'spacemacs/scale-font-transient-state/body)
 
-;; end of Text Manipulation Micro State
+;; end of Text Manipulation Transient State
 
-;; Transparency micro-state
+;; Transparency transient-state
 
 (defun spacemacs/toggle-transparency ()
   "Toggle between transparent or opaque display."
@@ -554,4 +561,4 @@ otherwise it is scaled down."
 (spacemacs/set-leader-keys "TT"
   'spacemacs/scale-transparency-transient-state/spacemacs/toggle-transparency)
 
-;; end of Transparency Micro State
+;; end of Transparency Transient State

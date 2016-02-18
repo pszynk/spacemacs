@@ -106,7 +106,9 @@
         "xr"  'latex/font-clear
         "xfa" 'latex/font-calligraphic
         "xfn" 'latex/font-normal
-        "xfu" 'latex/font-upright))))
+        "xfu" 'latex/font-upright)
+      (spacemacs/declare-prefix-for-mode 'latex-mode "mp"  "preview"))))
+
 
 (when (string= latex-build-command "LatexMk")
   (defun latex/init-auctex-latexmk ()
@@ -168,7 +170,7 @@
   (add-hook 'LaTeX-mode-hook 'evil-matchit-mode))
 
 (defun latex/post-init-flycheck ()
-  (spacemacs/add-flycheck-hook 'LaTeX-mode-hook))
+  (spacemacs/add-flycheck-hook 'LaTeX-mode))
 
 (defun latex/post-init-flyspell ()
   (spell-checking/add-flyspell-hook 'LaTeX-mode-hook))

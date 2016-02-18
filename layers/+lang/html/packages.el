@@ -84,6 +84,8 @@
     :defer t
     :init (spacemacs/add-to-hooks 'emmet-mode '(css-mode-hook
                                                 html-mode-hook
+                                                sass-mode-hook
+                                                scss-mode-hook
                                                 web-mode-hook))
     :config
     (progn
@@ -99,14 +101,14 @@
   (add-hook 'web-mode-hook 'turn-on-evil-matchit-mode))
 
 (defun html/post-init-flycheck ()
-  (dolist (hook '(haml-mode-hook
-                  jade-mode-hook
-                  less-mode-hook
-                  sass-mode-hook
-                  scss-mode-hook
-                  slim-mode-hook
-                  web-mode-hook))
-    (spacemacs/add-flycheck-hook hook)))
+  (dolist (mode '(haml-mode
+                  jade-mode
+                  less-mode
+                  sass-mode
+                  scss-mode
+                  slim-mode
+                  web-mode))
+    (spacemacs/add-flycheck-hook mode)))
 
 (defun html/init-haml-mode ()
   (use-package haml-mode
@@ -150,20 +152,7 @@
      'smartparens-mode)
    '(css-mode-hook scss-mode-hook sass-mode-hook less-css-mode-hook))
 
-  ;; Only use smartparens in web-mode
-  (with-eval-after-load 'smartparens
-    (setq web-mode-enable-auto-pairing nil)
-    (sp-local-pair 'web-mode "<% " " %>")
-    (sp-local-pair 'web-mode "{ " " }")
-    (sp-local-pair 'web-mode "<%= "  " %>")
-    (sp-local-pair 'web-mode "<%# "  " %>")
-    (sp-local-pair 'web-mode "<%$ "  " %>")
-    (sp-local-pair 'web-mode "<%@ "  " %>")
-    (sp-local-pair 'web-mode "<%: "  " %>")
-    (sp-local-pair 'web-mode "{{ "  " }}")
-    (sp-local-pair 'web-mode "{% "  " %}")
-    (sp-local-pair 'web-mode "{%- "  " %}")
-    (sp-local-pair 'web-mode "{# "  " #}")))
+  (add-hook 'web-mode-hook 'spacemacs/toggle-smartparens-off))
 
 (defun html/init-tagedit ()
   (use-package tagedit
@@ -260,7 +249,6 @@
      ("\\.handlebars\\'" . web-mode)
      ("\\.hbs\\'"        . web-mode)
      ("\\.eco\\'"        . web-mode)
-     ("\\.jsx\\'"        . web-mode)
      ("\\.ejs\\'"        . web-mode)
      ("\\.djhtml\\'"     . web-mode))))
 

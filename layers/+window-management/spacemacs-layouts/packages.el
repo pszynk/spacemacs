@@ -24,7 +24,9 @@
     :diminish persp-mode
     :init
     (progn
-      (setq persp-auto-resume-time (if dotspacemacs-auto-resume-layouts 1 -1)
+      (setq persp-auto-resume-time (if (or dotspacemacs-auto-resume-layouts
+                                           spacemacs-force-resume-layouts)
+                                       1 -1)
             persp-nil-name dotspacemacs-default-layout-name
             persp-reset-windows-on-nil-window-conf nil
             persp-set-last-persp-for-new-frames nil
@@ -54,10 +56,10 @@
                              *persp-hash* 'non-existent))
           (persp-switch spacemacs--last-selected-layout)))
 
-      ;; Perspectives micro-state -------------------------------------------
+      ;; Perspectives transient-state -------------------------------------------
 
       (defun spacemacs//layouts-ms-toggle-doc ()
-        "Toggle the full documenation for the layouts micro-state."
+        "Toggle the full documenation for the layouts transient-state."
         (interactive)
         (setq spacemacs--layouts-ms-doc-toggle
               (logxor spacemacs--layouts-ms-doc-toggle 1)))
@@ -75,33 +77,8 @@
               (concat (when current "[") caption (when current "]"))
             caption)))
 
-      (defvar spacemacs--layouts-ms-documentation
-        "
-  [?]                  toggle this help
-  [0,9]                switch to nth layout
-  [tab]                switch to the last
-  [A]                  add all buffers from another layout
-  [a]                  add all the buffers from another layout in the current one
-  [b]                  select a buffer in the current layout
-  [c]                  close the current layout and keep its buffers
-  [C]                  close the other layouts and keep their buffers
-  [h]                  go to default layout
-  [l]                  select/create a layout with helm
-  [L]                  load layouts from file
-  [n] or [C-l]         next layout in list
-  [N] or [p] or [C-h]  previous layout in list
-  [o]                  open a custom layout
-  [r]                  remove current buffer from layout
-  [R]                  rename current layout
-  [s]                  save all layouts
-  [S]                  save layouts by names
-  [t]                  show a buffer without adding it to current layout
-  [w]                  workspaces micro-state (needs eyebrowse layer enabled)
-  [x]                  kill current layout with its buffers
-  [X]                  kill other layouts with their buffers")
-
       (defun spacemacs//layouts-ms-doc ()
-        "Return the docstring for the layouts micro-state."
+        "Return the docstring for the layouts transient-state."
         (let* ((persp-list (or (persp-names-current-frame-fast-ordered)
                                (list persp-nil-name)))
                (formatted-persp-list
@@ -111,12 +88,35 @@
                     (spacemacs//layout-format-name
                      persp (position persp persp-list))) persp-list " | "))))
           (concat formatted-persp-list
-                  (when (equal 1 spacemacs--layouts-ms-doc-toggle)
-                    spacemacs--layouts-ms-documentation))))
+                  (if (equal 1 spacemacs--layouts-ms-doc-toggle)
+                      spacemacs--layouts-ms-documentation
+                    (concat
+                     "\n ["
+                     (propertize "?" 'face 'hydra-face-red)
+                     "]   toggle help")))))
 
       (spacemacs|define-transient-state layouts
         :title "Layouts Transient State"
-        :doc (concat (spacemacs//layouts-ms-doc))
+        :additional-docs
+        (spacemacs--layouts-ms-documentation .
+                                             "\n
+ Go to^^^^^^                         Add/Remove/Rename^^
+--^-^--^^^^-----------------------  --^-^---------------------------
+ [_b_]^^^^       buffer in layout    [_a_] add buffer
+ [_h_]^^^^       default layout      [_A_] add all from layout
+ [_o_]^^^^       custom layout       [_r_] remove current buffer
+ [_l_]^^^^       layout w/helm/ivy   [_d_] close current layout
+ [_L_]^^^^       layouts in file     [_D_] close other layout
+ [_0_,_9_]^^     nth layout          [_x_] kill current w/buffers
+ [_n_/_C-l_]^^   next layout         [_X_] kill other w/buffers
+ [_N_/_p_/_C-h_] prev layout         [_R_] rename current layout
+ [_<tab>_]^^^^   last layout
+--^^^^^^^^----------------------------------------------------------
+ [_s_/_S_] save all layouts/save by names
+ [_t_]^^   show a buffer without adding it to current layout
+ [_w_]^^   workspaces micro-state (requires eyebrowse layer)
+ [_?_]^^   toggle help
+")
         :bindings
         ;; need to exit in case number doesn't exist
         ("?" spacemacs//layouts-ms-toggle-doc)
@@ -137,8 +137,8 @@
         ("a" persp-add-buffer :exit t)
         ("A" persp-import-buffers :exit t)
         ("b" spacemacs/persp-helm-mini :exit t)
-        ("c" spacemacs/layouts-ms-close)
-        ("C" spacemacs/layouts-ms-close-other :exit t)
+        ("d" spacemacs/layouts-ms-close)
+        ("D" spacemacs/layouts-ms-close-other :exit t)
         ("h" spacemacs/layout-goto-default :exit t)
         ("l" spacemacs/helm-perspectives :exit t)
         ("L" persp-load-state-from-file :exit t)
@@ -151,10 +151,23 @@
         ("s" persp-save-state-to-file :exit t)
         ("S" persp-save-to-file-by-names :exit t)
         ("t" persp-temporarily-display-buffer :exit t)
-        ("w" spacemacs/layout-workspaces-micro-state :exit t)
+        ("w" spacemacs/layout-workspaces-transient-state :exit t)
         ("x" spacemacs/layouts-ms-kill)
         ("X" spacemacs/layouts-ms-kill-other :exit t))
       (spacemacs/set-leader-keys "l" 'spacemacs/layouts-transient-state/body)
+
+      ;; This enables the dynamic behavior from micro-states using ?
+      (add-hook 'spacemacs-post-user-config-hook
+                (lambda ()
+                  (setq spacemacs/layouts-transient-state/hint
+                        `(concat
+                          ,(when dotspacemacs-show-transient-state-title
+                             (concat
+                              (propertize "Layouts Transient State"
+                                          'face 'spacemacs-transient-state-title-face)
+                              "\n"))
+                          (spacemacs//layouts-ms-doc))))
+                t)
 
       (defun spacemacs/layout-switch-by-pos (pos)
         "Switch to perspective of position POS."
@@ -167,7 +180,7 @@
                            "Do you want to create one? "))
               (let ((persp-reset-windows-on-nil-window-conf t))
                 (persp-switch nil)
-                (spacemacs/home))))))
+                (spacemacs/home-delete-other-windows))))))
 
       ;; Define all `spacemacs/persp-switch-to-X' functions
       (dolist (i (number-sequence 9 0 -1))
@@ -184,7 +197,7 @@
           (persp-switch dotspacemacs-default-layout-name)))
 
       (defun spacemacs/layouts-ms-rename ()
-        "Rename a layout and get back to the perspectives micro-state."
+        "Rename a layout and get back to the perspectives transient-state."
         (interactive)
         (call-interactively 'persp-rename)
         (spacemacs/layouts-transient-state/body))
@@ -214,7 +227,7 @@
         (interactive)
         (persp-switch persp-last-persp-name))
 
-      ;; Custom perspectives micro-state -------------------------------------
+      ;; Custom perspectives transient-state -------------------------------------
 
       (defun spacemacs//custom-layout-func-name (name)
         "Return the name of the custom-perspective function for NAME."
@@ -256,7 +269,7 @@ Available PROPS:
              ;; Check for Clashes
              (if ,already-defined?
                  (unless (equal ,already-defined? ,name)
-                   (warn "Replacing existing binding \"%s\" for %s with %s"
+                   (spacemacs-buffer/warning "Replacing existing binding \"%s\" for %s with %s"
                          ,binding ,already-defined? ,name )
                    (push '(,binding . ,name) spacemacs--custom-layout-alist))
                (push '(,binding . ,name) spacemacs--custom-layout-alist)))))
@@ -267,25 +280,25 @@ Available PROPS:
         (spacemacs/find-dotfile))
 
       (defun spacemacs/select-custom-layout ()
-        "Update the custom-perspectives microstate and then activate it."
+        "Update the custom-perspectives transient-state and then activate it."
         (interactive)
         (spacemacs//update-custom-layouts)
         (spacemacs/custom-layouts-transient-state/body))
 
       (defun spacemacs//custom-layouts-ms-documentation ()
-        "Return the docstring for the custom perspectives micro-state."
+        "Return the docstring for the custom perspectives transient-state."
         (if spacemacs--custom-layout-alist
             (mapconcat (lambda (custom-persp)
                          (format "[%s] %s"
                                  (car custom-persp) (cdr custom-persp)))
                        spacemacs--custom-layout-alist " ")
-          (warn (format "`spacemacs--custom-layout-alist' variable is empty" ))))
+          (spacemacs-buffer/warning (format "`spacemacs--custom-layout-alist' variable is empty" ))))
 
       (defun spacemacs//update-custom-layouts ()
-        "Ensure the custom-perspectives micro-state is updated.
+        "Ensure the custom-perspectives transient-state is updated.
 Takes each element in the list `spacemacs--custom-layout-alist'
 format so they are supported by the
-`spacemacs/custom-layouts-micro-state' macro."
+`spacemacs/custom-layouts-transient-state' macro."
         (let (bindings)
           (dolist (custom-persp spacemacs--custom-layout-alist bindings)
             (let* ((binding (car custom-persp))
@@ -302,8 +315,30 @@ format so they are supported by the
       (defadvice persp-activate (before spacemacs//save-toggle-layout activate)
         (setq spacemacs--last-selected-layout persp-last-persp-name))
       (add-hook 'persp-mode-hook 'spacemacs//layout-autosave)
-      ;; By default, persp mode wont affect either helm or ido
-      (remove-hook 'ido-make-buffer-list-hook 'persp-restrict-ido-buffers))))
+
+      (defun spacemacs/alternate-buffer-in-persp ()
+        "Switch back and forth between current and last buffer in the
+current perspective."
+        (interactive)
+        (with-persp-buffer-list ()
+          (switch-to-buffer (other-buffer (current-buffer) t))))
+
+      (defun spacemacs-layouts/non-restricted-buffer-list ()
+        (interactive)
+        (remove-hook 'ido-make-buffer-list-hook  #'persp-restrict-ido-buffers)
+        (helm-mini)
+        (add-hook 'ido-make-buffer-list-hook  #'persp-restrict-ido-buffers))
+
+      (spacemacs/declare-prefix "b" "persp-buffers")
+      (spacemacs/declare-prefix "B" "global-buffers")
+
+      ;; Override SPC TAB to only change buffers in perspective
+      (spacemacs/set-leader-keys
+        "TAB"  'spacemacs/alternate-buffer-in-persp
+        "ba"   'persp-add-buffer
+        "br"   'persp-remove-buffer
+        "Bb"   'spacemacs-layouts/non-restricted-buffer-list
+        ))))
 
 (defun spacemacs-layouts/post-init-spaceline ()
   (setq spaceline-display-default-perspective
@@ -319,5 +354,18 @@ format so they are supported by the
     "pl" 'spacemacs/helm-persp-switch-project))
 
 (defun spacemacs-layouts/post-init-swiper ()
+  (defun spacemacs/ivy-persp-switch-project (arg)
+    (interactive "P")
+    (ivy-read "Switch to Project Perspective: "
+              (if (projectile-project-p)
+                  (cons (abbreviate-file-name (projectile-project-root))
+                        (projectile-relevant-known-projects))
+                projectile-known-projects)
+              :action (lambda (project)
+                        (let ((persp-reset-windows-on-nil-window-conf t))
+                          (persp-switch project)
+                          (let ((projectile-completion-system 'ivy))
+                            (projectile-switch-project-by-name project))))))
+
   (spacemacs/set-leader-keys
     "pl" 'spacemacs/ivy-persp-switch-project))
