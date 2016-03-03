@@ -187,8 +187,7 @@
         (eval `(defun ,(intern (format "spacemacs/persp-switch-to-%s" i)) nil
                  ,(format "Switch to layout %s." i)
                  (interactive)
-                 (spacemacs/layout-switch-by-pos ,(if (eq 0 i) 9 (1- i)))
-                 (spacemacs/layouts-transient-state/body))))
+                 (spacemacs/layout-switch-by-pos ,(if (eq 0 i) 9 (1- i))))))
 
       (defun spacemacs/layout-goto-default ()
         "Go to `dotspacemacs-default-layout-name` layout"
@@ -304,7 +303,7 @@ format so they are supported by the
             (let* ((binding (car custom-persp))
                    (name (cdr custom-persp))
                    (func-name (spacemacs//custom-layout-func-name name)))
-              (push (list binding func-name) bindings)))
+              (push (list binding func-name :exit t) bindings)))
           (eval `(spacemacs|define-transient-state custom-layouts
                    :doc (concat (spacemacs//custom-layouts-ms-documentation))
                    :bindings

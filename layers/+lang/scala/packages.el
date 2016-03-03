@@ -74,14 +74,14 @@
         (interactive)
         (ensime-inf-eval-buffer)
         (ensime-inf-switch)
-        (evil-insert-state))
+        (spacemacs/normal-to-insert-state))
 
       (defun ensime-inf-eval-region-switch (start end)
         "Send region content to shell and switch to it in insert mode."
         (interactive "r")
         (ensime-inf-switch)
         (ensime-inf-eval-region start end)
-        (evil-insert-state))
+        (spacemacs/normal-to-insert-state))
 
       (dolist (prefix '(("mb" . "scala/build")
                         ("mc" . "scala/check")
@@ -145,7 +145,7 @@
         "ns"     'ensime
         "nS"     'ensime-gen-and-restart
 
-        "rd"     'ensime-refactor-inline-local
+        "rd"     'ensime-refactor-diff-inline-local
         "rD"     'ensime-undo-peek
         "rf"     'ensime-format-source
         "ri"     'ensime-refactor-organize-imports
