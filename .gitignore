@@ -49,3 +49,6 @@ private/
 !private/snippets/
 !private/local/
 /games/
+
+# files?
+srecode-map.el
