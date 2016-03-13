@@ -23,7 +23,6 @@
     typo
     yasnippet
     which-key
-;;    (zathura :location local)
     latex-preview-pane
     ))
 
@@ -200,29 +199,3 @@
     :defer t
     )
   )
-
-;; (defun latex/init-zathura ()
-;;   "Initialize zathura"
-;; 
-;;   ;; (add-hook 'LaTeX-mode-hook
-;;   ;;           (lambda ()
-;;   ;;             (add-to-list 'TeX-view-program-list '("zathura" zathura-forward-search))
-;;   ;;             (add-to-list 'TeX-view-program-selection '(output-pdf "zathura"))
-;;   ;;             )
-;;   ;;           )
-;;   (message "inside init zathura")
-;;   (use-package zathura
-;;     ;;:defer t
-;;     :init
-;;     (add-hook 'LaTeX-mode-hook
-;;               (lambda ()
-;;                 (message "loading zathura")
-;;                 (add-to-list 'TeX-view-program-list '("zathura" zathura-forward-search))
-;;                 (add-to-list 'TeX-view-program-selection '(output-pdf "zathura"))
-;;                 )
-;;               )
-;;     ;; (add-to-list 'TeX-view-program-list '("zathura" zathura-forward-search))
-;;     ;; (add-to-list 'TeX-view-program-selection '(output-pdf "zathura"))
-;;     )
-;;   :config
-;;   )
