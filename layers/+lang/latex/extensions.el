@@ -27,13 +27,16 @@
   ;;           )
   (use-package zathura
     :defer t
-    :init
+    :config
     (add-hook 'LaTeX-mode-hook
               (lambda ()
+                (message "loading zathura")
                 (add-to-list 'TeX-view-program-list '("zathura" zathura-forward-search))
                 (add-to-list 'TeX-view-program-selection '(output-pdf "zathura"))
                 )
               )
+    ;; (add-to-list 'TeX-view-program-list '("zathura" zathura-forward-search))
+    ;; (add-to-list 'TeX-view-program-selection '(output-pdf "zathura"))
     )
   :config
   )

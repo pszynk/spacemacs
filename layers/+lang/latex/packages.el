@@ -13,7 +13,6 @@
   '(
     auctex
     auctex-latexmk
-    latex-preview-pane
     company
     company-auctex
     evil-matchit
@@ -24,6 +23,8 @@
     typo
     yasnippet
     which-key
+;;    (zathura :location local)
+    latex-preview-pane
     ))
 
 (defun latex/init-auctex ()
@@ -130,12 +131,6 @@
           (auctex-latexmk-setup))))))
 
 
-(defun latex/init-latex-preview-pane ()
-  "Initialize latex-preview-pane package"
-  (use-package latex-preview-pane
-    :defer t
-    )
-  )
 
 (defun latex/init-reftex ()
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
@@ -198,3 +193,36 @@
 (defun latex/post-init-which-key ()
   (push '("\\`latex/font-\\(.+\\)\\'" . "\\1")
         which-key-description-replacement-alist))
+
+(defun latex/init-latex-preview-pane ()
+  "Initialize latex-preview-pane package"
+  (use-package latex-preview-pane
+    :defer t
+    )
+  )
+
+;; (defun latex/init-zathura ()
+;;   "Initialize zathura"
+;; 
+;;   ;; (add-hook 'LaTeX-mode-hook
+;;   ;;           (lambda ()
+;;   ;;             (add-to-list 'TeX-view-program-list '("zathura" zathura-forward-search))
+;;   ;;             (add-to-list 'TeX-view-program-selection '(output-pdf "zathura"))
+;;   ;;             )
+;;   ;;           )
+;;   (message "inside init zathura")
+;;   (use-package zathura
+;;     ;;:defer t
+;;     :init
+;;     (add-hook 'LaTeX-mode-hook
+;;               (lambda ()
+;;                 (message "loading zathura")
+;;                 (add-to-list 'TeX-view-program-list '("zathura" zathura-forward-search))
+;;                 (add-to-list 'TeX-view-program-selection '(output-pdf "zathura"))
+;;                 )
+;;               )
+;;     ;; (add-to-list 'TeX-view-program-list '("zathura" zathura-forward-search))
+;;     ;; (add-to-list 'TeX-view-program-selection '(output-pdf "zathura"))
+;;     )
+;;   :config
+;;   )
