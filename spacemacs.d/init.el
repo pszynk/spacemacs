@@ -18,11 +18,17 @@
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      ;; misc
-     auto-completion
+     (auto-completion :variables
+                      ;; auto-completion-complete-with-key-sequence "kj"
+                      auto-completion-enable-snippets-in-popup t
+                      ;; auto-completion-enable-help-tooltip t
+                      auto-completion-enable-sort-by-usage t)
      syntax-checking
+     (spell-checking :variables
+                     spell-checking-enable-by-default nil)
      better-defaults
 
-     ;; lang support
+     ;;lang support
      ;;  - framework for parsers used in language layers
      semantic
      ;;  - programming
@@ -50,6 +56,7 @@
 
      ;; display
      themes-megapack
+     ;; pdf-tools TODO need install dependencies
 
      ;; tools
      topcoder
@@ -188,15 +195,21 @@ layers configuration."
 
   ;; (setq debug-on-error t)
 
-
   (add-to-list 'load-path "~/.spacemacs.d/config/")
+
+  ;; flyspell
+  (setq ispell-program-name "/usr/bin/hunspell")
+
+  ;; org
+  (require 'config-org)
 
   ;; Latex
   (require 'config-latex)
 
   ;; Colorize
   (require 'config-colorize)
-)
+  )
+
 
 
 
@@ -207,10 +220,13 @@ layers configuration."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-)
+ '(org-agenda-files (quote ("~/asd.org"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-)
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
+ '(org-agenda-date-today ((t (:inherit bold :foreground "cyan" :slant italic :height 1.2))))
+ '(org-agenda-date-weekend ((t (:inherit bold :foreground "plum")))))
