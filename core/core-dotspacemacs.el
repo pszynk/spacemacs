@@ -75,10 +75,11 @@ packages then consider to create a layer, you can also put the
 configuration in `dotspacemacs/user-config'.")
 
 (defvar dotspacemacs-editing-style 'vim
-  "One of `vim', `emacs' or `hybrid'. Evil is always enabled but if the
-variable is `emacs' then the `holy-mode' is enabled at startup. `hybrid'
-uses emacs key bindings for vim's insert mode, but otherwise leaves evil
-unchanged.")
+  "One of `vim', `emacs' or `hybrid'.
+`hybrid' is like `vim' except that `insert state' is replaced by the
+`hybrid state' with `emacs' key bindings. The value can also be a list
+ with `:variables' keyword (similar to layers). Check the editing styles
+ section of the documentation for details on available variables.")
 
 (defvar dotspacemacs-startup-banner 'official
    "Specify the startup banner. Default value is `official', it displays
@@ -309,6 +310,30 @@ are caught and signalled to user in spacemacs buffer."
                                            (error-message-string err))
                                    t))))))
 
+(defun dotspacemacs//read-editing-style-config (config)
+  "Read editing style CONFIG: apply variables and return the editing style.
+CONFIG can be the symbol of an editing style or a list where the car is
+the symbol of an editing style and the cdr is a list of keyword arguments like
+`:variables'."
+  (cond
+   ((symbolp config) config)
+   ((listp config)
+    (let ((variables (spacemacs/mplist-get config :variables)))
+      (while variables
+        (let ((var (pop variables)))
+          (if (consp variables)
+              (condition-case-unless-debug err
+                  (set-default var (eval (pop variables)))
+                ('error
+                 (spacemacs-buffer/append
+                  (format (concat "\nAn error occurred while reading the "
+                                  "editing style variable %s "
+                                  "(error: %s). Be sure to quote the value "
+                                  "if needed.\n") var err))))
+            (spacemacs-buffer/warning "Missing value for variable %s !"
+                                      var)))))
+    (car config))))
+
 (defun dotspacemacs/sync-configuration-layers (&optional arg)
   "Synchronize declared layers in dotfile with spacemacs.
 
@@ -326,6 +351,11 @@ Called with `C-u C-u' skips `dotspacemacs/user-config' _and_ preleminary tests."
                 (load-file buffer-file-name)
                 (dotspacemacs|call-func dotspacemacs/init
                                         "Calling dotfile init...")
+                (dotspacemacs|call-func dotspacemacs/user-init
+                                        "Calling dotfile user init...")
+                (setq dotspacemacs-editing-style
+                      (dotspacemacs//read-editing-style-config
+                       dotspacemacs-editing-style))
                 (configuration-layer/sync)
                 (if (member arg '((4) (16)))
                     (message (concat "Done (`dotspacemacs/user-config' "
@@ -539,8 +569,11 @@ error recovery."
   (dotspacemacs||let-init-test
    (dotspacemacs/init)
    (spacemacs//test-var
-    (lambda (x) (member x '(vim emacs hybrid)))
-    'dotspacemacs-editing-style "is \'vim, \'emacs or \'hybrid")
+    (lambda (x) (or (member x '(vim emacs hybrid))
+                    (and (listp x)
+                         (spacemacs/mplist-get x :variables))))
+    'dotspacemacs-editing-style
+    "is \'vim, \'emacs or \'hybrid or and list with `:variable' keyword")
    (spacemacs//test-var
     (lambda (x) (member x '(original cache nil)))
     'dotspacemacs-auto-save-file-location (concat "is one of \'original, "
