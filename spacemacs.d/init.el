@@ -53,6 +53,8 @@
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
+     (mu4e :variables
+           mu4e-installation-path "/usr/share/emacs/site-lisp")
 
      ;; display
      themes-megapack
@@ -203,6 +205,9 @@ layers configuration."
   ;; org
   (require 'config-org)
 
+  ;; mu4e
+  (require 'config-mu4e)
+
   ;; Latex
   (require 'config-latex)
 
@@ -220,13 +225,11 @@ layers configuration."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files (quote ("~/asd.org"))))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
- '(org-agenda-date-today ((t (:inherit bold :foreground "cyan" :slant italic :height 1.2))))
- '(org-agenda-date-weekend ((t (:inherit bold :foreground "plum")))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
