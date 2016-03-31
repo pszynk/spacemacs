@@ -24,7 +24,9 @@
                (cfgl-package "pkg2" :name 'pkg2 :owner 'layer1)
                (cfgl-package "pkg3" :name 'pkg3 :owner 'layer1)
                (cfgl-package "pkg4" :name 'pkg4 :owner 'layer2))))
-    (should (equal '(pkg2 pkg3) (cfgl-layer-owned-packages layer1)))))
+    (should (equal (list (cfgl-package "pkg2" :name 'pkg2 :owner 'layer1)
+                         (cfgl-package "pkg3" :name 'pkg3 :owner 'layer1))
+                   (cfgl-layer-owned-packages layer1)))))
 
 (ert-deftest test-cfgl-layer-owned-packages--nil-layer-returns-nil ()
   (should (null (cfgl-layer-owned-packages nil))))
@@ -795,6 +797,15 @@
       (spacemacs-buffer/message (m) ((:output nil))))
      (configuration-layer//configure-packages-2 `(,pkg)))))
 
+(ert-deftest test-configure-packages-2--lazy-install-package-is-not-configured()
+  (let ((pkg (cfgl-package "pkg" :name 'pkg :owner 'layer :lazy-install t))
+        (mocker-mock-default-record-cls 'mocker-stub-record))
+    (mocker-let
+     ((configuration-layer//configure-package (p) nil)
+      (spacemacs-buffer/loading-animation nil ((:output nil)))
+      (spacemacs-buffer/message (m) ((:output nil))))
+     (configuration-layer//configure-packages-2 `(,pkg)))))
+
 (ert-deftest
     test-configure-packages-2--local-package-w/-layer-owner-update-load-path()
   (let ((pkg (cfgl-package "pkg" :name 'pkg :owner 'layer1 :location 'local))
@@ -1223,6 +1234,6 @@
   (cl-letf (((symbol-function 'insert) 'identity))
     (should
      (equal
-      (concat "(configuration-layer/lazy-install 'mode "
-              ":extensions '(\"\\\\(\\\\.ext\\\\'\\\\)\"))\n")
-      (configuration-layer//insert-lazy-install-form 'mode "\\(\\.ext\\'\\)")))))
+      (concat "(configuration-layer/lazy-install 'layer "
+              ":extensions '(\"\\\\(\\\\.ext\\\\'\\\\)\" mode))\n")
+      (configuration-layer//insert-lazy-install-form 'layer 'mode "\\(\\.ext\\'\\)")))))
