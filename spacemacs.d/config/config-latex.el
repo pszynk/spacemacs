@@ -1,7 +1,7 @@
 ;;; config-latex --- configuration for TeX/LaTeX
 ;;; Commentary:
 
-(defun pszynk//config-latex ()
+(defun psz//config-latex ()
  ;;; Code:
 
   ;; (setq TeX-view-program-list
@@ -30,9 +30,9 @@
   (setq TeX-source-correlate-method 'synctex)
   )
 
-;; (add-hook 'LaTeX-mode-hook 'pszynk//config-latex)
+;; (add-hook 'LaTeX-mode-hook 'psz//config-latex)
 
-(with-eval-after-load 'latex (pszynk//config-latex))
+(with-eval-after-load 'latex (psz//config-latex))
 
 (add-hook 'doc-view-mode-hook 'auto-revert-mode)
 

@@ -2,7 +2,7 @@
 ;;; config-mu4e --- configuration for mu4e
 ;;; Commentary:
 
-(defun pszynk//config-mu4e ()
+(defun psz//config-mu4e ()
  ;;; Code:
 
   ;;; Set up some common mu4e variables
@@ -51,7 +51,7 @@
 
   )
 
-(with-eval-after-load 'mu4e (pszynk//config-mu4e))
+(with-eval-after-load 'mu4e (psz//config-mu4e))
 
 (provide 'config-mu4e)
 

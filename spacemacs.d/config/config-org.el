@@ -1,7 +1,7 @@
 ;;; config-org --- configuration for Org mode
 ;;; Commentary:
 
-(defun pszynk//config-org ()
+(defun psz//config-org ()
  ;;; Code:
 
   ;; try set org-directory from env
@@ -41,7 +41,7 @@
   (set-face-attribute 'org-agenda-date-weekend nil :inherit 'bold :foreground "plum")
   )
 
-(with-eval-after-load 'org (pszynk//config-org))
+(with-eval-after-load 'org (psz//config-org))
 
 (provide 'config-org)
 

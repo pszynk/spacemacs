@@ -213,6 +213,9 @@ layers configuration."
 
   ;; Colorize
   (require 'config-colorize)
+
+  ;; emacsClient
+  (require 'config-client)
   )
 
 
