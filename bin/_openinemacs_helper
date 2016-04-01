@@ -1,0 +1,3 @@
+#!/bin/bash
+RC=127
+exit $RC

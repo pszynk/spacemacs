@@ -1,0 +1,53 @@
+#!/bin/bash
+
+
+function is_number {
+    local re
+    re='^[0-9]+$'
+    if [[ $1 =~ $re ]] ; then
+        return 0
+    fi
+    return 1
+}
+
+FILE=$1
+LINE=$2
+COL=$3
+
+
+if is_number $LINE; then
+    POS="+${LINE}"
+    if is_number $COL; then
+        POS="${POS}:${COL}"
+    fi
+fi
+
+printf "Trying to connect to emacs server...      "
+ERROR_MSG=$(emacsclient -n -a _openinemacs_helper ${POS} "${FILE}" 2>&1)
+RC=$?
+if [ "$RC" = "0" ]; then
+    printf "[OK]\n"
+elif [ "$RC" = "1" ]; then
+    printf "[FAIL]\n"
+    printf "!! Emacs called with wrong arguments:\n" >&2
+    if [[ -z $FILE ]]; then
+        printf "!! > no file to open" >&2
+    else
+        printf "!! > ${ERROR_MSG}\n" >&2
+    fi
+    exit 1
+else
+    printf "[FAIL]\n"
+    printf "No emacs server! Starting emacs server... "
+    emacs ${POS} "${FILE}" &>/dev/null &
+    printf "[OK]\n"
+fi
+
+## old implementation
+## emacsclient -n -e "(psz-is-frame-p)" | grep t
+## if [ "$?" = "1" ]; then
+##     emacsclient -c -a '' -n -e "(psz-open-file \"$file\" $line $col)"
+## else
+##     emacsclient -e "(psz-focus-frame)"
+##     emacsclient -a "" -n -e "(psz-open-file \"$file\" $line $col)"
+## fi
