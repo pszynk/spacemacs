@@ -276,7 +276,7 @@ values."
    dotspacemacs-highlight-delimiters 'all
    ;; If non nil advises quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nill 
+   dotspacemacs-persistent-server t
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
@@ -328,8 +328,8 @@ layers configuration."
   (require 'config-colorize)
 
   ;; emacsClient
-  (require 'config-client)
-  ;; (setq default-frame-alist '((font . "Inconsolata-g for Powerline-13")))
+  ;; (require 'config-client)  ;; no need... workaround emacs --daemon problems with fonts and styles
+                               ;; with spacemacs native dotspacemacs-persistent-server t
 
   )
 
