@@ -63,6 +63,7 @@ values."
      ;;  - formatting
      markdown
      latex
+     csv
      ;; (latex :variables
      ;;        latex-build-command "LatexMk")
 
