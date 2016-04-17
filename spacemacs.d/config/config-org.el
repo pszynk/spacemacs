@@ -1,6 +1,8 @@
 ;;; config-org --- configuration for Org mode
 ;;; Commentary:
 
+(require 'f)
+
 (defun psz//config-org ()
  ;;; Code:
 
