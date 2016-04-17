@@ -59,6 +59,7 @@ values."
             c-c++-enable-clang-support t)
      python
      lua
+     sql
 
      ;;  - formatting
      markdown
