@@ -30,7 +30,7 @@
     pytest
     (python :location built-in)
     pyvenv
-    (py-yapf :location local)
+    py-yapf
     semantic
     smartparens
     stickyfunc-enhance
@@ -368,20 +368,7 @@
 
       ;; add this optional key binding for Emacs user, since it is unbound
       (define-key inferior-python-mode-map
-        (kbd "C-c M-l") 'spacemacs/comint-clear-buffer)
-
-      ;; fix for issue #2569 (https://github.com/syl20bnr/spacemacs/issues/2569)
-      ;; use `semantic-create-imenu-index' only when `semantic-mode' is enabled,
-      ;; otherwise use `python-imenu-create-index'
-      (defun spacemacs/python-imenu-create-index-python-or-semantic ()
-        (if (bound-and-true-p semantic-mode)
-            (semantic-create-imenu-index)
-          (python-imenu-create-index)))
-
-      (defadvice wisent-python-default-setup
-          (after spacemacs/python-set-imenu-create-index-function activate)
-        (setq imenu-create-index-function
-              #'spacemacs/python-imenu-create-index-python-or-semantic)))))
+        (kbd "C-c M-l") 'spacemacs/comint-clear-buffer))))
 
 (defun python/init-py-yapf ()
   (use-package py-yapf
@@ -392,10 +379,10 @@
               (add-hook 'python-mode-hook 'py-yapf-enable-on-save))))
 
 (defun python/post-init-semantic ()
+  (add-hook 'python-mode-hook
+            'spacemacs//disable-semantic-idle-summary-mode t)
   (add-hook 'python-mode-hook 'semantic-mode)
-
-  (when (configuration-layer/package-usedp 'anaconda-mode)
-    (add-hook 'python-mode-hook (lambda () (semantic-idle-summary-mode 0)) t))
+  (add-hook 'python-mode-hook 'spacemacs//python-imenu-create-index-use-semantic)
 
   (defadvice semantic-python-get-system-include-path
       (around semantic-python-skip-error-advice activate)
