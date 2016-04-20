@@ -1,16 +1,16 @@
 ;;; config-org --- configuration for Org mode
 ;;; Commentary:
 
-(require 'f)
 
 (defun psz//config-org ()
  ;;; Code:
 
+  (require 'f)
   ;; try set org-directory from env
   (setq org-directory
         (f-join (cond
                   ((getenv "PERSONAL_DIR"))
-                  (t "~/org"))
+                  (t "~/Personal"))
                 "org")
         )
 
