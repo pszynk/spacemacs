@@ -317,6 +317,9 @@ layers configuration."
   ;; flyspell
   (setq ispell-program-name "/usr/bin/hunspell")
 
+  ;; browser to chromium
+  (setq browse-url-browser-function 'browse-url-xdg-open)
+
   ;; org
   (require 'config-org)
 
