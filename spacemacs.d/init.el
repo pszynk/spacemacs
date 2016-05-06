@@ -60,6 +60,8 @@ values."
      python
      lua
      sql
+     html
+     javascript
 
      ;;  - formatting
      markdown
@@ -158,7 +160,7 @@ values."
    ;; size to make separators look not too crappy.
    ;; dotspacemacs-default-font '("Source Code Pro"
    ;; dotspacemacs-default-font '("Inconsolata-g"
-   dotspacemacs-default-font '("Inconsolata-g for Powerline"
+   dotspacemacs-default-font '("inconsolatagpowerline"
                                :size 15
                                :weight normal
                                :width normal
@@ -310,15 +312,21 @@ before packages are loaded. If you are unsure, you should try in setting them in
  This function is called at the very end of Spacemacs initialization after
 layers configuration."
 
+  ;; for debug uncoment
   ;; (setq debug-on-error t)
-
-  (add-to-list 'load-path "~/.spacemacs.d/config/")
 
   ;; flyspell
   (setq ispell-program-name "/usr/bin/hunspell")
 
   ;; browser to chromium
   (setq browse-url-browser-function 'browse-url-xdg-open)
+
+  ;; javascript indent 2 spaces
+  (setq-default js-indent-level 2)
+
+
+  (add-to-list 'load-path "~/.spacemacs.d/config/")
+
 
   ;; org
   (require 'config-org)
