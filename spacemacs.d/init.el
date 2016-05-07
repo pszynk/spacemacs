@@ -52,6 +52,10 @@ values."
      ;;lang support
      ;;  - framework for parsers used in language layers
      semantic
+
+     ;; - frameworks
+     react
+
      ;;  - programming
      emacs-lisp
      (c-c++ :variables
@@ -62,6 +66,7 @@ values."
      sql
      html
      javascript
+
 
      ;;  - formatting
      markdown
@@ -339,6 +344,9 @@ layers configuration."
 
   ;; Colorize
   (require 'config-colorize)
+
+  ;; Javascript + React
+  (require 'config-javascript)
 
   ;; emacsClient
   ;; (require 'config-client)  ;; no need... workaround emacs --daemon problems with fonts and styles
