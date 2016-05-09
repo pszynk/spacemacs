@@ -39,8 +39,9 @@
   (with-eval-after-load 'js2-mode
     (setq-default flycheck-disabled-checkers
                   (append flycheck-disabled-checkers '(javascript-jshint))))
-  )
 
+  (add-to-list 'auto-mode-alist '("\\.tern-project\\'" . json-mode))
+  )
 
 
 (psz//config-javascript)
