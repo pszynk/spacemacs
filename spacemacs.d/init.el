@@ -164,8 +164,8 @@ values."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    ;; dotspacemacs-default-font '("Source Code Pro"
-   ;; dotspacemacs-default-font '("Inconsolata-g"
-   dotspacemacs-default-font '("inconsolatagpowerline"
+   ;; dotspacemacs-default-font '("inconsolata"
+   dotspacemacs-default-font '("inconsolatag"
                                :size 15
                                :weight normal
                                :width normal
