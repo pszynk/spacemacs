@@ -42,12 +42,3 @@ else
     emacs ${POS} "${FILE}" &>/dev/null &
     printf "[OK]\n"
 fi
-
-## old implementation
-## emacsclient -n -e "(psz-is-frame-p)" | grep t
-## if [ "$?" = "1" ]; then
-##     emacsclient -c -a '' -n -e "(psz-open-file \"$file\" $line $col)"
-## else
-##     emacsclient -e "(psz-focus-frame)"
-##     emacsclient -a "" -n -e "(psz-open-file \"$file\" $line $col)"
-## fi
