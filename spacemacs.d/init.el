@@ -165,7 +165,7 @@ values."
    ;; size to make separators look not too crappy.
    ;; dotspacemacs-default-font '("Source Code Pro"
    ;; dotspacemacs-default-font '("inconsolata"
-   dotspacemacs-default-font '("inconsolatag"
+   dotspacemacs-default-font '("Inconsolata-g"
                                :size 15
                                :weight normal
                                :width normal
