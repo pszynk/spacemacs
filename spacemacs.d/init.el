@@ -166,7 +166,7 @@ values."
    ;; dotspacemacs-default-font '("Source Code Pro"
    ;; dotspacemacs-default-font '("inconsolata"
    dotspacemacs-default-font '("Inconsolatagp"
-                               :size 16
+                               :size 15
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
