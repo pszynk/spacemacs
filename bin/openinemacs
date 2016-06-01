@@ -10,6 +10,13 @@ function is_number {
     return 1
 }
 
+function editor_dummy {
+    RC=127
+    exit $RC
+}
+
+export -f editor_dummy
+
 FILE=$1
 LINE=$2
 COL=$3
@@ -23,7 +30,8 @@ if is_number $LINE; then
 fi
 
 printf "Trying to connect to emacs server...      "
-ERROR_MSG=$(emacsclient -n -a _openinemacs_helper ${POS} "${FILE}" 2>&1)
+#ERROR_MSG=$(emacsclient -n -a _openinemacs_helper ${POS} "${FILE}" 2>&1)
+ERROR_MSG=$(emacsclient -n -ca '' ${POS} "${FILE}" 2>&1)
 RC=$?
 if [ "$RC" = "0" ]; then
     printf "[OK]\n"
@@ -42,3 +50,12 @@ else
     emacs ${POS} "${FILE}" &>/dev/null &
     printf "[OK]\n"
 fi
+
+## old implementation
+## emacsclient -n -e "(psz-is-frame-p)" | grep t
+## if [ "$?" = "1" ]; then
+##     emacsclient -c -a '' -n -e "(psz-open-file \"$file\" $line $col)"
+## else
+##     emacsclient -e "(psz-focus-frame)"
+##     emacsclient -a "" -n -e "(psz-open-file \"$file\" $line $col)"
+## fi
