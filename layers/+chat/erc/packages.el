@@ -33,13 +33,12 @@
 (when (spacemacs/system-is-mac)
   (push 'erc-terminal-notifier erc-packages))
 
-(when (configuration-layer/layer-usedp 'auto-completion)
-  (defun erc/post-init-company ()
-    (spacemacs|add-company-hook erc-mode)
-    (push 'company-capf company-backends-erc-mode))
+(defun erc/post-init-company ()
+  (spacemacs|add-company-hook erc-mode)
+  (push 'company-capf company-backends-erc-mode))
 
-  (defun erc/post-init-company-emoji ()
-    (push 'company-emoji company-backends-erc-mode)))
+(defun erc/post-init-company-emoji ()
+  (push 'company-emoji company-backends-erc-mode))
 
 (defun erc/post-init-emoji-cheat-sheet-plus ()
   (add-hook 'erc-mode-hook 'emoji-cheat-sheet-plus-display-mode))
@@ -116,14 +115,15 @@
 
 
 (defun erc/init-erc-hl-nicks ()
-  (spacemacs|use-package-add-hook 'erc
+  (spacemacs|use-package-add-hook erc
     :post-config
     (use-package erc-hl-nicks)))
 
 (defun erc/init-erc-sasl ()
-  (spacemacs|use-package-add-hook 'erc
+  (spacemacs|use-package-add-hook erc
     :post-config
     (use-package erc-sasl
+      :defer t
       :if erc-enable-sasl-auth
       ;; Following http://www.emacswiki.org/emacs/ErcSASL
       ;; Maybe an advice would be better?
@@ -155,7 +155,7 @@
           (erc-update-mode-line))))))
 
 (defun erc/init-erc-social-graph ()
-  (spacemacs|use-package-add-hook 'erc
+  (spacemacs|use-package-add-hook erc
     :post-config
     (use-package erc-social-graph
       :init
@@ -167,19 +167,19 @@
           "D" 'erc-social-graph-draw)))))
 
 (defun erc/init-erc-tex ()
-  (spacemacs|use-package-add-hook 'erc
+  (spacemacs|use-package-add-hook erc
     :post-config
     (require 'erc-tex)))
 
 (defun erc/init-erc-yt ()
-  (spacemacs|use-package-add-hook 'erc
+  (spacemacs|use-package-add-hook erc
     :post-config
     (use-package erc-yt
       :init (with-eval-after-load 'erc
               (add-to-list 'erc-modules 'youtube)))))
 
 (defun erc/init-erc-yank ()
-  (spacemacs|use-package-add-hook 'erc
+  (spacemacs|use-package-add-hook erc
     :post-config
     (use-package erc-yank
       :if (configuration-layer/package-usedp 'gist)

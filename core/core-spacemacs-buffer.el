@@ -78,6 +78,7 @@ in spacemacs buffer along with quick buttons underneath.
 
 Easter egg:
 Doge special text banner can be reachable via `999', `doge' or `random*'.
+Cate special text banner can de reachable via `998', `cat' or `random*'.
 `random' ignore special banners whereas `random*' does not."
   (let ((banner (spacemacs-buffer//choose-banner))
         (buffer-read-only nil))
@@ -127,6 +128,8 @@ Doge special text banner can be reachable via `999', `doge' or `random*'.
            (spacemacs-buffer//choose-random-text-banner t))
           ((eq 'doge dotspacemacs-startup-banner)
            (spacemacs-buffer//get-banner-path 999))
+          ((eq 'cat dotspacemacs-startup-banner)
+           (spacemacs-buffer//get-banner-path 998))
           ((integerp dotspacemacs-startup-banner)
            (spacemacs-buffer//get-banner-path dotspacemacs-startup-banner))
           ((and dotspacemacs-startup-banner
@@ -147,7 +150,7 @@ If ALL is non-nil then truly all banners can be selected."
   (let* ((files (directory-files spacemacs-banner-directory t))
          (count (length files))
          ;; -2 then +2 to remove `.' and `..'
-         (choice (+ 2 (random (- count (if all 2 3))))))
+         (choice (+ 2 (random (- count (if all 2 4))))))
     (nth choice files)))
 
 (defun spacemacs-buffer//get-banner-path (index)
@@ -732,7 +735,7 @@ border."
                   (spacemacs//insert--shortcut "c" "Agenda:")
                   (insert list-separator)))
                ((eq el 'bookmarks)
-                (when (configuration-layer/layer-usedp 'helm)
+                (when (configuration-layer/package-usedp 'helm)
                   (helm-mode))
                 (require 'bookmark)
                 (when (spacemacs-buffer//insert-bookmark-list
