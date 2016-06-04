@@ -38,7 +38,6 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      ;; misc
-     spacemacs-helm
      (auto-completion :variables
                       ;; auto-completion-complete-with-key-sequence "kj"
                       auto-completion-enable-snippets-in-popup t
@@ -49,7 +48,13 @@ values."
                      spell-checking-enable-by-default nil)
      better-defaults
 
-     ;;lang support
+     ;; evil
+     (evil-snipe :variables
+                 evil-snipe-enable-alternate-f-and-t-behaviors t)
+     evil-cleverparens
+     vinegar
+
+     ;; lang support
      ;;  - framework for parsers used in language layers
      semantic
 
@@ -89,9 +94,16 @@ values."
 
      ;; display
      themes-megapack
+     colors
+     ;; (colors :variables
+     ;;         colors-enable-rainbow-identifiers t
+     ;;         colors-enable-nyan-cat-progress-bar t)
+     ;; theming
+
      ;; pdf-tools TODO need install dependencies
 
      ;; tools
+     speed-reading
      topcoder
      )
    ;; List of additional packages that will be installed without being
@@ -142,7 +154,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner 004
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'."
    ;; (default '(recents projects))
@@ -289,7 +301,7 @@ values."
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
    ;; (default '("ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   dotspacemacs-search-tools '("ag" "grep")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
@@ -299,7 +311,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil
+   dotspacemacs-whitespace-cleanup "changed"
    ))
 
 (defun dotspacemacs/user-init ()
@@ -325,6 +337,9 @@ layers configuration."
 
   ;; browser to chromium
   (setq browse-url-browser-function 'browse-url-xdg-open)
+
+  ;; evil snipe config
+  '((evil-snipe ))
 
   ;; javascript indent 2 spaces
   (setq-default js-indent-level 2)
