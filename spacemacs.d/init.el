@@ -75,6 +75,7 @@ values."
 
      ;;  - formatting
      markdown
+     yaml
      latex
      csv
      ;; (latex :variables

@@ -321,7 +321,7 @@ and choosing a rollback slot (sorted by date). This button uses the command
 
 * Configuration layers
 This section is an overview of layers. A more extensive introduction to writing
-configuration layers can be found [[file:LAYERS.org][here]].
+configuration layers can be found [[file:LAYERS.org][here]] (recommended reading!).
 
 ** Purpose
 Layers help collect related packages together to provide features. For example,
@@ -340,24 +340,24 @@ Configuration is organized in layers. Each layer has the following structure:
       | |__ [package 1]
       | |     ...
       | |__ [package n]
-      |__ config.el
-      |__ funcs.el
-      |__ keybindings.el
+      |-- layers.el
       |__ packages.el
-      |__ packages-funcs.el
+      |__ funcs.el
+      |__ config.el
+      |__ keybindings.el
 
     [] = directory
 #+END_EXAMPLE
 
 Where:
 
-| File              | Usage                                                                                  |
-|-------------------+----------------------------------------------------------------------------------------|
-| config.el         | Layer configuration (not related to packages contained in this layer)                  |
-| funcs.el          | Various functions and macros (not related to packages contained in this layer)         |
-| keybindings.el    | Emacs built-in key bindings or mandatory key bindings                                  |
-| packages.el       | The list of packages to install and the configuration functions (init, post-init, ...) |
-| packages-funcs.el | Additional functions used in the packages.el                                           |
+| File           | Usage                                                                                            |
+|----------------+--------------------------------------------------------------------------------------------------|
+| layers.el      | The place to declare additional layers                                                           |
+| packages.el    | The list of packages and their configuration functions (init, post-init, etc...)                 |
+| funcs.el       | All functions defined in the layer (used in package configuration for instance)                  |
+| config.el      | Layer configuration (defines the layer variables default values and setup some config variables) |
+| keybindings.el | General key bindings no tied to a specific package configuration                                 |
 
 =Packages= can be:
 - =ELPA= packages installed from an =ELPA= compliant repository
@@ -1505,7 +1505,8 @@ thusly:
 | ~SPC h d K~ | describe a keymap                                         |
 | ~SPC h d l~ | copy last pressed keys that you can paste in gitter chat  |
 | ~SPC h d m~ | describe current modes                                    |
-| ~SPC h d p~ | describe a package                                        |
+| ~SPC h d p~ | describe a package (Emacs built-in function)              |
+| ~SPC h d P~ | describe a package (Spacemacs layer information)          |
 | ~SPC h d s~ | copy system information that you can paste in gitter chat |
 | ~SPC h d t~ | describe a theme                                          |
 | ~SPC h d v~ | describe a variable                                       |
@@ -1751,6 +1752,7 @@ Windows manipulation commands (start with ~w~):
 | ~SPC w D~              | delete another window using [[https://github.com/abo-abo/ace-window][ace-delete-window]]                               |
 | ~SPC w t~              | toggle window dedication (dedicated window cannot be reused by a mode)      |
 | ~SPC w f~              | toggle follow mode                                                          |
+| ~SPC w F~              | create new frame                                                            |
 | ~SPC w h~              | move to window on the left                                                  |
 | ~SPC w H~              | move window to the left                                                     |
 | ~SPC w j~              | move to window below                                                        |
@@ -2837,12 +2839,12 @@ To search in a project see [[Searching in a project][project searching]].
 | ~SPC p p~   | switch project                                          |
 | ~SPC p r~   | open a recent file                                      |
 | ~SPC p R~   | replace a string                                        |
-| ~SPC p s~   | see [[Searching in a project][search in project]]                                   |
 | ~SPC p t~   | open =NeoTree= in =projectile= root                     |
 | ~SPC p T~   | test project                                            |
 | ~SPC p v~   | open project root in =vc-dir= or =magit=                |
 | ~SPC p y~   | find tags                                               |
 | ~SPC /~     | search in project with the best search tool available   |
+| ~SPC s p~   | see [[Searching in a project][search in project]]                                   |
 | ~SPC s a p~ | run =ag=                                                |
 | ~SPC s g p~ | run =grep=                                              |
 | ~SPC s k p~ | run =ack=                                               |

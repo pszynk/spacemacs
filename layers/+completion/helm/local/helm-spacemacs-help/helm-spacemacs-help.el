@@ -50,12 +50,9 @@
     (mapc (lambda (layer) (push (configuration-layer/make-layer layer)
                                 helm-spacemacs-help-all-layers))
           (configuration-layer/get-layers-list))
-    (dolist (layer helm-spacemacs-help-all-layers)
-      (unless (configuration-layer/layer-usedp (oref layer :name))
-        (configuration-layer//load-layer-files layer '("funcs.el"
-                                                       "config.el"))))
-    (setq helm-spacemacs-help-all-packages (configuration-layer/get-packages
-                                       helm-spacemacs-help-all-layers))))
+    (let (configuration-layer--packages)
+      (configuration-layer/get-packages helm-spacemacs-help-all-layers)
+      (setq helm-spacemacs-help-all-packages configuration-layer--packages))))
 
 ;;;###autoload
 (defun helm-spacemacs-help (arg)
@@ -245,8 +242,10 @@
   (let (result)
     (dolist (toggle spacemacs-toggles)
       (let* ((toggle-symbol (symbol-name (car toggle)))
+             (toggle-status (funcall (plist-get (cdr toggle) :predicate)))
              (toggle-name (capitalize (replace-regexp-in-string "-" " " toggle-symbol)))
-             (toggle-doc (format "%s: %s"
+             (toggle-doc (format "(%s) %s: %s"
+                                 (if toggle-status "+" "-")
                                  toggle-name
                                  (propertize
                                   (or (plist-get (cdr toggle) :documentation) "")
