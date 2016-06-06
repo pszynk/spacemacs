@@ -275,6 +275,38 @@ argument takes the kindows rotate backwards."
                 (not (eq (current-buffer) start-buffer)))
       (previous-buffer))))
 
+(defun spacemacs/rename-file (filename &optional new-filename)
+  "Rename FILENAME to NEW-FILENAME.
+
+When NEW-FILENAME is not specified, asks user for a new name.
+
+Also renames associated buffer (if any exists), invalidates
+projectile cache when it's possible and update recentf list."
+  (interactive "f")
+  (when (and filename (file-exists-p filename))
+    (let* ((buffer (find-buffer-visiting filename))
+           (short-name (file-name-nondirectory filename))
+           (new-name (if new-filename new-filename
+                       (read-file-name
+                        (format "Rename %s to: " short-name)))))
+      (cond ((get-buffer new-name)
+             (error "A buffer named '%s' already exists!" new-name))
+            (t
+             (let ((dir (file-name-directory new-name)))
+               (when (and (not (file-exists-p dir)) (yes-or-no-p (format "Create directory '%s'?" dir)))
+                 (make-directory dir t)))
+             (rename-file filename new-name 1)
+             (when buffer
+               (kill-buffer buffer)
+               (find-file newfile))
+             (when (fboundp 'recentf-add-file)
+               (recentf-add-file new-name)
+               (recentf-remove-if-non-kept filename))
+             (when (and (configuration-layer/package-usedp 'projectile)
+                        (projectile-project-p))
+               (call-interactively #'projectile-invalidate-cache))
+             (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name)))))))
+
 ;; from magnars
 (defun spacemacs/rename-current-buffer-file ()
   "Renames current buffer and file it is visiting."
@@ -297,7 +329,30 @@ argument takes the kindows rotate backwards."
                (when (fboundp 'recentf-add-file)
                    (recentf-add-file new-name)
                    (recentf-remove-if-non-kept filename))
+               (when (and (configuration-layer/package-usedp 'projectile)
+                          (projectile-project-p))
+                 (call-interactively #'projectile-invalidate-cache))
                (message "File '%s' successfully renamed to '%s'" name (file-name-nondirectory new-name))))))))
+
+(defun spacemacs/delete-file (filename &optional ask-user)
+  "Remove specified file or directory.
+
+Also kills associated buffer (if any exists) and invalidates
+projectile cache when it's possible.
+
+When ASK-USER is non-nil, user will be asked to confirm file
+removal."
+  (interactive "f")
+  (when (and filename (file-exists-p filename))
+    (let ((buffer (find-buffer-visiting filename)))
+      (when buffer
+        (kill-buffer buffer)))
+    (when (or (not ask-user)
+              (yes-or-no-p "Are you sure you want to delete this file? "))
+      (delete-file filename)
+      (when (and (configuration-layer/package-usedp 'projectile)
+                 (projectile-project-p))
+        (call-interactively #'projectile-invalidate-cache)))))
 
 ;; from magnars
 (defun spacemacs/delete-current-buffer-file ()
@@ -311,6 +366,9 @@ argument takes the kindows rotate backwards."
       (when (yes-or-no-p "Are you sure you want to delete this file? ")
         (delete-file filename t)
         (kill-buffer buffer)
+        (when (and (configuration-layer/package-usedp 'projectile)
+                   (projectile-project-p))
+          (call-interactively #'projectile-invalidate-cache))
         (message "File '%s' successfully removed" filename)))))
 
 ;; from magnars
@@ -333,14 +391,24 @@ argument takes the kindows rotate backwards."
 
 ;; check when opening large files - literal file open
 (defun spacemacs/check-large-file ()
-  (let ((size (nth 7 (file-attributes (buffer-file-name)))))
+  (let* ((filename (buffer-file-name))
+         (size (nth 7 (file-attributes filename))))
     (when (and
            (not (memq major-mode spacemacs-large-file-modes-list))
            size (> size (* 1024 1024 dotspacemacs-large-file-size))
-           (y-or-n-p "This is a large file, open literally to avoid performance issues?"))
+           (y-or-n-p (format "%s is a large file, open literally to avoid performance issues?"
+                             filename)))
       (setq buffer-read-only t)
       (buffer-disable-undo)
       (fundamental-mode))))
+
+;; our own implementation of kill-this-buffer from menu-bar.el
+(defun spacemacs/kill-this-buffer ()
+  "Kill the current buffer."
+  (interactive)
+  (if (window-minibuffer-p)
+      (abort-recursive-edit)
+    (kill-buffer (current-buffer))))
 
 ;; found at http://emacswiki.org/emacs/KillingBuffers
 (defun spacemacs/kill-other-buffers ()
@@ -930,3 +998,8 @@ is nonempty."
   (interactive)
   (when compilation-last-buffer
     (delete-windows-on compilation-last-buffer)))
+
+(defun no-linum (&rest ignore)
+  "Disable linum if current buffer."
+  (when (or 'linum-mode global-linum-mode)
+    (linum-mode 0)))

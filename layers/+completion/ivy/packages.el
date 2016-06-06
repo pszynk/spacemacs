@@ -16,12 +16,16 @@
         evil
         flx
         ivy
+        ivy-hydra
         (ivy-spacemacs-help :location local)
         persp-mode
         projectile
         smex
         swiper
         wgrep))
+
+(defun ivy/init-ivy-hydra ()
+  (use-package ivy-hydra))
 
 (defun ivy/init-counsel ()
   (use-package counsel
@@ -93,7 +97,7 @@
     (spacemacs|use-package-add-hook projectile
       :post-init
       (progn
-        (setq projectile-switch-project-action 'counsel-projectile)
+        (setq projectile-switch-project-action 'counsel-projectile-find-file)
         (spacemacs/set-leader-keys
           "pb" 'counsel-projectile-switch-to-buffer
           "pd" 'counsel-projectile-find-dir

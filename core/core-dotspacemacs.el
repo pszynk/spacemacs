@@ -161,8 +161,9 @@ emacs.")
                                     :weight normal
                                     :width normal
                                     :powerline-scale 1.1)
-  "Default font. `powerline-scale' allows to quickly tweak the mode-line
-size to make separators look not too crappy.")
+  "Default font, or prioritized list of fonts. `powerline-scale'
+allows to quickly tweak the mode-line size to make separators
+look not too crappy.")
 
 (defvar dotspacemacs-remap-Y-to-y$ nil
   "If non nil `Y' is remapped to `y$' in Evil states.")
@@ -170,6 +171,9 @@ size to make separators look not too crappy.")
 (defvar dotspacemacs-retain-visual-state-on-shift t
   "If non-nil, the shift mappings `<' and `>' retain visual state
 if used there.")
+
+(defvar dotspacemacs-visual-line-move-text nil
+  "If non-nil, J and K move lines up and down when in visual mode.")
 
 (defvar dotspacemacs-ex-substitute-global nil
   "If non nil, inverse the meaning of `g' in `:substitute' Evil ex-command.")

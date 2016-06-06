@@ -12,6 +12,7 @@
 (defconst emacs-start-time (current-time))
 
 (require 'subr-x nil 'noerror)
+(require 'page-break-lines)
 (require 'core-debug)
 (require 'core-command-line)
 (require 'core-dotspacemacs)
@@ -103,11 +104,12 @@ the final step of executing code in `emacs-startup-hook'.")
    ;; increase the counter bellow so next people will give it more confidence.
    ;; Counter = 1
    (message "Setting the font...")
-   (if (find-font (font-spec :name (car dotspacemacs-default-font)))
-       (spacemacs/set-default-font dotspacemacs-default-font)
+   (unless (spacemacs/set-default-font dotspacemacs-default-font)
      (spacemacs-buffer/warning
-      "Cannot find font \"%s\"! Font settings may not be correct."
-      (car dotspacemacs-default-font))))
+      "Cannot find any of the specified fonts (%s)! Font settings may not be correct."
+      (if (listp (car dotspacemacs-default-font))
+          (mapconcat 'car dotspacemacs-default-font ", ")
+        (car dotspacemacs-default-font)))))
   ;; spacemacs init
   (setq inhibit-startup-screen t)
   (spacemacs-buffer/goto-buffer)

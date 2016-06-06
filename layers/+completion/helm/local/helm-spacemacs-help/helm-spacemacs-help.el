@@ -176,7 +176,7 @@
            (condition-case-unless-debug nil
                (with-current-buffer (find-file-noselect file)
                  (gh-md-render-buffer)
-                 (kill-this-buffer))
+                 (spacemacs/kill-this-buffer))
              ;; if anything fails, fall back to simply open file
              (find-file file)))
           ((equal (file-name-extension file) "org")
@@ -231,11 +231,12 @@
 
 (defun helm-spacemacs-help//toggle-source ()
   "Construct the helm source for the toggles."
-  (helm-build-sync-source "Toggles"
-    :candidates #'helm-spacemacs-help//toggle-candidates
-    :persistent-action #'helm-spacemacs-help//toggle
-    :keymap helm-map
-    :action (helm-make-actions "Toggle" #'helm-spacemacs-help//toggle)))
+  (let ((candidates (helm-spacemacs-help//toggle-candidates)))
+    (helm-build-sync-source "Toggles"
+      :candidates candidates
+      :persistent-action #'helm-spacemacs-help//toggle
+      :keymap helm-map
+      :action (helm-make-actions "Toggle" #'helm-spacemacs-help//toggle))))
 
 (defun helm-spacemacs-help//toggle-candidates ()
   "Return the sorted candidates for toggle source."

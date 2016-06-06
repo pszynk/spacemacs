@@ -17,7 +17,6 @@
         (diminish :step bootstrap)
         (evil :step bootstrap)
         (hydra :step bootstrap)
-        (page-break-lines :step bootstrap)
         (use-package :step bootstrap)
         (which-key :step bootstrap)
         ))
@@ -118,8 +117,9 @@
     (evil-map visual ">" ">gv"))
 
   ;; move selection up and down
-  (define-key evil-visual-state-map "J" (concat ":m '>+1" (kbd "RET") "gv=gv"))
-  (define-key evil-visual-state-map "K" (concat ":m '<-2" (kbd "RET") "gv=gv"))
+  (when dotspacemacs-visual-line-move-text
+    (define-key evil-visual-state-map "J" (concat ":m '>+1" (kbd "RET") "gv=gv"))
+    (define-key evil-visual-state-map "K" (concat ":m '<-2" (kbd "RET") "gv=gv")))
 
   (evil-ex-define-cmd "enew" 'spacemacs/new-empty-buffer)
 
@@ -246,11 +246,6 @@
   (require 'hydra)
   (setq hydra-key-doc-function 'spacemacs//hydra-key-doc-function
         hydra-head-format "[%s] "))
-
-(defun spacemacs-bootstrap/init-page-break-lines ()
-  (require 'page-break-lines)
-  (global-page-break-lines-mode t)
-  (spacemacs|hide-lighter page-break-lines-mode))
 
 (defun spacemacs-bootstrap/init-use-package ()
   (require 'use-package)
