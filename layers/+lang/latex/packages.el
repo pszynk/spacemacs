@@ -86,8 +86,9 @@
             "ze" 'TeX-fold-env
             "zm" 'TeX-fold-macro
             "zr" 'TeX-fold-region))
-        (spacemacs/declare-prefix-for-mode mode "mx"  "text/fonts")
-        (spacemacs/declare-prefix-for-mode mode "mz"  "fold"))
+        (spacemacs/declare-prefix-for-mode mode "mh" "help")
+        (spacemacs/declare-prefix-for-mode mode "mx" "text/fonts")
+        (spacemacs/declare-prefix-for-mode mode "mz" "fold"))
 
       ;; Key bindings specific to LaTeX
       (spacemacs/set-leader-keys-for-major-mode 'latex-mode
@@ -115,7 +116,9 @@
         "xfa" 'latex/font-calligraphic
         "xfn" 'latex/font-normal
         "xfu" 'latex/font-upright)
-      (spacemacs/declare-prefix-for-mode 'latex-mode "mp"  "preview"))))
+      (spacemacs/declare-prefix-for-mode 'latex-mode "mi" "insert")
+      (spacemacs/declare-prefix-for-mode 'latex-mode "mp" "preview")
+      (spacemacs/declare-prefix-for-mode 'latex-mode "mf" "fill"))))
 
 (defun latex/init-auctex-latexmk ()
   (use-package auctex-latexmk
@@ -156,7 +159,7 @@
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (setq reftex-plug-into-AUCTeX '(nil nil t t t)
         reftex-use-fonts t)
-  (spacemacs/declare-prefix-for-mode 'latex-mode "mr"  "reftex")
+  (spacemacs/declare-prefix-for-mode 'latex-mode "mr" "reftex")
   (spacemacs|diminish reftex-mode " Ʀ" " R")
   (spacemacs/set-leader-keys-for-major-mode 'latex-mode
     "rc"    'reftex-citation
