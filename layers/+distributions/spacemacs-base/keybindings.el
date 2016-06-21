@@ -139,6 +139,33 @@
   "en" 'spacemacs/next-error
   "eN" 'spacemacs/previous-error
   "ep" 'spacemacs/previous-error)
+(spacemacs|define-transient-state error
+  :title "Error transient state"
+  :hint-is-doc t
+  :dynamic-hint
+  (let ((sys (spacemacs//error-delegate)))
+    (cond
+     ((eq 'flycheck sys)
+      "\nBrowsing flycheck errors from this buffer.")
+     ((eq 'emacs sys)
+      (let ((buf (next-error-find-buffer)))
+        (if buf
+            (concat "\nBrowsing entries from \""
+                    (buffer-name buf)
+                    "\""
+                    (with-current-buffer buf
+                      (when spacemacs--gne-line-func
+                        (format " (%d of %d)"
+                                (max 1 (1+ (- spacemacs--gne-cur-line
+                                              spacemacs--gne-min-line)))
+                                (1+ (- spacemacs--gne-max-line
+                                       spacemacs--gne-min-line))))))
+          "\nNo next-error capable buffer found.")))))
+  :bindings
+  ("n" spacemacs/next-error "next")
+  ("p" spacemacs/previous-error "prev")
+  ("q" nil "quit" :exit t)
+  :evil-leader "e.")
 ;; file -----------------------------------------------------------------------
 (spacemacs/set-leader-keys
   "fc" 'spacemacs/copy-file
@@ -269,7 +296,6 @@
   :documentation "Display the current frame in full screen."
   :evil-leader "TF")
 (spacemacs|add-toggle maximize-frame
-  :if (version< "24.3.50" emacs-version)
   :status (eq (frame-parameter nil 'fullscreen) 'maximized)
   :on (toggle-frame-maximized)
   :off (toggle-frame-maximized)
@@ -292,7 +318,7 @@
   :documentation "Display the tool bar in GUI mode."
   :evil-leader "Tt")
 (spacemacs|add-toggle menu-bar
-  :if (or window-system (version<= "24.3.1" emacs-version))
+  :if window-system
   :mode menu-bar-mode
   :documentation "Display the menu bar."
   :evil-leader "Tm")
