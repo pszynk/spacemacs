@@ -22,7 +22,8 @@
     (message (concat "Your version of Emacs (%s) is too old. "
                      "Spacemacs requires Emacs version %s or above.")
              emacs-version spacemacs-emacs-min-version)
-  (load-file (concat user-emacs-directory "core/core-load-paths.el"))
+  (load-file (concat (file-name-directory load-file-name)
+                     "core/core-load-paths.el"))
   (require 'core-spacemacs)
   (spacemacs/init)
   (spacemacs/maybe-install-dotfile)

@@ -18,7 +18,6 @@
                                        ("ai"  "irc")
                                        ("as"  "shells")
                                        ("b"   "buffers")
-                                       ("bm"  "move")
                                        ("c"   "compile/comments")
                                        ("C"   "capture/colors")
                                        ("e"   "errors")
@@ -117,16 +116,15 @@
   "au"  'undo-tree-visualize)
 ;; buffers --------------------------------------------------------------------
 (spacemacs/set-leader-keys
-  "bd"  'spacemacs/kill-this-buffer
   "TAB" 'spacemacs/alternate-buffer
-  "bh"  'spacemacs/home
+  "bd"  'spacemacs/kill-this-buffer
   "be"  'spacemacs/safe-erase-buffer
-  "bK"  'spacemacs/kill-other-buffers
-  "bk"  'ido-kill-buffer
-  "b C-k" 'spacemacs/kill-matching-buffers-rudely
-  "bP"  'spacemacs/copy-clipboard-to-whole-buffer
+  "bh"  'spacemacs/home
+  "bk"  'spacemacs/kill-matching-buffers-rudely
   "bn"  'spacemacs/next-useful-buffer
+  "bm"  'spacemacs/kill-other-buffers
   "bN"  'spacemacs/new-empty-buffer
+  "bP"  'spacemacs/copy-clipboard-to-whole-buffer
   "bp"  'spacemacs/previous-useful-buffer
   "bR"  'spacemacs/safe-revert-buffer
   "bs"  'spacemacs/switch-to-scratch-buffer
@@ -359,7 +357,7 @@
   "w2"  'spacemacs/layout-double-columns
   "w3"  'spacemacs/layout-triple-columns
   "wb"  'spacemacs/switch-to-minibuffer-window
-  "wd"  'delete-window
+  "wd"  'spacemacs/delete-window
   "wt"  'spacemacs/toggle-current-window-dedication
   "wf"  'follow-mode
   "wF"  'make-frame
@@ -380,7 +378,7 @@
   "wl"  'evil-window-right
   "w <right>"  'evil-window-right
   "wm"  'spacemacs/toggle-maximize-buffer
-  "wM"  'spacemacs-centered-buffer-mode
+  "wc"  'spacemacs-centered-buffer-mode
   "wo"  'other-frame
   "wr"  'spacemacs/rotate-windows
   "wR"  'spacemacs/rotate-windows-backward
