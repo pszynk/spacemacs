@@ -219,9 +219,11 @@
 (spacemacs/set-leader-keys
   "j0" 'spacemacs/push-mark-and-goto-beginning-of-line
   "j$" 'spacemacs/push-mark-and-goto-end-of-line
-  "jf" 'find-function-at-point
+  "jF" 'find-function-at-point
+  "jf" 'find-function
   "ji" 'spacemacs/jump-in-buffer
-  "jv" 'find-variable-at-point)
+  "jv" 'find-variable
+  "jV" 'find-variable-at-point)
 
 ;; Compilation ----------------------------------------------------------------
 (spacemacs/set-leader-keys
@@ -378,7 +380,8 @@
   "wl"  'evil-window-right
   "w <right>"  'evil-window-right
   "wm"  'spacemacs/toggle-maximize-buffer
-  "wc"  'spacemacs-centered-buffer-mode
+  "wc"  'spacemacs/toggle-centered-buffer-mode
+  "wC"  'spacemacs/centered-buffer-mode-full-width
   "wo"  'other-frame
   "wr"  'spacemacs/rotate-windows
   "wR"  'spacemacs/rotate-windows-backward
@@ -391,7 +394,8 @@
   "wV"  'split-window-right-and-focus
   "ww"  'other-window
   "w/"  'split-window-right
-  "w="  'balance-windows)
+  "w="  'balance-windows
+  "w_"  'spacemacs/maximize-horizontally)
 ;; text -----------------------------------------------------------------------
 (defalias 'count-region 'count-words-region)
 
@@ -424,7 +428,14 @@
   "xtw" 'transpose-words
   "xU"  'upcase-region
   "xu"  'downcase-region
-  "xwc" 'spacemacs/count-words-analysis)
+  "xwc" 'spacemacs/count-words-analysis
+  "x TAB" 'indent-rigidly)
+
+(define-key indent-rigidly-map "h" 'indent-rigidly-left)
+(define-key indent-rigidly-map "l" 'indent-rigidly-right)
+(define-key indent-rigidly-map "H" 'indent-rigidly-left-to-tab-stop)
+(define-key indent-rigidly-map "L" 'indent-rigidly-right-to-tab-stop)
+
 ;; shell ----------------------------------------------------------------------
 (with-eval-after-load 'shell
   (evil-define-key 'insert comint-mode-map [up] 'comint-previous-input)
