@@ -4,16 +4,6 @@
 (defun psz//config-latex ()
  ;;; Code:
 
-  ;; (setq TeX-view-program-list
-  ;;              '(("Zathura"
-  ;;                ("zathura "
-  ;;                 (mode-io-correlate " --synctex-forward %n:0:%b -x \"emacsclient +%{line} %{input}\" ")
-  ;;                 " %o")
-  ;;                "zathura")))
-  ;; (setq TeX-view-program-selection
-  ;;       '((output-pdf "Zathura"))
-  ;;       ;;         (output-dvi "xdvi")
-  ;;       )
   (add-to-list 'TeX-view-program-list
                '("Zathura"
                  ("zathura "
@@ -26,8 +16,12 @@
                )
 
   (setq TeX-source-correlate-mode t)
-  (setq TeX-source-correlate-start-server t)
+  ;; (setq TeX-source-correlate-start-server t)
   (setq TeX-source-correlate-method 'synctex)
+
+
+  ;; begin end blocks no indent
+  (setq LaTeX-indent-level 0)
   )
 
 ;; (add-hook 'LaTeX-mode-hook 'psz//config-latex)
