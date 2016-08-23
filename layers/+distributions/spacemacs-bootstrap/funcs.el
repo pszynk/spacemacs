@@ -61,10 +61,9 @@
         i.e. `SPC m g g`, to lookup the source of the definition,
         while falling back to `evil-goto-definition'"
   (interactive)
-  (let ((binding (key-binding (kbd (concat dotspacemacs-leader-key " mgg")))))
-    (if (commandp binding)
-        (call-interactively binding)
-      (evil-goto-definition))))
+  (if spacemacs-jump-handlers
+      (call-interactively 'spacemacs/jump-to-definition)
+    (call-interactively 'evil-goto-definition)))
 
 (defun spacemacs//set-evil-shift-width ()
   "Set the value of `evil-shift-width' based on the indentation settings of the
