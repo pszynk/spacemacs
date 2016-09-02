@@ -32,6 +32,7 @@
         (holy-mode :location local :step pre)
         (hybrid-mode :location local :step pre)
         (image-mode :location built-in)
+        (imenu :location built-in)
         (linum :location built-in)
         (occur-mode :location built-in)
         (package-menu :location built-in)
@@ -225,6 +226,11 @@
     :config (evilified-state-evilify-map image-mode-map
               :mode image-mode)))
 
+(defun spacemacs-base/init-imenu ()
+  (use-package imenu
+    :defer t
+    :init (spacemacs/set-leader-keys "ji" 'imenu)))
+
 (defun spacemacs-base/init-linum ()
   (when dotspacemacs-line-numbers
     (add-hook 'prog-mode-hook 'linum-mode)
@@ -328,13 +334,12 @@
         "pa" 'projectile-toggle-between-implementation-and-test
         "pc" 'projectile-compile-project
         "pD" 'projectile-dired
-        "pG" 'projectile-regenerate-tags
+        "pg" 'projectile-find-tag
+        "p C-g" 'projectile-regenerate-tags
         "pI" 'projectile-invalidate-cache
         "pk" 'projectile-kill-buffers
-        "po" 'projectile-multi-occur
         "pR" 'projectile-replace
-        "pT" 'projectile-test-project
-        "py" 'projectile-find-tag))
+        "pT" 'projectile-test-project))
     :config
     (progn
       (projectile-global-mode)
