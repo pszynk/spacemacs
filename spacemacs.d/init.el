@@ -354,6 +354,9 @@ layers configuration."
   ;; javascript indent 2 spaces
   (setq-default js-indent-level 2)
 
+  ;; anaconda envs
+  ;;(setenv "WORKON_HOME" "/home/pawel/opt/miniconda2/envs")
+
 
   (add-to-list 'load-path "~/.spacemacs.d/config/")
 
