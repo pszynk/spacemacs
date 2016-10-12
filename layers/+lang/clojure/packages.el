@@ -12,6 +12,7 @@
     popwin
     smartparens
     subword
+    org
     ))
 
 (defun clojure/init-cider ()
@@ -119,6 +120,7 @@
           "er" 'cider-eval-region
           "ew" 'cider-eval-last-sexp-and-replace
 
+          "="  'cider-format-buffer
           "fb" 'cider-format-buffer
 
           "gb" 'cider-pop-back
@@ -135,13 +137,13 @@
           "sc" (if (eq m 'cider-repl-mode)
                    'cider-repl-clear-buffer
                  'cider-connect)
+          "sC" 'cider-find-and-clear-repl-output
           "se" 'spacemacs/cider-send-last-sexp-to-repl
           "sE" 'spacemacs/cider-send-last-sexp-to-repl-focus
           "sf" 'spacemacs/cider-send-function-to-repl
           "sF" 'spacemacs/cider-send-function-to-repl-focus
           "si" 'cider-jack-in
           "sI" 'cider-jack-in-clojurescript
-          "sk" 'cider-find-and-clear-repl-output
           "sn" 'spacemacs/cider-send-ns-form-to-repl
           "sN" 'spacemacs/cider-send-ns-form-to-repl-focus
           "so" 'cider-repl-switch-to-other
@@ -287,3 +289,8 @@
 (defun clojure/init-clojure-snippets ()
   (use-package clojure-snippets
     :defer t))
+
+(defun clojure/pre-init-org ()
+  (spacemacs|use-package-add-hook org
+    :post-config (add-to-list 'org-babel-load-languages '(clojure . t))
+    (setq org-babel-clojure-backend 'cider)))
