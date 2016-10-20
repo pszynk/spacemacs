@@ -15,7 +15,7 @@
 (setq topcoder-packages
     '(
       compile
-      winner
+      ;; winner po co to niby było?
       ansi-color
       ))
 
