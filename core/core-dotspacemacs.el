@@ -326,9 +326,9 @@ to aggressively delete empty lines and long sequences of whitespace, `trailing'
 to delete only the whitespace at end of lines, `changed' to delete only
 whitespace for changed lines or `nil' to disable cleanup.")
 
-(defvar dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+(defvar dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
   "List of search tool executable names. Spacemacs uses the first installed
-tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.")
+tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.")
 
 (defvar dotspacemacs-default-package-repository 'melpa-stable
   "The default package repository used if no explicit repository has been
@@ -556,20 +556,16 @@ If ARG is non nil then Ask questions to the user before installing the dotfile."
           (write-file dotspacemacs-filepath)
           (message "%s has been installed." dotspacemacs-filepath)
           t))))
-  (load-file dotspacemacs-filepath))
-
-(defun dotspacemacs//install-and-replace (&optional values)
-  "Install the dotfile and replace its content according to VALUES.
-
-VALUES is an alist where the key is the text to replace and value is the new
-value."
-  )
+  (dotspacemacs/load-file)
+  ;; force new wizard values to be applied
+  (dotspacemacs/init))
 
 (defun dotspacemacs/load-file ()
   "Load ~/.spacemacs if it exists."
   (let ((dotspacemacs (dotspacemacs/location)))
     (if (file-exists-p dotspacemacs)
-        (unless (with-demoted-errors "Error loading .spacemacs: %S" (load dotspacemacs))
+        (unless (with-demoted-errors "Error loading .spacemacs: %S"
+                  (load dotspacemacs))
           (dotspacemacs/safe-load)))))
 
 (defun dotspacemacs/safe-load ()
