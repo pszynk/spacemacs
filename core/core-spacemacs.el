@@ -16,6 +16,7 @@
 (require 'core-debug)
 (require 'core-command-line)
 (require 'core-dotspacemacs)
+(require 'core-custom-settings)
 (require 'core-release-management)
 (require 'core-auto-completion)
 (require 'core-jump)
@@ -194,6 +195,8 @@ defer call using `spacemacs-post-user-config-hook'."
      ;; them in his/her ~/.spacemacs file
      (dotspacemacs|call-func dotspacemacs/user-config
                              "Calling dotfile user config...")
+     (dotspacemacs|call-func dotspacemacs/emacs-custom-settings
+                             "Calling dotfile Emacs custom settings...")
      (run-hooks 'spacemacs-post-user-config-hook)
      (setq spacemacs-post-user-config-hook-run t)
      (when (fboundp dotspacemacs-scratch-mode)
