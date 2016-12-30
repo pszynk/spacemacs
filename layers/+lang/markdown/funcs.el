@@ -1,4 +1,4 @@
-;;; keybindings.el --- Better Emacs Defaults Layer key bindings File
+;;; funcs.el --- Markdown Layer Functions File for Spacemacs
 ;;
 ;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
@@ -9,4 +9,6 @@
 ;;
 ;;; License: GPLv3
 
-(global-set-key (kbd "C-w") 'spacemacs/backward-kill-word-or-region)
+(defun spacemacs/activate-mmm-mode ()
+  ;; Enable `mmm-mode'.
+  (mmm-mode 1))
