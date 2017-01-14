@@ -197,9 +197,8 @@
   (add-hook 'LaTeX-mode-hook 'spacemacs/load-yasnippet))
 
 (defun latex/post-init-which-key ()
-<<<<<<< HEAD
-  (push '("\\`latex/font-\\(.+\\)\\'" . "\\1")
-        which-key-description-replacement-alist))
+  (push '((nil . "\\`latex/font-\\(.+\\)\\'") . (nil . "\\1"))
+        which-key-replacement-alist))
 
 (defun latex/init-latex-preview-pane ()
   "Initialize latex-preview-pane package"
@@ -207,7 +206,3 @@
     :defer t
     )
   )
-=======
-  (push '((nil . "\\`latex/font-\\(.+\\)\\'") . (nil . "\\1"))
-        which-key-replacement-alist))
->>>>>>> upstream/develop

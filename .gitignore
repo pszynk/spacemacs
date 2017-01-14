@@ -5,6 +5,7 @@ ac-comphist.dat
 eproject.lst
 .smex-items
 \#*
+\.#*
 .places
 .cache
 /eww-bookmarks
