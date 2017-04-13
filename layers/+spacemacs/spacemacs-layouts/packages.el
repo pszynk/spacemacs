@@ -113,6 +113,7 @@
       (setq persp-auto-resume-time (if (or dotspacemacs-auto-resume-layouts
                                            spacemacs-force-resume-layouts)
                                        1 -1)
+            persp-is-ibc-as-f-supported nil
             persp-nil-name dotspacemacs-default-layout-name
             persp-reset-windows-on-nil-window-conf nil
             persp-set-last-persp-for-new-frames nil
@@ -210,7 +211,6 @@
       (spacemacs/declare-prefix "B" "global-buffers")
       ;; Override SPC TAB to only change buffers in perspective
       (spacemacs/set-leader-keys
-        "TAB"  'spacemacs/alternate-buffer-in-persp
         "ba"   'persp-add-buffer
         "br"   'persp-remove-buffer))))
 
