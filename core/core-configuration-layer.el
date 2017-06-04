@@ -633,10 +633,10 @@ If TOGGLEP is nil then `:toggle' parameter is ignored."
                (eq (plist-get (cdr location) :fetcher) 'local))
           (cond
            (layer (let ((path (expand-file-name
-                               (format "%s%s/%s.el"
+                               (format "%s%s"
                                        (configuration-layer/get-layer-local-dir
                                         layer-name)
-                                       pkg-name-str pkg-name-str))))
+                                       pkg-name-str))))
                     (cfgl-package-set-property
                      obj :location `(recipe :fetcher file :path ,path))))
            ((eq 'dotfile layer-name)
@@ -1128,9 +1128,11 @@ Returns nil if the directory is not a category."
                        ;; layers in private folder ~/.emacs.d/private
                        (list configuration-layer-private-directory)
                        ;; layers in dotdirectory
+                       ;; this path may not exist, so check if it does
                        (when dotspacemacs-directory
-                         (list (expand-file-name (concat dotspacemacs-directory
-                                                         "layers/"))))
+                         (let ((dir (expand-file-name (concat dotspacemacs-directory
+                                                              "layers/"))))
+                           (when (file-exists-p dir) (list dir))))
                        ;; additional layer directories provided by the user
                        dotspacemacs-configuration-layer-path))
         (discovered '()))
@@ -1170,9 +1172,10 @@ Returns nil if the directory is not a category."
                   (if indexed-layer
                       ;; the same layer may have been discovered twice,
                       ;; in which case we don't need a warning
-                      (unless (string-equal
-                               (directory-file-name (oref indexed-layer :dir))
-                               (directory-file-name sub))
+                      (unless (string-equal (file-truename
+                                             (directory-file-name (oref indexed-layer :dir)))
+                                            (file-truename
+                                             (directory-file-name sub)))
                         (configuration-layer//warning
                          (concat
                           "Duplicated layer %s detected in directory \"%s\", "
@@ -1980,7 +1983,7 @@ depends on it."
     ;; (message "orphans: %s" orphans)
     (if orphans
         (progn
-          (spacemacs-buffer/set-mode-line "Uninstalling not used packages...")
+          (spacemacs-buffer/set-mode-line "Uninstalling unused packages...")
           (spacemacs//redisplay)
           (spacemacs-buffer/append
            (format "Found %s orphan package(s) to delete...\n"

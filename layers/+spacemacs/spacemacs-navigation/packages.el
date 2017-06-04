@@ -74,7 +74,7 @@
             ahs-inhibit-face-list nil
             spacemacs--symbol-highlight-transient-state-doc
             "
- %s  [_n_] next  [_N_/_p_] previous        [_r_] change range   [_R_] reset       [_e_] iedit
+ %s  [_n_] next   [_N_/_p_] previous   [_r_] change range   [_R_] reset   [_e_] iedit
  %s  [_d_/_D_] next/previous definition")
 
       ;; since we are creating our own maps,
@@ -229,8 +229,8 @@
     :defer t
     :init
     (progn
-      (setq spacemacs-window-manipulation-transient-state-add-bindings
-            '(("g" spacemacs/toggle-golden-ratio)))
+      (spacemacs/transient-state-register-add-bindings 'window-manipulation
+        '(("g" spacemacs/toggle-golden-ratio)))
       (spacemacs|add-toggle golden-ratio
         :status golden-ratio-mode
         :on (golden-ratio-mode) (golden-ratio)
@@ -355,7 +355,7 @@ Navigation^^^^             Actions^^         Visual actions/config^^^
 ───────^^^^─────────────── ───────^^──────── ───────^^^────────────────
 [_L_]   next sibling^^     [_c_] create      [_TAB_] shrink/enlarge
 [_H_]   previous sibling^^ [_C_] copy        [_|_]   vertical split
-[_J_]   goto child^^       [_d_] delete      [_-_]   horizonatal split
+[_J_]   goto child^^       [_d_] delete      [_-_]   horizontal split
 [_K_]   goto parent^^      [_r_] rename      [_gr_]  refresh^
 [_l_]   open/expand^^      [_R_] change root [_s_]   hidden:^^^ %s(if neo-buffer--show-hidden-file-p \"on\" \"off\")
 [_h_]   up/collapse^^      ^^                ^^^
@@ -506,6 +506,14 @@ When ARG is non-nil search in junk files."
       "Restart emacs and enable debug-init."
       (interactive)
       (spacemacs/restart-emacs (cons "--debug-init" args)))
+    (defun spacemacs/restart-emacs-timed-requires (&optional args)
+      "Restart emacs and time loads / requires."
+      (interactive)
+      (spacemacs/restart-emacs (cons "--timed-requires" args)))
+    (defun spacemacs/restart-emacs-adv-timers (&optional args)
+      "Restart emacs and time loads / requires and spacemacs configuration."
+      (interactive)
+      (spacemacs/restart-emacs (cons "--adv-timers" args)))
     (defun spacemacs/restart-stock-emacs-with-packages (packages &optional args)
       "Restart emacs without the spacemacs configuration, enable
 debug-init and load the given list of packages."
@@ -532,7 +540,9 @@ debug-init and load the given list of packages."
       "qd" 'spacemacs/restart-emacs-debug-init
       "qD" 'spacemacs/restart-stock-emacs-with-packages
       "qr" 'spacemacs/restart-emacs-resume-layouts
-      "qR" 'spacemacs/restart-emacs)))
+      "qR" 'spacemacs/restart-emacs
+      "qt" 'spacemacs/restart-emacs-timed-requires
+      "qt" 'spacemacs/restart-emacs-adv-timers)))
 
 (defun spacemacs-navigation/init-smooth-scrolling ()
   (setq scroll-preserve-screen-position t

@@ -5,7 +5,6 @@ ac-comphist.dat
 eproject.lst
 .smex-items
 \#*
-\.#*
 .places
 .cache
 /eww-bookmarks
@@ -14,7 +13,7 @@ eshell/history
 .emacs.desktop.lock
 eshell/alias
 eshell/lastdir
-/url/cookies
+url/*
 my-org/
 org-files/
 semanticdb/
@@ -53,6 +52,8 @@ private/
 !private/snippets/
 !private/local/
 /games/
+/doc/COMMUNITY.org
+/doc/CONTRIBUTING.org
 
 # files?
 srecode-map.el
