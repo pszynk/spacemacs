@@ -13,13 +13,13 @@
       '(
         company
         (company-emacs-eclim :toggle
-                             (configuration-layer/package-usedp 'company))
+                             (configuration-layer/package-used-p 'company))
         eclim
         eldoc
         ensime
         flycheck
         (flycheck-eclim :location local
-                        :toggle (configuration-layer/package-usedp 'flycheck))
+                        :requires flycheck)
         flyspell
         ggtags
         gradle-mode
@@ -117,6 +117,7 @@
         "rf" 'eclim-java-format
         "ri" 'eclim-java-import-organize
         "rj" 'eclim-java-implement
+        "rn" 'eclim-java-new
         "rr" 'eclim-java-refactor-rename-symbol-at-point
         ;; test
         "tt" 'eclim-run-junit)
@@ -171,6 +172,12 @@
       (spacemacs/register-repl 'ensime 'ensime-inf-switch "ensime"))
     :config
     (progn
+      ;; This function was renamed in ensime. Usually we don't need to do this,
+      ;; but documentation recommends the stable version of ensime, so we must
+      ;; try to support it, too.
+      (unless (fboundp 'ensime-type-at-point)
+        (defalias 'ensime-type-at-point 'ensime-print-type-at-point))
+
       ;; key bindings
       (dolist (mode java--ensime-modes)
         (dolist (prefix '(("mb" . "build")
@@ -295,7 +302,7 @@
 ;;       :init
 ;;       (progn
 ;;         (spacemacs//ensime-init 'java-mode t nil)
-;;         (when (configuration-layer/package-usedp 'company)
+;;         (when (configuration-layer/package-used-p 'company)
 ;;           (push 'ensime-company company-backends-java-mode)))
 ;;       :config
 ;;       (progn

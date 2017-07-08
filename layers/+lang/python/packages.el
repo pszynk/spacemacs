@@ -13,7 +13,7 @@
   '(
     anaconda-mode
     company
-    (company-anaconda :toggle (configuration-layer/package-usedp 'company))
+    (company-anaconda :requires company)
     cython-mode
     eldoc
     evil-matchit
@@ -21,7 +21,7 @@
     ggtags
     helm-cscope
     helm-gtags
-    (helm-pydoc :toggle (configuration-layer/package-usedp 'helm))
+    (helm-pydoc :requires helm)
     hy-mode
     live-py-mode
     (nose :location local)
@@ -78,7 +78,7 @@
     :variables
     company-minimum-prefix-length 0
     company-idle-delay 0.5)
-  (when (configuration-layer/package-usedp 'pip-requirements)
+  (when (configuration-layer/package-used-p 'pip-requirements)
     (spacemacs|add-company-backends
       :backends company-capf
       :modes pip-requirements-mode)))
@@ -102,7 +102,7 @@
 (defun python/post-init-eldoc ()
   (defun spacemacs//init-eldoc-python-mode ()
     (eldoc-mode)
-    (when (configuration-layer/package-usedp 'anaconda-mode)
+    (when (configuration-layer/package-used-p 'anaconda-mode)
       (anaconda-eldoc-mode)))
   (add-hook 'python-mode-hook 'spacemacs//init-eldoc-python-mode))
 
@@ -134,18 +134,17 @@
     :defer t
     :init
     (progn
-      (let ((hy-path (executable-find "hy")))
-        (when hy-path
-          (setq hy-mode-inferior-lisp-command (concat hy-path " --spy"))
-          (spacemacs/set-leader-keys-for-major-mode 'hy-mode
-            "si" 'inferior-lisp
-            "sb" 'lisp-load-file
-            "sB" 'switch-to-lisp
-            "se" 'lisp-eval-last-sexp
-            "sf" 'lisp-eval-defun
-            "sF" 'lisp-eval-defun-and-go
-            "sr" 'lisp-eval-region
-            "sR" 'lisp-eval-region-and-go))))))
+      (spacemacs/set-leader-keys-for-major-mode 'hy-mode
+        "si" 'inferior-lisp
+        "sb" 'lisp-load-file
+        "sB" 'switch-to-lisp
+        "ee" 'lisp-eval-last-sexp
+        "ef" 'lisp-eval-defun
+        "eF" 'lisp-eval-defun-and-go
+        "er" 'lisp-eval-region
+        "eR" 'lisp-eval-region-and-go)
+      ;; call `spacemacs//python-setup-hy' once, don't put it in a hook (see issue #5988)
+      (spacemacs//python-setup-hy))))
 
 (defun python/init-live-py-mode ()
   (use-package live-py-mode
@@ -204,7 +203,7 @@
                   'spacemacs//pyenv-mode-set-local-version)))
       ;; setup shell correctly on environment switch
       (dolist (func '(pyenv-mode-set pyenv-mode-unset))
-        (advice-add func :after 'spacemacs/python-setup-shell))
+        (advice-add func :after 'spacemacs/python-setup-everything))
       (spacemacs/set-leader-keys-for-major-mode 'python-mode
         "vu" 'pyenv-mode-unset
         "vs" 'pyenv-mode-set))))
@@ -229,8 +228,7 @@
           "Vw" 'pyvenv-workon))
       ;; setup shell correctly on environment switch
       (dolist (func '(pyvenv-activate pyvenv-deactivate pyvenv-workon))
-        (advice-add func :after 'spacemacs/python-setup-shell)
-        (advice-add func :after 'spacemacs/python-setup-checkers)))))
+        (advice-add func :after 'spacemacs/python-setup-everything)))))
 
 (defun python/init-pylookup ()
   (use-package pylookup
@@ -279,14 +277,13 @@
         ;; make C-j work the same way as RET
         (local-set-key (kbd "C-j") 'newline-and-indent))
 
-
       (defun inferior-python-setup-hook ()
         (setq indent-tabs-mode t))
 
       (add-hook 'inferior-python-mode-hook #'inferior-python-setup-hook)
       (add-hook 'python-mode-hook #'python-default)
-      ;; call `spacemacs/python-setup-shell' once, don't put it in a hook (see issue #5988)
-      (spacemacs/python-setup-shell))
+      ;; call `spacemacs//python-setup-shell' once, don't put it in a hook (see issue #5988)
+      (spacemacs//python-setup-shell))
     :config
     (progn
       ;; add support for `ahs-range-beginning-of-defun' for python-mode
@@ -410,7 +407,7 @@
         (kbd "C-c M-l") 'spacemacs/comint-clear-buffer))))
 
 (defun python/post-init-semantic ()
-  (when (configuration-layer/package-usedp 'anaconda-mode)
+  (when (configuration-layer/package-used-p 'anaconda-mode)
       (add-hook 'python-mode-hook
                 'spacemacs//disable-semantic-idle-summary-mode t))
   (spacemacs/add-to-hook 'python-mode-hook

@@ -4,7 +4,7 @@
         cider-eval-sexp-fu
         clj-refactor
         clojure-mode
-        (clojure-snippets :toggle (configuration-layer/layer-usedp 'auto-completion))
+        (clojure-snippets :toggle (configuration-layer/layer-used-p 'auto-completion))
         company
         eldoc
         ggtags
@@ -72,6 +72,7 @@
             "em" 'cider-macroexpand-1
             "eM" 'cider-macroexpand-all
             "er" 'cider-eval-region
+            "eP" 'cider-pprint-eval-last-sexp
             "ew" 'cider-eval-last-sexp-and-replace
 
             "="  'cider-format-buffer
