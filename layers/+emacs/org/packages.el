@@ -179,6 +179,7 @@ Will work on both org-mode and any mode that accepts plain html."
         "Cc" 'org-clock-cancel
         "Ci" 'org-clock-in
         "Co" 'org-clock-out
+        "Cr" 'org-resolve-clocks
         "dd" 'org-deadline
         "ds" 'org-schedule
         "dt" 'org-time-stamp
@@ -187,8 +188,10 @@ Will work on both org-mode and any mode that accepts plain html."
 
         "a" 'org-agenda
 
-        "Tt" 'org-show-todo-tree
+        "Te" 'org-toggle-pretty-entities
         "Ti" 'org-toggle-inline-images
+        "Tl" 'org-toggle-link-display
+        "Tt" 'org-show-todo-tree
         "TT" 'org-todo
         "TV" 'space-doc-mode
         "Tx" 'org-toggle-latex-fragment
@@ -273,7 +276,7 @@ Will work on both org-mode and any mode that accepts plain html."
         "xr" (spacemacs|org-emphasize spacemacs/org-clear ? )
         "xs" (spacemacs|org-emphasize spacemacs/org-strike-through ?+)
         "xu" (spacemacs|org-emphasize spacemacs/org-underline ?_)
-        "xv" (spacemacs|org-emphasize spacemacs/org-verbose ?=))
+        "xv" (spacemacs|org-emphasize spacemacs/org-verbatim ?=))
 
       ;; Add global evil-leader mappings. Used to access org-agenda
       ;; functionalities – and a few others commands – from any other mode.
@@ -289,6 +292,7 @@ Will work on both org-mode and any mode that accepts plain html."
         "aoki" 'org-clock-in-last
         "aokj" 'org-clock-jump-to-current-clock
         "aoko" 'org-clock-out
+        "aokr" 'org-resolve-clocks
         "aol" 'org-store-link
         "aom" 'org-tags-view
         "aoo" 'org-agenda
@@ -462,8 +466,7 @@ Headline^^            Visit entry^^               Filter^^                    Da
     :init
     (progn
       (spacemacs/set-leader-keys
-        "aob" 'org-brain-open
-        "aoB" 'org-brain-visualize)
+        "aob" 'org-brain-visualize)
       (evil-set-initial-state 'org-brain-visualize-mode 'emacs))))
 
 (defun org/init-org-expiry ()
@@ -542,7 +545,7 @@ Headline^^            Visit entry^^               Filter^^                    Da
 
 (defun org/init-org-projectile ()
   (use-package org-projectile
-    :commands (org-projectile:location-for-project)
+    :commands (org-projectile-location-for-project)
     :init
     (progn
       (spacemacs/set-leader-keys
@@ -553,12 +556,11 @@ Headline^^            Visit entry^^               Filter^^                    Da
     :config
     (if (file-name-absolute-p org-projectile-file)
         (progn
-          (setq org-projectile:projects-file org-projectile-file)
-          (push (org-projectile:project-todo-entry
-                 nil nil nil :empty-lines 1)
+          (setq org-projectile-projects-file org-projectile-file)
+          (push (org-projectile-project-todo-entry :empty-lines 1)
                 org-capture-templates))
-      (org-projectile:per-repo)
-      (setq org-projectile:per-repo-filename org-projectile-file))))
+      (org-projectile-per-project)
+      (setq org-projectile-per-project-filepath org-projectile-file))))
 
 (defun org/init-ox-twbs ()
   (spacemacs|use-package-add-hook org :post-config (require 'ox-twbs)))

@@ -20,6 +20,7 @@
                                        ("as"  "shells")
                                        ("ay"  "ipython notebook")
                                        ("b"   "buffers")
+                                       ("bN"  "new empty buffer")
                                        ("c"   "compile/comments")
                                        ("C"   "capture/colors")
                                        ("e"   "errors")
@@ -65,6 +66,7 @@
                                        ("xa"  "align")
                                        ("xd"  "delete")
                                        ("xg"  "google-translate")
+                                       ("xj"  "justification")
                                        ("xl"  "lines")
                                        ("xm"  "move")
                                        ("xt"  "transpose")
@@ -426,7 +428,7 @@
   "wV"  'split-window-right-and-focus
   "ww"  'other-window
   "w/"  'split-window-right
-  "w="  'balance-windows
+  "w="  'balance-windows-area
   "w+"  'spacemacs/window-layout-toggle
   "w_"  'spacemacs/maximize-horizontally)
 ;; text -----------------------------------------------------------------------
@@ -467,6 +469,8 @@
   "xlu" 'spacemacs/uniquify-lines
   "xtc" 'transpose-chars
   "xtl" 'transpose-lines
+  "xtp" 'transpose-paragraphs
+  "xts" 'transpose-sentences
   "xtw" 'transpose-words
   "xU"  'upcase-region
   "xu"  'downcase-region
