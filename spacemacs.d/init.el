@@ -90,8 +90,8 @@ This function should only modify configuration layer settings."
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
-     (mu4e :variables
-           mu4e-installation-path "/usr/share/emacs/site-lisp")
+     ;; (mu4e :variables
+     ;;       mu4e-installation-path "/usr/share/emacs/site-lisp")
 
      ;; display
      themes-megapack
