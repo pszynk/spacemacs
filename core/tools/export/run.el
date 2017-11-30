@@ -67,7 +67,7 @@ It will be matched against full path of each exported file.")
                 "Arguments:"
                 " - <export> - You already know this :)"
                 " - Target directory for export"
-                "   (default: \"<TMP>/spacemacs--export/\")"
+                "   (default: \"<TMP>/spacemacs-export/\")"
                 " - Count of Emacs instances that will be used for exporting"
                 "   (default \"6\", minimal vale is 1 and maximal"
                 "    is total count of ORG files)"
@@ -148,11 +148,15 @@ See `spacemacs-export-docs-help-text' for description."
      ((string= script-mode "export")
       (append
        `(:target-directory
-         ,(or (pop arg-list)
-              (concat temporary-file-directory
-                      "spacemacs-export/"))
+         ,(file-name-as-directory
+           (or (pop arg-list)
+               (concat temporary-file-directory
+                       "spacemacs-export/")))
          :workers-count
-         ,(max (or (pop arg-list) 6) 1))
+         ,(max (or (when-let (cnt (pop arg-list))
+                     (string-to-number cnt))
+                   6)
+               1))
        (let ((exclude-re
               (or (pop arg-list)
                   spacemacs--export-docs-default-exclude-re))
