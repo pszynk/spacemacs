@@ -34,7 +34,7 @@
       "f C-t" #'treemacs-find-file)
     :config
     (progn
-      (spacemacs/add-evil-cursor "treemacs" "MediumPurple1" '(hbar . 0))
+      (spacemacs/define-evil-state-face "treemacs" "MediumPurple1")
       (setq treemacs-follow-after-init t
             treemacs-width 35
             treemacs-position 'left
@@ -71,4 +71,4 @@
 (defun treemacs/pre-init-winum ()
   (spacemacs|use-package-add-hook winum
     :post-config
-    (setq winum-assign-func #'treemacs--window-number-ten)))
+    (add-to-list 'winum-assign-functions #'treemacs--window-number-ten)))
