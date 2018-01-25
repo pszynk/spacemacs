@@ -1,6 +1,6 @@
 ;;; packages.el --- Ruby Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -18,6 +18,7 @@
         evil-matchit
         flycheck
         ggtags
+        counsel-gtags
         helm-gtags
         minitest
         org
@@ -26,6 +27,7 @@
         robe
         rspec-mode
         rubocop
+        ruby-hash-syntax
         (ruby-mode :location built-in :toggle (not ruby-enable-enh-ruby-mode))
         ruby-refactor
         ruby-test-mode
@@ -85,10 +87,16 @@
   (spacemacs/enable-flycheck 'enh-ruby-mode))
 
 (defun ruby/post-init-ggtags ()
-  (add-hook 'ruby-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
+  (spacemacs/add-to-hooks 'spacemacs/ggtags-mode-enable
+                          '(ruby-mode-local-vars-hook
+                            enh-ruby-mode-local-vars-hook)))
+
+(defun ruby/post-init-counsel-gtags ()
+  (spacemacs/counsel-gtags-define-keys-for-mode 'ruby-mode))
 
 (defun ruby/post-init-helm-gtags ()
-  (spacemacs/helm-gtags-define-keys-for-mode 'ruby-mode))
+  (dolist (mode '(ruby-mode enh-ruby-mode))
+    (spacemacs/helm-gtags-define-keys-for-mode mode)))
 
 (defun ruby/init-minitest ()
   (use-package minitest
@@ -221,6 +229,14 @@
               "'" 'ruby-toggle-string-quotes
               "{" 'ruby-toggle-block)))
 
+(defun ruby/init-ruby-hash-syntax ()
+  (use-package ruby-hash-syntax
+    :defer t
+    :init
+    (dolist (mode '(ruby-mode enh-ruby-mode))
+      (spacemacs/set-leader-keys-for-major-mode mode
+        "xh" 'ruby-hash-syntax-toggle))))
+
 (defun ruby/init-ruby-refactor ()
   (use-package ruby-refactor
     :defer t
@@ -280,7 +296,7 @@
       (spacemacs/add-to-hooks 'rvm-activate-corresponding-ruby
                               '(ruby-mode-hook enh-ruby-mode-hook)))))
 
-(defun ruby/post-init-smartparens ()
+(defun ruby/pre-init-smartparens ()
   (spacemacs|use-package-add-hook smartparens
     :post-config
     (sp-with-modes (if ruby-enable-enh-ruby-mode 'enh-ruby-mode 'ruby-mode)

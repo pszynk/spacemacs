@@ -1,6 +1,6 @@
 ;;; packages.el --- Org Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -26,8 +26,7 @@
         (org-expiry :location built-in)
         (org-journal :toggle org-enable-org-journal-support)
         org-download
-        ;; org-mime is installed by `org-plus-contrib'
-        (org-mime :location built-in)
+        org-mime
         org-pomodoro
         org-present
         (org-projectile :requires projectile)
@@ -55,12 +54,13 @@
     :init
     (progn
       (add-hook 'org-mode-hook 'spacemacs//evil-org-mode)
-      (setq evil-org-key-theme `(textobjects
+      (setq evil-org-use-additional-insert t
+            evil-org-key-theme `(textobjects
                                  navigation
                                  additional
                                  ,@(when org-want-todo-bindings '(todo)))))
     :config
-    (spacemacs|diminish evil-org-mode " ⓔ" " e")))
+    (spacemacs|hide-lighter evil-org-mode)))
 
 (defun org/post-init-evil-surround ()
   (defun spacemacs/add-org-surrounds ()
@@ -143,10 +143,6 @@
 
       (let ((dir (configuration-layer/get-layer-local-dir 'org)))
         (setq org-export-async-init-file (concat dir "org-async-init.el")))
-      (defmacro spacemacs|org-emphasize (fname char)
-        "Make function for setting the emphasis in org mode"
-        `(defun ,fname () (interactive)
-                (org-emphasize ,char)))
 
       ;; Insert key for org-mode and markdown a la C-h k
       ;; from SE endless http://emacs.stackexchange.com/questions/2206/i-want-to-have-the-kbd-tags-for-my-blog-written-in-org-mode/2208#2208
@@ -175,6 +171,7 @@ Will work on both org-mode and any mode that accepts plain html."
                         ("mti" . "insert")
                         ("mtt" . "toggle")
                         ("mx" . "text")
+                        ("mb" . "src-blocks/babel")
                         ))
         (spacemacs/declare-prefix-for-mode 'org-mode (car prefix) (cdr prefix)))
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
@@ -213,7 +210,8 @@ Will work on both org-mode and any mode that accepts plain html."
         "C-S-k" 'org-shiftcontrolup
 
         ;; Subtree editing
-        "sa" 'org-archive-subtree
+        "sa" 'org-toggle-archive-tag
+        "sA" 'org-archive-subtree
         "sb" 'org-tree-to-indirect-buffer
         "sh" 'org-promote-subtree
         "sj" 'org-move-subtree-down
@@ -253,6 +251,30 @@ Will work on both org-mode and any mode that accepts plain html."
         "tto" 'org-table-toggle-coordinate-overlays
         "tw" 'org-table-wrap-region
 
+        ;; Source blocks / org-babel
+        "bp"     'org-babel-previous-src-block
+        "bn"     'org-babel-next-src-block
+        "be"     'org-babel-execute-maybe
+        "bo"     'org-babel-open-src-block-result
+        "bv"     'org-babel-expand-src-block
+        "bu"     'org-babel-goto-src-block-head
+        "bg"     'org-babel-goto-named-src-block
+        "br"     'org-babel-goto-named-result
+        "bb"     'org-babel-execute-buffer
+        "bs"     'org-babel-execute-subtree
+        "bd"     'org-babel-demarcate-block
+        "bt"     'org-babel-tangle
+        "bf"     'org-babel-tangle-file
+        "bc"     'org-babel-check-src-block
+        "bj"     'org-babel-insert-header-arg
+        "bl"     'org-babel-load-in-session
+        "bi"     'org-babel-lob-ingest
+        "bI"     'org-babel-view-src-block-info
+        "bz"     'org-babel-switch-to-session
+        "bZ"     'org-babel-switch-to-session-with-code
+        "ba"     'org-babel-sha1-hash
+        "bx"     'org-babel-do-key-sequence-in-edit-buffer
+        "b."     'spacemacs/org-babel-transient-state/body
         ;; Multi-purpose keys
         (or dotspacemacs-major-mode-leader-key ",") 'org-ctrl-c-ctrl-c
         "*" 'org-ctrl-c-star
@@ -344,7 +366,21 @@ Will work on both org-mode and any mode that accepts plain html."
             (org-eval-in-calendar '(calendar-backward-year 1))))
         (define-key org-read-date-minibuffer-local-map (kbd "M-J")
           (lambda () (interactive)
-            (org-eval-in-calendar '(calendar-forward-year 1))))))))
+            (org-eval-in-calendar '(calendar-forward-year 1)))))
+
+      (spacemacs|define-transient-state org-babel
+        :title "Org Babel Transient state"
+        :doc "
+[_j_/_k_] navigate src blocks         [_e_] execute src block
+[_g_] goto named block                [_'_] edit src block
+[_q_] quit"
+        :bindings
+        ("q" nil :exit t)
+        ("j" org-babel-next-src-block)
+        ("k" org-babel-previous-src-block)
+        ("g" org-babel-goto-named-src-block)
+        ("e" org-babel-execute-maybe :exit t)
+        ("'" org-edit-special :exit t)))))
 
 (defun org/init-org-agenda ()
   (use-package org-agenda
@@ -459,6 +495,10 @@ Headline^^            Visit entry^^               Filter^^                    Da
       :bindings
       "j" 'org-agenda-next-line
       "k" 'org-agenda-previous-line
+      ;; C-h should not be rebound by evilification so we unshadow it manually
+      ;; TODO add the rule in auto-evilification to ignore C-h (like we do
+      ;; with C-g)
+      (kbd "C-h") nil
       (kbd "M-j") 'org-agenda-next-item
       (kbd "M-k") 'org-agenda-previous-item
       (kbd "M-h") 'org-agenda-earlier
@@ -505,10 +545,8 @@ Headline^^            Visit entry^^               Filter^^                    Da
 (defun org/init-org-mime ()
   (use-package org-mime
     :defer t
-    :commands (org-mime-htmlize org-mime-org-buffer-htmlize)
     :init
     (progn
-      ;; move this key bindings to an `init-message' function
       (spacemacs/set-leader-keys-for-major-mode 'message-mode
         "em" 'org-mime-htmlize)
       (spacemacs/set-leader-keys-for-major-mode 'org-mode
@@ -571,14 +609,17 @@ Headline^^            Visit entry^^               Filter^^                    Da
       (org-projectile-per-project)
       (setq org-projectile-per-project-filepath org-projectile-file))))
 
-(defun org/init-ox-twbs ()
+(defun org/pre-init-ox-twbs ()
   (spacemacs|use-package-add-hook org :post-config (require 'ox-twbs)))
+(defun org/init-ox-twbs ())
 
-(defun org/init-ox-gfm ()
+(defun org/pre-init-ox-gfm ()
   (spacemacs|use-package-add-hook org :post-config (require 'ox-gfm)))
+(defun org/init-ox-gfm ())
 
-(defun org/init-ox-reveal ()
+(defun org/pre-init-ox-reveal ()
   (spacemacs|use-package-add-hook org :post-config (require 'ox-reveal)))
+(defun org/init-ox-reveal ())
 
 (defun org/post-init-persp-mode ()
   (spacemacs|define-custom-layout "@Org"

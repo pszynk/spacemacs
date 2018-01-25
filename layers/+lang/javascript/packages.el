@@ -1,6 +1,6 @@
 ;;; packages.el --- Javascript Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -18,6 +18,7 @@
         evil-matchit
         flycheck
         ggtags
+        counsel-gtags
         helm-gtags
         impatient-mode
         js-doc
@@ -81,6 +82,9 @@
 
 (defun javascript/post-init-ggtags ()
   (add-hook 'js2-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
+
+(defun javascript/post-init-counsel-gtags ()
+  (spacemacs/counsel-gtags-define-keys-for-mode 'js2-mode))
 
 (defun javascript/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'js2-mode))
@@ -242,7 +246,10 @@
 (defun javascript/init-livid-mode ()
   (use-package livid-mode
     :defer t
-    :init (spacemacs|add-toggle javascript-repl-live-evaluation
-            :mode livid-mode
-            :documentation "Live evaluation of JS buffer change."
-            :evil-leader-for-mode (js2-mode . "sa"))))
+    :init
+    (progn
+      (spacemacs|add-toggle javascript-repl-live-evaluation
+        :mode livid-mode
+        :documentation "Live evaluation of JS buffer change."
+        :evil-leader-for-mode (js2-mode . "Tl"))
+      (spacemacs|diminish livid-mode " 🅻" " [l]"))))

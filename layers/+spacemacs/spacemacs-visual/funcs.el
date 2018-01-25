@@ -1,6 +1,6 @@
 ;;; funcs.el --- Spacemacs UI Layer functions File
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -32,7 +32,7 @@
 
 (defun spacemacs//zoom-frm-powerline-reset ()
   (when (fboundp 'powerline-reset)
-    (setq-default powerline-height (spacemacs/compute-powerline-height))
+    (setq-default powerline-height (spacemacs/compute-mode-line-height))
     (powerline-reset)))
 
 (defun spacemacs//zoom-frm-do (arg)

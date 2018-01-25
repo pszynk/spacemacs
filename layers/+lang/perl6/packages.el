@@ -1,6 +1,6 @@
 ;;; packages.el --- perl6 layer packages file for Spacemacs.
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author:  Bahtiar `kalkin-`''Gadimov <bahtiar@gadimov.de>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -14,7 +14,10 @@
     evil
     flycheck
     (flycheck-perl6 :requires flycheck)
-    perl6-mode
+    ;; Not available in MELPA for now
+    ;; TODO check progress on issue: https://github.com/melpa/melpa/issues/5261
+    (perl6-mode :location (recipe :fetcher github
+                                  :repo "perl6/perl6-mode"))
     ))
 
 (defun perl6/post-init-company ()

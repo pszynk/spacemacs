@@ -1,6 +1,6 @@
 ;;; packages.el --- Elixir Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -18,6 +18,7 @@
     flycheck-mix
     flycheck-credo
     ggtags
+    counsel-gtags
     helm-gtags
     ob-elixir
     popwin
@@ -168,16 +169,12 @@
 (defun elixir/post-init-flycheck ()
   (spacemacs/enable-flycheck 'elixir-mode))
 
-(defun elixir/pre-init-org ()
-  (spacemacs|use-package-add-hook org
-    :post-config (add-to-list 'org-babel-load-languages '(elixir . t))))
-
-(defun elixir/init-ob-elixir ()
+(defun elixir/pre-init-ob-elixir ()
   (spacemacs|use-package-add-hook org
     :post-config
     (use-package ob-elixir
       :init (add-to-list 'org-babel-load-languages '(elixir . t)))))
-
+(defun elixir/init-ob-elixir ())
 
 (defun elixir/pre-init-popwin ()
   (spacemacs|use-package-add-hook popwin
@@ -206,6 +203,9 @@
 
 (defun elixir/post-init-ggtags ()
   (add-hook 'elixir-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
+
+(defun elixir/post-init-counsel-gtags ()
+  (spacemacs/counsel-gtags-define-keys-for-mode 'elixir-mode))
 
 (defun elixir/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'elixir-mode))

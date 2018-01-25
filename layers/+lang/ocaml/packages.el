@@ -1,6 +1,6 @@
 ;;; packages.el --- ocaml Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -16,6 +16,7 @@
    ;; flycheck
    ;; flycheck-ocaml
     ggtags
+    counsel-gtags
     helm-gtags
     merlin
     ocp-indent
@@ -33,7 +34,7 @@
 
 (when (configuration-layer/layer-used-p 'syntax-checking)
   (defun ocaml/post-init-flycheck ()
-    (spacemacs/enable-flycheck 'merlin-mode))
+    (spacemacs/enable-flycheck 'tuareg-mode))
   (defun ocaml/init-flycheck-ocaml ()
     (use-package flycheck-ocaml
       :if (configuration-layer/package-used-p 'flycheck)
@@ -46,6 +47,9 @@
 
 (defun ocaml/post-init-ggtags ()
   (add-hook 'ocaml-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
+
+(defun ocaml/post-init-counsel-gtags ()
+  (spacemacs/counsel-gtags-define-keys-for-mode 'ocaml-mode))
 
 (defun ocaml/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'ocaml-mode))

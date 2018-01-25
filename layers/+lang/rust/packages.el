@@ -1,6 +1,6 @@
 ;;; packages.el --- Rust Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Chris Hoeppner <me@mkaito.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -37,15 +37,16 @@
         "cd" 'cargo-process-doc
         "cD" 'cargo-process-doc-open
         "ce" 'cargo-process-bench
-        "cf" 'cargo-process-current-test
         "cf" 'cargo-process-fmt
         "ci" 'cargo-process-init
         "cl" 'cargo-process-clippy
         "cn" 'cargo-process-new
         "co" 'cargo-process-current-file-tests
         "cs" 'cargo-process-search
+        "ct" 'cargo-process-current-test
         "cu" 'cargo-process-update
         "cx" 'cargo-process-run
+        "cv" 'cargo-process-check
         "t" 'cargo-process-test))))
 
 (defun rust/post-init-flycheck ()
@@ -58,6 +59,9 @@
 
 (defun rust/post-init-ggtags ()
   (add-hook 'rust-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
+
+(defun rust/post-init-counsel-gtags ()
+  (spacemacs/counsel-gtags-define-keys-for-mode 'rust-mode))
 
 (defun rust/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'rust-mode))

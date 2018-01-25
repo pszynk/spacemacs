@@ -1,6 +1,6 @@
 ;;; packages.el --- Spacemacs Editing Visual Layer packages File
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -14,7 +14,7 @@
         ;; default
         adaptive-wrap
         column-enforce-mode
-        hide-comnt
+        (hide-comnt :location local)
         highlight-indentation
         highlight-numbers
         highlight-parentheses
