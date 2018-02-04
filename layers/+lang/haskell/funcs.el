@@ -1,6 +1,6 @@
 ;;; funcs.el --- Haskell Layer funcs File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -102,6 +102,13 @@
   ;; use only internal indentation system from haskell
   (if (fboundp 'electric-indent-local-mode)
       (electric-indent-local-mode -1)))
+
+(defun spacemacs/haskell-format-imports ()
+  "Sort and align import statements from anywhere in the source file."
+  (interactive)
+  (save-excursion
+    (haskell-navigate-imports)
+    (haskell-mode-format-imports)))
 
 ;; Dante Functions
 

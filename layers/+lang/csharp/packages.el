@@ -1,6 +1,6 @@
 ;;; packages.el --- csharp Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -15,6 +15,7 @@
     csharp-mode
     evil-matchit
     ggtags
+    counsel-gtags
     helm-gtags
     omnisharp
     flycheck
@@ -53,6 +54,7 @@
         ;; [missing in roslyn] "pl" 'omnisharp-add-reference
 
         ;; Navigation
+        "ge"   'omnisharp-solution-errors
         "gG"   'omnisharp-go-to-definition-other-window
         "gu"   'omnisharp-helm-find-usages
         "gU"   'omnisharp-find-usages-with-ido
@@ -115,6 +117,9 @@
 
 (defun csharp/post-init-ggtags ()
   (add-hook 'csharp-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
+
+(defun csharp/post-init-counsel-gtags ()
+  (spacemacs/counsel-gtags-define-keys-for-mode 'csharp-mode))
 
 (defun csharp/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'csharp-mode))

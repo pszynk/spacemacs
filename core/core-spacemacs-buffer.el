@@ -1,6 +1,6 @@
 ;;; core-spacemacs-buffer.el --- Spacemacs Core File
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -783,7 +783,7 @@ TYPES: list of `org-mode' types to fetch."
   (require 'org-agenda)
   (let ((date (calendar-gregorian-from-absolute (org-today))))
     (apply #'append
-           (loop for file in (org-agenda-files nil 'ifmode)
+           (cl-loop for file in (org-agenda-files nil 'ifmode)
                  collect
                  (spacemacs-buffer//make-org-items
                   file
@@ -804,7 +804,7 @@ TYPES: list of `org-mode' types to fetch."
   "Make a spacemacs-buffer org item list.
 FILE: file name.
 ITEMS:"
-  (loop
+  (cl-loop
    for item in items
    collect
    (spacemacs-buffer//make-org-item file item)))
@@ -889,8 +889,7 @@ SEQ, START and END are the same arguments as for `cl-subseq'"
 
 (defun spacemacs-buffer//do-insert-startupify-lists ()
   "Insert the startup lists in the current buffer."
-  (let ((list-separator "\n\n")
-        (recentf-exclude '((lambda (filename) t))))
+  (let ((list-separator "\n\n"))
     (mapc (lambda (els)
             (let ((el (or (car-safe els) els))
                   (list-size

@@ -1,6 +1,6 @@
 ;;; funcs.el --- Spacemacs Completion Layer functions File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -104,7 +104,7 @@
 
 ;; Helm Window position
 
-(defun spacemacs//display-helm-window (buffer)
+(defun spacemacs//display-helm-window (buffer &optional resume)
   "Display the Helm window respecting `helm-position'."
   (let ((display-buffer-alist
          (list spacemacs-helm-display-help-buffer-regexp

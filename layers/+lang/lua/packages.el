@@ -1,6 +1,6 @@
 ;;; packages.el --- Lua Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -15,6 +15,7 @@
         (company-lua :requires company)
         flycheck
         ggtags
+        counsel-gtags
         helm-gtags
         lua-mode
         ))
@@ -50,6 +51,9 @@
 
 (defun lua/post-init-ggtags ()
   (add-hook 'lua-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
+
+(defun lua/post-init-counsel-gtags ()
+  (spacemacs/counsel-gtags-define-keys-for-mode 'lua-mode))
 
 (defun lua/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'lua-mode))

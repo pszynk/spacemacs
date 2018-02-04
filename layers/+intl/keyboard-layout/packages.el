@@ -1,6 +1,6 @@
 ;;; packages.el --- keyboard-layout Layer Packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Fabien Dubosson <fabien.dubosson@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -51,7 +51,9 @@
     :colemak-hnei
     (setq aw-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
     :colemak-jkhl
-    (setq aw-keys '(?a ?r ?s ?t ?n ?e ?i ?o))))
+    (setq aw-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
+    :workman
+    (setq aw-keys '(?a ?s ?h ?t ?n ?e ?o ?i))))
 
 (defun keyboard-layout/pre-init-avy ()
   (kl|config avy
@@ -70,7 +72,9 @@
     :colemak-hnei
     (setq-default avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
     :colemak-jkhl
-    (setq-default avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o))))
+    (setq-default avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
+    :workman
+    (setq-default avy-keys '(?a ?s ?h ?t ?n ?e ?o ?i))))
 
 (defun keyboard-layout/pre-init-comint ()
   (kl|config comint-mode

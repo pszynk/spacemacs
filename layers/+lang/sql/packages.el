@@ -1,6 +1,6 @@
 ;;; packages.el --- sql Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Brian Hicks <brian@brianthicks.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -23,14 +23,13 @@
     :init (spacemacs/register-repl 'sql 'spacemacs/sql-start "sql")
     :config
     (progn
-      (setq spacemacs-sql-highlightable sql-product-alist
-            spacemacs-sql-startable (remove-if-not
-                                (lambda (product) (sql-get-product-feature (car product) :sqli-program))
-                                sql-product-alist)
-
+      (setq
             ;; should not set this to anything else than nil
             ;; the focus of SQLi is handled by spacemacs conventions
             sql-pop-to-buffer-after-send-region nil)
+      (advice-add 'sql-add-product :after #'spacemacs/sql-populate-products-list)
+      (advice-add 'sql-del-product :after #'spacemacs/sql-populate-products-list)
+      (spacemacs/sql-populate-products-list)
 
       (defun spacemacs//sql-source (products)
         "return a source for helm selection"

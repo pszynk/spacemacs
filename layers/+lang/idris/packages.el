@@ -1,6 +1,6 @@
 ;;; packages.el --- Idris Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Timothy Jones <tim@zmthy.net>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -106,6 +106,9 @@
         "sP" 'spacemacs/idris-load-backward-line-and-focus
         "ss" 'idris-pop-to-repl
         "sq" 'idris-quit)))
+
+  ;; To bind TAB to the indentation command for all Idris buffers
+  (add-hook 'idris-mode-hook 'turn-on-idris-simple-indent)
 
   ;; open special buffers in motion state so they can be closed with ~q~
   (evil-set-initial-state 'idris-compiler-notes-mode 'motion)

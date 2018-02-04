@@ -1,6 +1,6 @@
 ;;; packages.el --- Spacemacs Editing Layer packages File
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -61,8 +61,7 @@
       (setq avy-background t)
       (spacemacs/set-leader-keys
         "jb" 'avy-pop-mark
-        "jj" 'evil-avy-goto-char
-        "jJ" 'evil-avy-goto-char-2
+        "jj" 'evil-avy-goto-char-timer
         "jl" 'evil-avy-goto-line
         "ju" 'spacemacs/avy-goto-url
         "jw" 'evil-avy-goto-word-or-subword-1

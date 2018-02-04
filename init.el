@@ -1,6 +1,6 @@
 ;;; init.el --- Spacemacs Initialization File
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -12,10 +12,9 @@
 ;; Without this comment emacs25 adds (package-initialize) here
 ;; (package-initialize)
 
-;; Increase gc-cons-threshold, depending on your system you may set it back to a
-;; lower value in your dotfile (function `dotspacemacs/user-config')
-(setq gc-cons-threshold 100000000)
-
+;; Avoid garbage collection during startup.
+;; see `SPC h . dotspacemacs-gc-cons' for more info
+(setq gc-cons-threshold 402653184 gc-cons-percentage 0.6)
 (load-file (concat (file-name-directory load-file-name)
                    "core/core-versions.el"))
 (load-file (concat (file-name-directory load-file-name)

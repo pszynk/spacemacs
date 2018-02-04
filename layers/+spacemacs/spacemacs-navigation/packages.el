@@ -1,6 +1,6 @@
 ;;; packages.el --- Spacemacs Navigation Layer packages File
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -12,13 +12,13 @@
 (setq spacemacs-navigation-packages
       '(ace-link
         auto-highlight-symbol
-        (centered-cursor :location local)
+        centered-cursor-mode
         (compile :location built-in)
         (doc-view :location built-in)
         flx-ido
         golden-ratio
         (grep :location built-in)
-        info+
+        (info+ :location local)
         open-junk-file
         paradox
         restart-emacs
@@ -122,7 +122,7 @@
         ("r" ahs-change-range)
         ("q" nil :exit t)))))
 
-(defun spacemacs-navigation/init-centered-cursor ()
+(defun spacemacs-navigation/init-centered-cursor-mode ()
   (use-package centered-cursor-mode
     :commands (centered-cursor-mode
                global-centered-cursor-mode)

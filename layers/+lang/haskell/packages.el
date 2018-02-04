@@ -1,6 +1,6 @@
 ;;; packages.el --- Haskell Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -21,6 +21,7 @@
     ghc
     haskell-mode
     haskell-snippets
+    counsel-gtags
     helm-gtags
     (helm-hoogle :requires helm)
     hindent
@@ -175,7 +176,9 @@
           "dp"  'haskell-debug/previous
           "dr"  'haskell-debug/refresh
           "ds"  'haskell-debug/step
-          "dt"  'haskell-debug/trace))
+          "dt"  'haskell-debug/trace
+
+          "ri"  'spacemacs/haskell-format-imports))
 
       (evilified-state-evilify haskell-debug-mode haskell-debug-mode-map
         "RET" 'haskell-debug/select
@@ -259,21 +262,24 @@
 
   (with-eval-after-load 'yasnippet (haskell-snippets-initialize)))
 
+(defun haskell/post-init-counsel-gtags ()
+  (spacemacs/counsel-gtags-define-keys-for-mode 'haskell-mode))
+
 (defun haskell/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'haskell-mode))
+
 
 ;; doesn't support literate-haskell-mode :(
 (defun haskell/init-hindent ()
   (use-package hindent
     :defer t
-    :if (stringp haskell-enable-hindent-style)
+    :if haskell-enable-hindent
     :init
     (add-hook 'haskell-mode-hook #'hindent-mode)
     :config
     (progn
-      (setq hindent-style haskell-enable-hindent-style)
       (spacemacs/set-leader-keys-for-major-mode 'haskell-mode
-        "f" 'hindent-reformat-decl))))
+        "f" 'hindent-reformat-decl-or-fill))))
 
 (defun haskell/init-hlint-refactor ()
   (use-package hlint-refactor

@@ -1,6 +1,6 @@
 ;;; packages.el --- Latex Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -19,6 +19,7 @@
         flycheck
         flyspell
         ggtags
+        counsel-gtags
         helm-gtags
         (magic-latex-buffer :toggle latex-enable-magic)
         smartparens
@@ -130,15 +131,15 @@
       (spacemacs/declare-prefix-for-mode 'latex-mode "mp" "preview")
       (spacemacs/declare-prefix-for-mode 'latex-mode "mf" "fill"))))
 
+(defun latex/pre-init-auctex-latexmk ()
+  (spacemacs|use-package-add-hook tex
+    :post-config
+    (auctex-latexmk-setup)))
+
 (defun latex/init-auctex-latexmk ()
   (use-package auctex-latexmk
     :defer t
-    :init
-    (progn
-      (setq auctex-latexmk-inherit-TeX-PDF-mode t)
-      (spacemacs|use-package-add-hook tex
-        :post-config
-        (auctex-latexmk-setup)))))
+    :init (setq auctex-latexmk-inherit-TeX-PDF-mode t)))
 
 (defun latex/init-company-auctex ()
   (use-package company-auctex
@@ -183,6 +184,9 @@
     "rt"    'reftex-toc
     "rT"    'reftex-toc-recenter
     "rv"    'reftex-view-crossref))
+
+(defun latex/post-init-counsel-gtags ()
+  (spacemacs/counsel-gtags-define-keys-for-mode 'latex-mode))
 
 (defun latex/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'latex-mode))

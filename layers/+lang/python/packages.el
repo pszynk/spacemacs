@@ -1,6 +1,6 @@
 ;;; packages.el --- Python Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -20,13 +20,16 @@
     flycheck
     ggtags
     helm-cscope
+    counsel-gtags
     helm-gtags
     (helm-pydoc :requires helm)
     hy-mode
+    importmagic
     live-py-mode
     (nose :location local)
     org
     pip-requirements
+    pippel
     py-isort
     pyenv-mode
     (pylookup :location local)
@@ -58,8 +61,8 @@
         "gb" 'anaconda-mode-go-back
         "gu" 'anaconda-mode-find-references)
 
-      (evilified-state-evilify-map anaconda-mode-view-mode-map
-        :mode anaconda-mode-view-mode
+      (evilified-state-evilify-map anaconda-view-mode-map
+        :mode anaconda-view-mode
         :bindings
         (kbd "q") 'quit-window
         (kbd "C-j") 'next-error-no-select
@@ -96,8 +99,8 @@
     :init
     (progn
       (spacemacs/set-leader-keys-for-major-mode 'cython-mode
-        "hh" 'anaconda-mode-view-doc
-        "gu" 'anaconda-mode-usages))))
+        "hh" 'anaconda-mode-show-doc
+        "gu" 'anaconda-mode-find-references))))
 
 (defun python/post-init-eldoc ()
   (add-hook 'python-mode-hook 'spacemacs//init-eldoc-python-mode))
@@ -112,6 +115,9 @@
   (spacemacs|use-package-add-hook xcscope
     :post-init
     (spacemacs/setup-helm-cscope 'python-mode)))
+
+(defun python/post-init-counsel-gtags ()
+  (spacemacs/counsel-gtags-define-keys-for-mode 'python-mode))
 
 (defun python/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'python-mode))
@@ -141,6 +147,14 @@
         "eR" 'lisp-eval-region-and-go)
       ;; call `spacemacs//python-setup-hy' once, don't put it in a hook (see issue #5988)
       (spacemacs//python-setup-hy))))
+
+(defun python/init-importmagic ()
+  (use-package importmagic
+    :init
+    (progn
+      (add-hook 'python-mode-hook 'importmagic-mode)
+      (spacemacs/set-leader-keys-for-major-mode 'python-mode
+        "rf" 'importmagic-fix-symbol-at-point))))
 
 (defun python/init-live-py-mode ()
   (use-package live-py-mode
@@ -173,6 +187,15 @@
 (defun python/init-pip-requirements ()
   (use-package pip-requirements
     :defer t))
+
+(defun python/init-pippel ()
+  (use-package pippel
+    :defer t
+    :init (spacemacs/set-leader-keys-for-major-mode 'python-mode
+            "P" 'pippel-list-packages)
+    :config
+    (evilified-state-evilify-map pippel-package-menu-mode-map
+      :mode pippel-package-menu-mode)))
 
 (defun python/init-py-isort ()
   (use-package py-isort
@@ -256,9 +279,10 @@
 (defun python/init-python ()
   (use-package python
     :defer t
+    :mode (("SConstruct\\'" . python-mode) ("SConscript\\'" . python-mode))
     :init
     (progn
-      (spacemacs/register-repl 'python 'python-start-or-switch-repl "python")
+      (spacemacs/register-repl 'python 'spacemacs/python-start-or-switch-repl "python")
       (add-hook 'inferior-python-mode-hook
                 #'spacemacs//inferior-python-setup-hook)
       (add-hook 'python-mode-hook #'spacemacs//python-default)
@@ -346,7 +370,7 @@ fix this issue."
         (call-interactively 'sp-backward-delete-char)))))
 
 (defun python/post-init-stickyfunc-enhance ()
-  (add-hook 'python-mode-hook 'spacemacs/lazy-load-stickyfunc-enhance))
+  (add-hook 'python-mode-hook 'spacemacs/load-stickyfunc-enhance))
 
 (defun python/pre-init-xcscope ()
   (spacemacs|use-package-add-hook xcscope

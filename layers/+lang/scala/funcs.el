@@ -1,6 +1,6 @@
 ;;; funcs.el --- Scala Layer functions File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -11,7 +11,8 @@
 
 (defun spacemacs//scala-setup-ensime ()
   "Setup ENSIME for Scala."
-  (spacemacs//java-setup-ensime))
+  (spacemacs//java-setup-ensime)
+  (add-to-list 'spacemacs-jump-handlers-scala-mode 'ensime-edit-definition))
 
 (defun spacemacs//scala-disable-flycheck-scala ()
   (push 'scala flycheck-disabled-checkers))

@@ -1,6 +1,6 @@
 ;;; packages.el --- Ycmd Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
 ;;
 ;; Author: Brian Hicks <brian@brianthicks.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -16,10 +16,6 @@
     eldoc
     ycmd
     ))
-
-(unless (boundp 'ycmd-server-command)
-  (message (concat "YCMD won't work unless you set the ycmd-server-command "
-                   "variable to the path to a ycmd install.")))
 
 (defun ycmd/init-company-ycmd ()
   (use-package company-ycmd
