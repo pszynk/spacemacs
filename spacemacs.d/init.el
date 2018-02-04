@@ -176,8 +176,17 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
+<<<<<<< HEAD
    ;; to `emacs-version'. (default 'emacs-version)
    dotspacemacs-elpa-subdirectory 'emacs-version
+||||||| merged common ancestors
+   ;; to `emacs-version'. (default nil)
+   dotspacemacs-elpa-subdirectory nil
+=======
+   ;; to `emacs-version'. (default 'emacs-version)
+   dotspacemacs-elpa-subdirectory 'emacs-version
+
+>>>>>>> 20887eaa937cfe1532c595b12ccf1de66a1073c1
    ;; One of `vim', `emacs' or `hybrid'.
    ;; `hybrid' is like `vim' except that `insert state' is replaced by the
    ;; `hybrid state' with `emacs' key bindings. The value can also be a list
