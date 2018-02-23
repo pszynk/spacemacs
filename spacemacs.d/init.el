@@ -568,16 +568,34 @@ before packages are loaded."
   ;; Javascript + React
   (require 'config-javascript)
 
-  ;; Semantic adviser
-  (defun semantic-completion-advice (adviced-f &rest r)
-           "Check if POINT it's inside a string or comment before calling semantic-*"
-           (if (or (inside-string-q) (inside-comment-q)) 
-                     (not (message "Oleeee! do not call function, we're inside a string or comment!")) 
-                     (apply adviced-f r)))
 
-  (eval-after-load 'semantic
-    (advice-add 'semantic-analyze-completion-at-point-function :around #'semantic-completion-advice)
-    )
+
+  ;; Semantic adviser
+  ;; (defun inside-string-q ()
+  ;;   "Returns non-nil if inside string, else nil.
+  ;;    Result depends on syntax table's string quote character."
+  ;;   (interactive)
+  ;;   (let ((result (nth 3 (syntax-ppss))))
+  ;;     (message "%s" result)
+  ;;     result))
+
+  ;; (defun inside-comment-q ()
+  ;;   "Returns non-nil if inside comment, else nil.
+  ;;    Result depends on syntax table's comment character."
+  ;;   (interactive)
+  ;;   (let ((result (nth 4 (syntax-ppss))))
+  ;;     (message "%s" result)
+  ;;     result))
+
+  ;; (defun semantic-completion-advice (adviced-f &rest r)
+  ;;   "Check if POINT it's inside a string or comment before calling semantic-*"
+  ;;   (if (or (inside-string-q) (inside-comment-q)) 
+  ;;       (not (message "Oleeee! do not call function, we're inside a string or comment!")) 
+  ;;     (apply adviced-f r)))
+
+  ;; (eval-after-load 'semantic
+  ;;   (advice-add 'semantic-analyze-completion-at-point-function :around #'semantic-completion-advice)
+  ;;   )
 
 
   ;; emacsClient
