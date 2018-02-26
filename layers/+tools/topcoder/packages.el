@@ -14,7 +14,7 @@
 ;; which require an initialization must be listed explicitly in the list.
 (setq topcoder-packages
     '(
-      compile
+      (compile :location built-in)
       ;; winner po co to niby było?
       ansi-color
       ))
@@ -22,15 +22,15 @@
 ;; List of packages to exclude.
 (setq topcoder-excluded-packages '())
 
-(defun topcoder/init-compile ()
+(defun topcoder/post-init-compile ()
   "Initialize compile"
-  :defer t
-  :config
+
+  (use-package compile
+    :defer t
+    :config
+    )
   )
 
-  ;; (use-package ansi-color
-  ;;   :defer t
-  ;;   :config
 (defun topcoder/init-ansi-color ()
   "Initialize ansi-color"
 
