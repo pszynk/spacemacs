@@ -26,10 +26,14 @@
         js2-refactor
         json-mode
         json-snatcher
-        (tern :toggle (spacemacs//tern-detect))
+        tern
         web-beautify
         skewer-mode
         livid-mode
+        (lsp-javascript-typescript
+         :requires lsp-mode
+         :location (recipe :fetcher github
+                           :repo "emacs-lsp/lsp-javascript"))
         ))
 
 (defun javascript/post-init-add-node-modules-path ()
@@ -66,12 +70,10 @@
   (use-package company-tern
     :if (and (configuration-layer/package-used-p 'company)
              (configuration-layer/package-used-p 'tern))
-    :defer t
-    :init (spacemacs|add-company-backends
-            :backends company-tern
-            :modes js2-mode)))
+    :defer t))
 
 (defun javascript/post-init-company ()
+  (spacemacs//javascript-setup-company)
   (spacemacs|add-company-backends
     :backends company-capf
     :modes coffee-mode))
@@ -104,7 +106,9 @@
     (progn
       (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
       ;; Required to make imenu functions work correctly
-      (add-hook 'js2-mode-hook 'js2-imenu-extras-mode))
+      (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+      ;; setup javascript backend
+      (spacemacs//javascript-setup-backend))
     :config
     (progn
       ;; prefixes
@@ -193,14 +197,7 @@
 
 (defun javascript/init-tern ()
   (use-package tern
-    :defer t
-    :init (add-hook 'js2-mode-hook 'tern-mode)
-    :config
-    (progn
-      (spacemacs|hide-lighter tern-mode)
-      (when javascript-disable-tern-port-files
-        (add-to-list 'tern-command "--no-port-file" 'append))
-      (spacemacs//set-tern-key-bindings 'js2-mode))))
+    :defer t))
 
 (defun javascript/init-web-beautify ()
   (use-package web-beautify
@@ -253,3 +250,8 @@
         :documentation "Live evaluation of JS buffer change."
         :evil-leader-for-mode (js2-mode . "Tl"))
       (spacemacs|diminish livid-mode " 🅻" " [l]"))))
+
+(defun javascript/init-lsp-javascript-typescript ()
+  (use-package lsp-javascript-typescript
+    :commands lsp-javascript-typescript-enable
+    :defer t))
