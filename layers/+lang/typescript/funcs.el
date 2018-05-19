@@ -26,7 +26,7 @@
 
 (defun spacemacs//typescript-setup-eldoc ()
   "Conditionally setup eldoc based on backend."
-  (pcase java-backend
+  (pcase typescript-backend
     (`tide (spacemacs//typescript-setup-tide-eldoc))
     (`lsp (spacemacs//typescript-setup-lsp-eldoc))))
 
@@ -76,16 +76,7 @@
   "Setup lsp auto-completion."
   (if (configuration-layer/layer-used-p 'lsp)
       (progn
-        ;; fix lsp-typescript company prefix
-        ;; https://github.com/emacs-lsp/lsp-typescript/issues/9#issuecomment-379515379
-        (defun lsp-prefix-company-transformer (candidates)
-          (let ((completion-ignore-case t))
-            (all-completions (company-grab-symbol) candidates)))
-        (defun lsp-prefix-typescript-hook nil
-          (make-local-variable 'company-transformers)
-          (push 'lsp-prefix-company-transformer company-transformers))
-        (spacemacs/add-to-hooks #'lsp-prefix-typescript-hook
-                         '(typescript-mode-hook typescript-tsx-mode-hook))
+        (fix-lsp-company-prefix)
         (spacemacs|add-company-backends
           :backends company-lsp
           :modes typescript-mode typescript-tsx-mode
@@ -159,6 +150,3 @@
                  (list (point-min) (point-max))))
   (browse-url (concat "http://www.typescriptlang.org/Playground#src="
                       (url-hexify-string (buffer-substring-no-properties start end)))))
-
-(defun spacemacs/typescript-yasnippet-setup ()
-  (yas-activate-extra-mode 'js-mode))

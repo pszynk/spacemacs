@@ -46,13 +46,14 @@
     :post-init
     ;; add some functions to ahs transient states
     (setq spacemacs--symbol-highlight-transient-state-doc
-          (concat spacemacs--symbol-highlight-transient-state-doc
-                  "  [_b_] search buffers [_/_] search proj [_f_] search files [_s_] swoop"))
+          (concat
+           spacemacs--symbol-highlight-transient-state-doc
+           "  Search: [_s_] swoop  [_b_] buffers  [_f_] files  [_/_] project"))
     (spacemacs/transient-state-register-add-bindings 'symbol-highlight
-      '(("/" spacemacs/helm-project-smart-do-search-region-or-symbol :exit t)
+      '(("s" spacemacs/helm-swoop-region-or-symbol :exit t)
         ("b" spacemacs/helm-buffers-smart-do-search-region-or-symbol :exit t)
         ("f" spacemacs/helm-files-smart-do-search-region-or-symbol :exit t)
-        ("s" spacemacs/helm-swoop-region-or-symbol :exit t)))))
+        ("/" spacemacs/helm-project-smart-do-search-region-or-symbol :exit t)))))
 
 (defun helm/post-init-bookmark ()
   (spacemacs/set-leader-keys "fb" 'helm-filtered-bookmarks))
@@ -68,7 +69,7 @@
       (unless (configuration-layer/package-used-p 'ibuffer)
         (evil-ex-define-cmd "buffers" 'helm-buffers-list))
       ;; use helm by default for M-x, C-x C-f, and C-x b
-      (unless (configuration-layer/package-used-p 'smex)
+      (unless (configuration-layer/layer-usedp 'smex)
         (global-set-key (kbd "M-x") 'helm-M-x))
       (global-set-key (kbd "C-x C-f") 'spacemacs/helm-find-files)
       (global-set-key (kbd "C-x b") 'helm-buffers-list)
@@ -117,7 +118,7 @@
       ;; to overwrite any key binding
       (add-hook 'emacs-startup-hook
                 (lambda ()
-                  (unless (configuration-layer/package-used-p 'smex)
+                  (unless (configuration-layer/layer-usedp 'smex)
                     (spacemacs/set-leader-keys
                       dotspacemacs-emacs-command-key 'helm-M-x))))
       (helm-mode))
@@ -139,9 +140,13 @@
         (define-key helm-bookmark-map (kbd "C-/") 'helm-bookmark-help))
       (with-eval-after-load 'helm-bookmark
         (simpler-helm-bookmark-keybindings))
-      (define-key helm-buffer-map (kbd "RET") 'spacemacs/helm-find-buffers-windows)
-      (define-key helm-generic-files-map (kbd "RET") 'spacemacs/helm-find-files-windows)
-      (define-key helm-find-files-map (kbd "RET") 'spacemacs/helm-find-files-windows))))
+      (when (configuration-layer/package-used-p 'winum)
+        (define-key helm-buffer-map
+          (kbd "RET") 'spacemacs/helm-find-buffers-windows)
+        (define-key helm-generic-files-map
+          (kbd "RET") 'spacemacs/helm-find-files-windows)
+        (define-key helm-find-files-map
+          (kbd "RET") 'spacemacs/helm-find-files-windows)))))
 
 (defun helm/init-helm-ag ()
   (use-package helm-ag
