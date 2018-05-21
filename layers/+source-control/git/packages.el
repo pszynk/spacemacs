@@ -117,9 +117,10 @@
 
 (defun git/init-magit ()
   (use-package magit
-    :defer t
+    :defer (spacemacs/defer)
     :init
     (progn
+      (spacemacs|require 'magit)
       (setq magit-completing-read-function
             (if (configuration-layer/layer-used-p 'ivy)
                 'ivy-completing-read
@@ -136,7 +137,8 @@
         "gb"  'spacemacs/git-blame-micro-state
         "gc"  'magit-clone
         "gff" 'magit-find-file
-        "gfh" 'magit-log-buffer-file
+        "gfl" 'magit-log-buffer-file
+        "gfd" 'magit-diff-buffer-file-popup
         "gi"  'magit-init
         "gL"  'magit-list-repositories
         "gm"  'magit-dispatch-popup

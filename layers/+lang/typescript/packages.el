@@ -19,7 +19,6 @@
         tide
         typescript-mode
         web-mode
-        yasnippet
         ))
 
 (defun typescript/post-init-add-node-modules-path ()
@@ -89,24 +88,19 @@
   (define-derived-mode typescript-tsx-mode web-mode "TypeScript-tsx")
   (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-tsx-mode)))
 
-(defun typescript/post-init-yasnippet ()
-  (spacemacs/add-to-hooks #'spacemacs/typescript-yasnippet-setup '(typescript-mode-hook
-                                                     typescript-tsx-mode-hook)))
-
 (defun typescript/init-typescript-mode ()
   (use-package typescript-mode
     :defer t
     :init
-    ;; setup typescript backend
-    (spacemacs/add-to-hooks #'spacemacs//typescript-setup-backend
-                     '(typescript-mode-local-vars-hook
-                       typescript-tsx-mode-local-vars-hook))
-
-    ;; safe values for backend to be used in directory file variables
-    (add-to-list 'safe-local-variable-values
-                 (cons 'typescript-backend 'lsp))
-    (add-to-list 'safe-local-variable-values
-                 (cons 'typescript-backend 'tide))
+    (progn
+      ;; setup typescript backend
+      (spacemacs/add-to-hooks #'spacemacs//typescript-setup-backend
+                       '(typescript-mode-local-vars-hook
+                         typescript-tsx-mode-local-vars-hook))
+      ;; safe values for backend to be used in directory file variables
+      (dolist (value '(lsp tide))
+        (add-to-list 'safe-local-variable-values
+                     (cons 'typescript-backend value))))
     :config
     (progn
       (when typescript-fmt-on-save
