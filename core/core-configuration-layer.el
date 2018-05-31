@@ -187,7 +187,7 @@ subdirectory of ROOT is used."
                 :initform nil
                 :type boolean
                 :documentation
-                "Boolean to track wether layers.el has been loaded."))
+                "Boolean to track whether layers.el has been loaded."))
   "A configuration layer.")
 
 (defmethod cfgl-layer-owned-packages ((layer cfgl-layer) &optional props)
@@ -662,6 +662,9 @@ To prevent package from being installed or uninstalled set the variable
         (configuration-layer/delete-orphan-packages packages))))
   ;; configure used packages
   (configuration-layer//configure-packages configuration-layer--used-packages)
+  ;; evaluate layer variables a second time to override default values set in
+  ;; packages configuration above
+  (configuration-layer//set-layers-variables configuration-layer--used-layers)
   (configuration-layer//load-layers-files configuration-layer--used-layers
                         '("keybindings.el"))
   (dotspacemacs|call-func dotspacemacs/user-load
@@ -1464,7 +1467,7 @@ discovery."
 (defun configuration-layer/declare-layer (layer-specs)
   "Declare a single layer with spec LAYER-SPECS.
 Set the variable `configuration-layer--declared-layers-usedp' to control
-wether the declared layer is an used one or not."
+whether the declared layer is an used one or not."
   (let* ((layer-name (if (listp layer-specs) (car layer-specs) layer-specs))
          (layer (configuration-layer/get-layer layer-name))
          (usedp configuration-layer--declared-layers-usedp))
@@ -1558,9 +1561,10 @@ RNAME is the name symbol of another existing layer."
          "Unknown layer %s to declare lshadow relationship."
          rname)))))
 
-(defun configuration-layer//set-layers-variables (layers)
-  "Set the configuration variables for the passed LAYERS."
-  (mapc 'configuration-layer//set-layer-variables layers))
+(defun configuration-layer//set-layers-variables (layer-names)
+  "Set the configuration variables for the passed LAYER-NAMES."
+  (mapc 'configuration-layer//set-layer-variables (mapcar '(lambda (lname) (configuration-layer/get-layer lname))
+                                        layer-names)))
 
 (defun configuration-layer//set-layer-variables (layer)
   "Set the configuration variables for the passed LAYER."

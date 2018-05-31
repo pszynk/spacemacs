@@ -50,8 +50,9 @@ python-*-docs-html
 # Private directory
 private/
 !private/README.md
-!private/snippets/
-!private/local/
+!private/snippets/README.md
+!private/templates/README.md
+!private/local/README.md
 /games/
 /doc/COMMUNITY.org
 /doc/CONTRIBUTING.org

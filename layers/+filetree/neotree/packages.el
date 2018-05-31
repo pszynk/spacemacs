@@ -34,6 +34,9 @@
             neo-modern-sidebar t
             neo-vc-integration nil)
 
+      (when (eq 'darwin system-type)
+       (setq neo-default-system-application "open"))
+
       (spacemacs|define-transient-state neotree
         :title "NeoTree Key Hints"
         :doc "
@@ -106,7 +109,9 @@ Navigation^^^^             Actions^^         Visual actions/config^^^
         "fT" 'neotree-show
         "pt" 'neotree-find-project-root))
     :config
-    (spacemacs//neotree-key-bindings)))
+    (progn
+      (spacemacs//neotree-key-bindings)
+      (add-to-list 'spacemacs-window-split-ignore-prefixes neo-buffer-name))))
 
 (defun neotree/pre-init-winum ()
   (spacemacs|use-package-add-hook winum

@@ -37,7 +37,7 @@
         evil-visual-mark-mode
         evil-visualstar
         (hs-minor-mode :location built-in)
-        linum-relative
+        (linum-relative :toggle (version< emacs-version "26"))
         vi-tilde-fringe
         ))
 
@@ -96,8 +96,10 @@
 
 (defun spacemacs-evil/init-evil-escape ()
   (use-package evil-escape
-    :init (evil-escape-mode)
-    :config (spacemacs|hide-lighter evil-escape-mode)))
+    :init (progn
+            (spacemacs|hide-lighter evil-escape-mode)
+            (spacemacs//evil-escape-deactivate-in-holy-mode dotspacemacs-editing-style)
+            (add-hook 'spacemacs-editing-style-hook #'spacemacs//evil-escape-deactivate-in-holy-mode))))
 
 (defun spacemacs-evil/init-evil-exchange ()
   (use-package evil-exchange
@@ -311,10 +313,7 @@
     :commands (linum-relative-toggle linum-relative-on)
     :init
     (progn
-      (when (or (eq dotspacemacs-line-numbers 'relative)
-                (and (listp dotspacemacs-line-numbers)
-                     (car (spacemacs/mplist-get dotspacemacs-line-numbers
-                                                :relative))))
+      (when (spacemacs/relative-line-numbers-p)
         (add-hook 'spacemacs-post-user-config-hook 'linum-relative-on))
       (spacemacs/set-leader-keys "tr" 'spacemacs/linum-relative-toggle))
     :config
