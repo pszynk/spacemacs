@@ -59,7 +59,7 @@ Available PROPS:
     `:variables' property is used in several calls to this macro for the same
     MODES.
 
-`:apppend-hook BOOLEAN'
+`:append-hook BOOLEAN'
     Advanced property to control whether hooks functions are hooked or not,
     if non-nil hook functions are appended to modes hooks passed as `:modes'.
 
@@ -69,12 +69,12 @@ Available PROPS:
   (let* ((backends (spacemacs/mplist-get props :backends))
          (modes (spacemacs/mplist-get props :modes))
          (variables (spacemacs/mplist-get props :variables))
-         (from (plist-get props :from))
+         (from (spacemacs/plist-get props :from))
          (hooks (if (memq :append-hooks props)
-                    (plist-get props :append-hooks)
+                    (spacemacs/plist-get props :append-hooks)
                   t))
          (call-hooks (when (memq :call-hooks props)
-                       (plist-get props :call-hooks)))
+                       (spacemacs/plist-get props :call-hooks)))
          (result '(progn)))
     (dolist (mode modes)
       (let ((backends-var-name (intern (format "company-backends-%S" mode)))
@@ -331,6 +331,16 @@ MODE parameter must match the :modes values used in the call to
   (spacemacs/load-yasnippet)
   (require 'helm-c-yasnippet)
   (call-interactively 'helm-yas-complete))
+
+
+;; ivy-yas
+
+(defun spacemacs/ivy-yas ()
+  "Lazy load ivy-yasnippet"
+  (interactive)
+  (spacemacs/load-yasnippet)
+  (require 'ivy-yasnippet)
+  (call-interactively 'ivy-yasnippet))
 
 
 ;; Yasnippet

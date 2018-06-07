@@ -16,6 +16,7 @@
         evil-ediff
         evil-escape
         evil-exchange
+        evil-goggles
         evil-iedit-state
         evil-indent-plus
         evil-lion
@@ -37,7 +38,7 @@
         evil-visual-mark-mode
         evil-visualstar
         (hs-minor-mode :location built-in)
-        linum-relative
+        (linum-relative :toggle (version< emacs-version "26"))
         vi-tilde-fringe
         ))
 
@@ -96,12 +97,29 @@
 
 (defun spacemacs-evil/init-evil-escape ()
   (use-package evil-escape
-    :init (evil-escape-mode)
+    :init
+    (progn
+      (add-hook 'spacemacs-editing-style-hook #'spacemacs//evil-escape-deactivate-in-holy-mode)
+      ;; apply once when emacs starts
+      (spacemacs//evil-escape-deactivate-in-holy-mode dotspacemacs-editing-style))
     :config (spacemacs|hide-lighter evil-escape-mode)))
 
 (defun spacemacs-evil/init-evil-exchange ()
   (use-package evil-exchange
     :init (evil-exchange-install)))
+
+(defun spacemacs-evil/init-evil-goggles ()
+  (use-package evil-goggles
+    :init
+    (progn
+      ;; disable pulses as it is more distracting than useful and
+      ;; less readable.
+      (setq evil-goggles-pulse nil
+            evil-goggles-async-duration 0.2
+            evil-goggles-blocking-duration 0.12)
+      (evil-goggles-mode))
+    :config
+    (spacemacs|hide-lighter evil-goggles-mode)))
 
 (defun spacemacs-evil/init-evil-iedit-state ()
   (use-package evil-iedit-state
@@ -113,12 +131,17 @@
             iedit-toggle-key-default nil)
       (spacemacs/set-leader-keys "se" 'evil-iedit-state/iedit-mode))
     :config
-    ;; activate leader in iedit and iedit-insert states
-    (define-key evil-iedit-state-map
-      (kbd dotspacemacs-leader-key) spacemacs-default-map)
-    (spacemacs//iedit-insert-state-hybrid dotspacemacs-editing-style)
-    (add-hook 'spacemacs-editing-style-hook
-              #'spacemacs//iedit-insert-state-hybrid)))
+    (progn
+      ;; set TAB action
+      (add-hook 'spacemacs-editing-style-hook
+                #'spacemacs//iedit-state-TAB-key-bindings)
+      (spacemacs//iedit-state-TAB-key-bindings dotspacemacs-editing-style)
+      ;; activate leader in iedit and iedit-insert states
+      (define-key evil-iedit-state-map
+        (kbd dotspacemacs-leader-key) spacemacs-default-map)
+      (spacemacs//iedit-insert-state-hybrid dotspacemacs-editing-style)
+      (add-hook 'spacemacs-editing-style-hook
+                #'spacemacs//iedit-insert-state-hybrid))))
 
 (defun spacemacs-evil/init-evil-indent-plus ()
   (use-package evil-indent-plus
@@ -311,10 +334,7 @@
     :commands (linum-relative-toggle linum-relative-on)
     :init
     (progn
-      (when (or (eq dotspacemacs-line-numbers 'relative)
-                (and (listp dotspacemacs-line-numbers)
-                     (car (spacemacs/mplist-get dotspacemacs-line-numbers
-                                                :relative))))
+      (when (spacemacs/relative-line-numbers-p)
         (add-hook 'spacemacs-post-user-config-hook 'linum-relative-on))
       (spacemacs/set-leader-keys "tr" 'spacemacs/linum-relative-toggle))
     :config

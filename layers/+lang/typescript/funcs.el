@@ -70,7 +70,7 @@
                                     'typescript-tsx-mode)
         (lsp-javascript-typescript-enable))
     (message (concat "`lsp' layer is not installed, "
-                     "please add `lsp' layer to your dofile."))))
+                     "please add `lsp' layer to your dotfile."))))
 
 (defun spacemacs//typescript-setup-lsp-company ()
   "Setup lsp auto-completion."
@@ -85,7 +85,7 @@
           :call-hooks t)
         (company-mode))
     (message (concat "`lsp' layer is not installed, "
-                     "please add `lsp' layer to your dofile."))))
+                     "please add `lsp' layer to your dotfile."))))
 
 (defun spacemacs//typescript-setup-lsp-eldoc ()
   "Setup eldoc for LSP."
@@ -150,3 +150,6 @@
                  (list (point-min) (point-max))))
   (browse-url (concat "http://www.typescriptlang.org/Playground#src="
                       (url-hexify-string (buffer-substring-no-properties start end)))))
+
+(defun spacemacs/typescript-yasnippet-setup ()
+  (yas-activate-extra-mode 'js-mode))

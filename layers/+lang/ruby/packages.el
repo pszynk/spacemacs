@@ -57,7 +57,7 @@
       :modes ruby-mode enh-ruby-mode))
   (with-eval-after-load 'company-dabbrev-code
     (dolist (mode '(ruby-mode enh-ruby-mode))
-      (push mode company-dabbrev-code-modes))))
+      (add-to-list 'company-dabbrev-code-modes mode))))
 
 (defun ruby/init-chruby ()
   (use-package chruby
@@ -161,10 +161,12 @@
           "rsr" 'robe-rails-refresh
           ;; inf-enh-ruby-mode
           "sb" 'ruby-send-buffer
+          "sB" 'ruby-send-buffer-and-go
           "sf" 'ruby-send-definition
           "sF" 'ruby-send-definition-and-go
           "si" 'robe-start
           "sl" 'ruby-send-line
+          "sL" 'ruby-send-line-and-go
           "sr" 'ruby-send-region
           "sR" 'ruby-send-region-and-go
           "ss" 'ruby-switch-to-inf)))))

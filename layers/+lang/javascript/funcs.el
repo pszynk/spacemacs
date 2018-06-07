@@ -15,13 +15,13 @@
 (defun spacemacs//javascript-setup-backend ()
   "Conditionally setup javascript backend."
   (pcase javascript-backend
-    (`tern (spacemacs/tern-setup-tern))
+    (`tern (spacemacs//javascript-setup-tern))
     (`lsp (spacemacs//javascript-setup-lsp))))
 
 (defun spacemacs//javascript-setup-company ()
   "Conditionally setup company based on backend."
   (pcase javascript-backend
-    (`tern (spacemacs/tern-setup-tern-company 'js2-mode))
+    (`tern (spacemacs//javascript-setup-tern-company))
     (`lsp (spacemacs//javascript-setup-lsp-company))))
 
 
@@ -35,7 +35,7 @@
         (lsp-javascript-typescript-enable)
         (lsp-javascript-flow-enable))
     (message (concat "`lsp' layer is not installed, "
-                     "please add `lsp' layer to your dofile."))))
+                     "please add `lsp' layer to your dotfile."))))
 
 (defun spacemacs//javascript-setup-lsp-company ()
   "Setup lsp auto-completion."
@@ -49,7 +49,24 @@
           :call-hooks t)
         (company-mode))
     (message (concat "`lsp' layer is not installed, "
-                     "please add `lsp' layer to your dofile."))))
+                     "please add `lsp' layer to your dotfile."))))
+
+
+;; tern
+(defun spacemacs//javascript-setup-tern ()
+  (if (configuration-layer/layer-used-p 'tern)
+      (when (locate-file "tern" exec-path)
+        (spacemacs/tern-setup-tern))
+    (message (concat "Tern was configured as the javascript backend but "
+                     "the `tern' layer is not present in your `.spacemacs'!"))))
+
+(defun spacemacs//javascript-setup-tern-company ()
+  (if (configuration-layer/layer-used-p 'tern)
+      (when (locate-file "tern" exec-path)
+        (spacemacs/tern-setup-tern-company 'js2-mode))
+    (message (concat "Tern was configured as the javascript backend but "
+                     "the `tern' layer is not present in your `.spacemacs'!"))))
+
 
 
 ;; js-doc

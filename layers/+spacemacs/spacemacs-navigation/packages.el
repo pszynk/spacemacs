@@ -127,7 +127,7 @@
         :title "Symbol Highlight Transient State"
         :hint-is-doc t
         :dynamic-hint (spacemacs//symbol-highlight-ts-doc)
-        :before-exit (spacemacs//ahs-ms-on-exit)
+        :before-exit (spacemacs//ahs-ts-on-exit)
         :bindings
         ("d" ahs-forward-definition)
         ("D" ahs-backward-definition)
@@ -328,7 +328,12 @@
     :init
     (progn
       (setq open-junk-file-format (concat spacemacs-cache-directory "junk/%Y/%m/%d-%H%M%S."))
-      (spacemacs/set-leader-keys "fJ" 'spacemacs/open-junk-file))))
+      (spacemacs/set-leader-keys "fJ" 'spacemacs/open-junk-file)
+      ;; function to run open-junk-file hooks is buggy when opening a large file
+      ;; and Emacs warns about it.
+      ;; Since this is not really useful to add hooks to open-junk-files lets remove
+      ;; it
+      (remove-hook 'find-file-hook 'find-file-hook--open-junk-file))))
 
 (defun spacemacs-navigation/init-paradox ()
   (use-package paradox

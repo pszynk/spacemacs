@@ -29,6 +29,7 @@
         maven-test-mode
         (meghanada :toggle (not (version< emacs-version "25.1")))
         mvn
+        org
         ))
 
 (defun java/post-init-company ()
@@ -296,7 +297,7 @@
 ;;       (progn
 ;;         (spacemacs//ensime-init 'java-mode t nil)
 ;;         (when (configuration-layer/package-used-p 'company)
-;;           (push 'ensime-company company-backends-java-mode)))
+;;           (add-to-list 'company-backends-java-mode 'ensime-company)))
 ;;       :config
 ;;       (progn
 ;;         (spacemacs/ensime-configure-keybindings 'java-mode)))))
@@ -348,6 +349,10 @@
 
 (defun java/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'java-mode))
+
+(defun java/pre-init-org ()
+  (spacemacs|use-package-add-hook org
+    :post-config (add-to-list 'org-babel-load-languages '(java . t))))
 
 (defun java/init-java-mode ()
   (use-package java-mode
