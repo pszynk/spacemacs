@@ -40,7 +40,7 @@ This function should only modify configuration layer settings."
      ;; ----------------------------------------------------------------
      helm
      (auto-completion :variables
-                      ;; auto-completion-complete-with-key-sequence "kj"
+                      Color of Autumn             ;; auto-completion-complete-with-key-sequence "kj"
                       auto-completion-enable-snippets-in-popup t
                       ;; auto-completion-enable-help-tooltip t
                       auto-completion-enable-sort-by-usage t)
@@ -52,7 +52,7 @@ This function should only modify configuration layer settings."
      ;; evil
      (evil-snipe :variables
                  evil-snipe-enable-alternate-f-and-t-behaviors t)
-     evil-cleverparens
+     ;; evil-cleverparens (unstable)
      vinegar
 
      ;; lang support
@@ -103,15 +103,13 @@ This function should only modify configuration layer settings."
      ;;         colors-enable-nyan-cat-progress-bar t)
      ;; theming
 
-     ;; pdf-tools TODO need install dependencies
-
      ;; tools
      docker
-     neotree
      fasd
+     neotree
      ranger
-     systemd
      speed-reading
+     systemd
      topcoder
      )
 
@@ -241,7 +239,8 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Inconsolata Nerd Font Cg"
+   ;dotspacemacs-default-font '("Inconsolata"
+   dotspacemacs-default-font '("monospace"
                                :size 15
                                :weight normal
                                :width normal
