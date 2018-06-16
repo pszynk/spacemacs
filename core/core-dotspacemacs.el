@@ -55,6 +55,21 @@ exists. Otherwise, fallback to ~/.spacemacs"))
 `+distributions'. For now available distributions are `spacemacs-base'
 or `spacemacs'.")
 
+(defvar dotspacemacs-import-env-vars-from-shell (and (display-graphic-p)
+                                           (or (eq system-type 'darwin)
+                                               (eq system-type 'gnu/linux)
+                                               (eq window-system 'x)))
+  "If non-nil then Spacemacs will import your PATH and environment variables
+from your default shell on startup. This is enabled by default for macOS users
+and X11 users.")
+
+(defvar dotspacemacs-import-env-vars-shell-file-name nil
+  "If nil then use the default shell is used to fetch the environment variables.
+Set this variable to a different shell executable path to import the environment
+variables from this shell. Note that `file-shell-name' is preserved and always
+points to the default shell. For instance to use your fish shell environment
+variables set this variable to `/usr/local/bin/fish'.")
+
 (defvar dotspacemacs-enable-emacs-pdumper nil
   "If non-nil then enable support for the portable dumper. You'll need
 to compile Emacs 27 from source following the instructions in file
@@ -226,19 +241,6 @@ emacs.")
   "Default font, or prioritized list of fonts. This setting has no effect when
 running Emacs in terminal.")
 
-(defvar dotspacemacs-remap-Y-to-y$ nil
-  "If non nil `Y' is remapped to `y$' in Evil states.")
-
-(defvar dotspacemacs-retain-visual-state-on-shift t
-  "If non-nil, the shift mappings `<' and `>' retain visual state
-if used there.")
-
-(defvar dotspacemacs-visual-line-move-text nil
-  "If non-nil, J and K move lines up and down when in visual mode.")
-
-(defvar dotspacemacs-ex-substitute-global nil
-  "If non nil, inverse the meaning of `g' in `:substitute' Evil ex-command.")
-
 (defvar dotspacemacs-folding-method 'evil
   "Code folding method. Possible values are `evil' and `origami'.")
 
@@ -329,7 +331,9 @@ can be toggled through `toggle-transparency'.")
   "If non nil show the color guide hint for transient state keys.")
 
 (defvar dotspacemacs-mode-line-unicode-symbols t
-  "If non nil unicode symbols are displayed in the mode-line (eg. for lighters)")
+  "If non nil unicode symbols are displayed in the mode-line (eg. for lighters).
+If you use Emacs as a daemon and wants unicode characters only in GUI set
+the value to quoted `display-graphic-p'. (default t)")
 
 (defvar dotspacemacs-smooth-scrolling t
   "If non nil smooth scrolling (native-scrolling) is enabled.
@@ -358,6 +362,12 @@ restricts line-number to the specified list of major-mode.")
 
 (defvar dotspacemacs-persistent-server nil
   "If non nil advises quit functions to keep server open when quitting.")
+
+(defvar dotspacemacs-server-socket-dir nil
+  "Set the emacs server socket location.
+If nil, uses whatever the Emacs default is,
+otherwise a directory path like \"~/.emacs.d/server\".
+Has no effect if `dotspacemacs-enable-server' is nil.")
 
 (defvar dotspacemacs-smartparens-strict-mode nil
   "If non-nil smartparens-strict-mode will be enabled in programming modes.")
@@ -456,7 +466,7 @@ the symbol of an editing style and the cdr is a list of keyword arguments like
   (cond
    ((symbolp config) config)
    ((listp config)
-    (let ((variables (spacemacs/mplist-get config :variables)))
+    (let ((variables (spacemacs/mplist-get-values config :variables)))
       (while variables
         (let ((var (pop variables)))
           (if (consp variables)
@@ -526,7 +536,7 @@ Called with `C-u C-u' skips `dotspacemacs/user-config' _and_ preleminary tests."
             (spacemacs-buffer/warning "Some tests failed, check `%s' buffer"
                                       dotspacemacs-test-results-buffer))))))
   (when (configuration-layer/package-used-p 'spaceline)
-    (spacemacs//set-powerline-for-startup-buffers)))
+    (spacemacs//restore-buffers-powerline)))
 
 (defun dotspacemacs/get-variable-string-list ()
   "Return a list of all the dotspacemacs variables as strings."
@@ -774,10 +784,10 @@ error recovery."
                       emacs
                       hybrid))
           (and (listp x)
-               (eq 'hybrid (car x))
-               (spacemacs/mplist-get x :variables))))
+               (member (car x) '(vim emacs hybrid))
+               (spacemacs/mplist-get-values x :variables))))
     'dotspacemacs-editing-style
-    "is \'vim, \'emacs or \'hybrid or and list with `:variable' keyword")
+    "is \'vim, \'emacs or \'hybrid or and list with `:variables' keyword")
    (spacemacs//test-var
     (lambda (x)
       (let ((themes '(spacemacs

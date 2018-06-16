@@ -16,7 +16,6 @@
         centered-cursor-mode
         (compile :location built-in)
         (doc-view :location built-in)
-        flx-ido
         golden-ratio
         (grep :location built-in)
         (info+ :location local)
@@ -204,10 +203,6 @@
               (doc-view-minor-mode))
           ad-do-it)))))
 
-(defun spacemacs-navigation/init-flx-ido ()
-  (use-package flx-ido
-    :init (flx-ido-mode 1)))
-
 (defun spacemacs-navigation/init-golden-ratio ()
   (use-package golden-ratio
     :defer t
@@ -317,9 +312,8 @@
     :defer t
     :init
     (progn
-      (with-eval-after-load 'info
-        (require 'info+))
-      (setq Info-fontify-angle-bracketed-flag nil))))
+      (setq Info-fontify-angle-bracketed-flag nil)
+      (add-hook 'Info-mode-hook (lambda () (require 'info+))))))
 
 (defun spacemacs-navigation/init-open-junk-file ()
   (use-package open-junk-file

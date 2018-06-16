@@ -18,10 +18,7 @@
         (bind-key :step bootstrap)
         (diminish :step bootstrap)
         (evil :step bootstrap)
-        (exec-path-from-shell :step bootstrap
-                              :toggle (or (spacemacs/system-is-mac)
-                                          (spacemacs/system-is-linux)
-                                          (eq window-system 'x)))
+        (spacemacs-environment :step bootstrap :location built-in)
         (hydra :step bootstrap)
         (use-package :step bootstrap)
         (which-key :step bootstrap)
@@ -79,10 +76,10 @@
   (define-key evil-normal-state-map (kbd dotspacemacs-ex-command-key) 'evil-ex)
   (define-key evil-visual-state-map (kbd dotspacemacs-ex-command-key) 'evil-ex)
   (define-key evil-motion-state-map (kbd dotspacemacs-ex-command-key) 'evil-ex)
-  (setq evil-ex-substitute-global dotspacemacs-ex-substitute-global)
+  (setq evil-ex-substitute-global vim-style-ex-substitute-global)
 
   ;; evil-want-Y-yank-to-eol must be set via customize to have an effect
-  (customize-set-variable 'evil-want-Y-yank-to-eol dotspacemacs-remap-Y-to-y$)
+  (customize-set-variable 'evil-want-Y-yank-to-eol vim-style-remap-Y-to-y$)
 
   ;; bind evil-jump-forward for GUI only.
   (define-key evil-motion-state-map [C-i] 'evil-jump-forward)
@@ -97,7 +94,9 @@
   (define-key evil-window-map (kbd "<right>") 'evil-window-right)
   (define-key evil-window-map (kbd "<up>") 'evil-window-up)
   (define-key evil-window-map (kbd "<down>") 'evil-window-down)
-  (spacemacs/set-leader-keys "re" 'evil-show-registers)
+  (spacemacs/set-leader-keys
+    "re" 'evil-show-registers
+    "sc" 'spacemacs/evil-search-clear-highlight)
   ;; motions keys for help buffers
   (evil-define-key 'motion help-mode-map (kbd "<escape>") 'quit-window)
   (evil-define-key 'motion help-mode-map (kbd "<tab>") 'forward-button)
@@ -114,12 +113,12 @@
   (add-hook 'after-change-major-mode-hook 'spacemacs//set-evil-shift-width 'append)
 
   ;; Keep the region active when shifting
-  (when dotspacemacs-retain-visual-state-on-shift
+  (when vim-style-retain-visual-state-on-shift
     (evil-map visual "<" "<gv")
     (evil-map visual ">" ">gv"))
 
   ;; move selection up and down
-  (when dotspacemacs-visual-line-move-text
+  (when vim-style-visual-line-move-text
     (define-key evil-visual-state-map "J" (concat ":m '>+1" (kbd "RET") "gv=gv"))
     (define-key evil-visual-state-map "K" (concat ":m '<-2" (kbd "RET") "gv=gv")))
 
@@ -286,10 +285,6 @@
   (evil-declare-ignore-repeat 'spacemacs/next-error)
   (evil-declare-ignore-repeat 'spacemacs/previous-error))
 
-(defun spacemacs-bootstrap/init-exec-path-from-shell ()
-  (require 'exec-path-from-shell)
-  (exec-path-from-shell-initialize))
-
 (defun spacemacs-bootstrap/init-hydra ()
   (require 'hydra)
   (setq hydra-key-doc-function 'spacemacs//hydra-key-doc-function
@@ -326,6 +321,7 @@
            ("spacemacs/toggle-\\(.+\\)" . "\\1")
            ("spacemacs/alternate-buffer" . "last buffer")
            ("spacemacs/toggle-mode-line-\\(.+\\)" . "\\1")
+           ("lazy-helm/\\(.+\\)" . "\\1")
            ("avy-goto-word-or-subword-1" . "avy word")
            ("shell-command" . "shell cmd")
            ("spacemacs/default-pop-shell" . "open shell")
@@ -496,6 +492,10 @@
 
   (which-key-mode)
   (spacemacs|diminish which-key-mode " Ⓚ" " K"))
+
+(defun spacemacs-bootstrap/init-spacemacs-environment ()
+  (when dotspacemacs-import-env-vars-from-shell
+    (spacemacs/loadenv)))
 
 ;; pre packages
 
