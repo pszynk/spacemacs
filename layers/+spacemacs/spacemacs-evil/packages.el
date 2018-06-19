@@ -28,7 +28,6 @@
         evil-nerd-commenter
         evil-matchit
         evil-numbers
-        evil-search-highlight-persist
         evil-surround
         ;; Temporarily disabled, pending the resolution of
         ;; https://github.com/7696122/evil-terminal-cursor-changer/issues/8
@@ -69,6 +68,7 @@
 
 (defun spacemacs-evil/init-evil-args ()
   (use-package evil-args
+    :defer t
     :init
     (progn
       ;; bind evil-args text objects
@@ -97,29 +97,59 @@
 
 (defun spacemacs-evil/init-evil-escape ()
   (use-package evil-escape
+    :defer t
     :init
+    (add-hook 'emacs-startup-hook
+              (lambda ()
+                (spacemacs|add-transient-hook evil-normal-state-exit-hook
+                  (lambda () (require 'evil-escape))
+                  lazy-load-evil-escape-1)
+                (spacemacs|add-transient-hook window-configuration-change-hook
+                  (lambda () (require 'evil-escape))
+                  lazy-load-evil-escape-2)))
+    :config
     (progn
       (add-hook 'spacemacs-editing-style-hook #'spacemacs//evil-escape-deactivate-in-holy-mode)
       ;; apply once when emacs starts
-      (spacemacs//evil-escape-deactivate-in-holy-mode dotspacemacs-editing-style))
-    :config (spacemacs|hide-lighter evil-escape-mode)))
+      (spacemacs//evil-escape-deactivate-in-holy-mode dotspacemacs-editing-style)
+      (spacemacs|hide-lighter evil-escape-mode))))
 
 (defun spacemacs-evil/init-evil-exchange ()
   (use-package evil-exchange
-    :init (evil-exchange-install)))
+    :defer t
+    :init
+    (progn
+      (let ((evil-exchange-key (kbd "gx"))
+            (evil-exchange-cancel-key (kbd "gX")))
+        (define-key evil-normal-state-map evil-exchange-key 'evil-exchange)
+        (define-key evil-visual-state-map evil-exchange-key 'evil-exchange)
+        (define-key evil-normal-state-map evil-exchange-cancel-key
+          'evil-exchange-cancel)
+        (define-key evil-visual-state-map evil-exchange-cancel-key
+          'evil-exchange-cancel)))))
 
 (defun spacemacs-evil/init-evil-goggles ()
   (use-package evil-goggles
+    :defer t
     :init
     (progn
       ;; disable pulses as it is more distracting than useful and
       ;; less readable.
       (setq evil-goggles-pulse nil
-            evil-goggles-async-duration 0.2
-            evil-goggles-blocking-duration 0.12)
-      (evil-goggles-mode))
+            evil-goggles-async-duration 0.1
+            evil-goggles-blocking-duration 0.05)
+      (when (or vim-style-visual-feedback
+              hybrid-style-visual-feedback)
+        (spacemacs|add-transient-hook evil-operator-state-entry-hook
+          (lambda () (require 'evil-goggles))
+          lazy-load-evil-googles)))
     :config
-    (spacemacs|hide-lighter evil-goggles-mode)))
+    (progn
+      (if (or vim-style-visual-feedback
+              hybrid-style-visual-feedback)
+          (evil-goggles-mode)
+        (evil-goggles-mode -1))
+      (spacemacs|hide-lighter evil-goggles-mode))))
 
 (defun spacemacs-evil/init-evil-iedit-state ()
   (use-package evil-iedit-state
@@ -145,24 +175,40 @@
 
 (defun spacemacs-evil/init-evil-indent-plus ()
   (use-package evil-indent-plus
-    :init (evil-indent-plus-default-bindings)))
+    :defer t
+    :init
+    (progn
+      (define-key evil-inner-text-objects-map "i" 'evil-indent-plus-i-indent)
+      (define-key evil-outer-text-objects-map "i" 'evil-indent-plus-a-indent)
+      (define-key evil-inner-text-objects-map "I" 'evil-indent-plus-i-indent-up)
+      (define-key evil-outer-text-objects-map "I" 'evil-indent-plus-a-indent-up)
+      (define-key evil-inner-text-objects-map "J"
+        'evil-indent-plus-i-indent-up-down)
+      (define-key evil-outer-text-objects-map "J"
+        'evil-indent-plus-a-indent-up-down))))
 
 (defun spacemacs-evil/init-evil-lion ()
   (use-package evil-lion
+    :defer t
     :init
     (progn
-      ;; Override the default keys, as they collide
+      ;; Override the default keys, as they collide (with what ? :-))
       (setq evil-lion-left-align-key nil
             evil-lion-right-align-key nil)
       (spacemacs/set-leader-keys
         "xal" 'evil-lion-left
-        "xaL" 'evil-lion-right)
-      (evil-lion-mode))))
+        "xaL" 'evil-lion-right))
+    :config (evil-lion-mode)))
 
 (defun spacemacs-evil/init-evil-lisp-state ()
   (use-package evil-lisp-state
-    :init (setq evil-lisp-state-global t)
+    :defer t
+    :init
+    (progn
+      (add-hook 'prog-mode-hook 'spacemacs//load-evil-lisp-state)
+      (setq evil-lisp-state-global t))
     :config (spacemacs/set-leader-keys "k" evil-lisp-state-map)))
+
 
 (defun spacemacs-evil/init-evil-mc ()
   (use-package evil-mc
@@ -245,7 +291,8 @@
 
 (defun spacemacs-evil/init-evil-numbers ()
   (use-package evil-numbers
-    :config
+    :defer t
+    :init
     (progn
       (spacemacs|define-transient-state evil-numbers
         :title "Evil Numbers Transient State"
@@ -261,29 +308,20 @@
         "n=" 'spacemacs/evil-numbers-transient-state/evil-numbers/inc-at-pt
         "n-" 'spacemacs/evil-numbers-transient-state/evil-numbers/dec-at-pt))))
 
-(defun spacemacs-evil/init-evil-search-highlight-persist ()
-  (use-package evil-search-highlight-persist
-    :init
-    (progn
-      (global-evil-search-highlight-persist)
-      ;; (set-face-attribute )
-      (define-key evil-search-highlight-persist-map
-        (kbd "C-x SPC") 'rectangle-mark-mode)
-      (spacemacs/set-leader-keys "sc" 'spacemacs/evil-search-clear-highlight)
-      (evil-ex-define-cmd "nohlsearch" 'spacemacs/evil-search-clear-highlight)
-      (spacemacs//adaptive-evil-highlight-persist-face)
-      (add-hook 'spacemacs-post-theme-change-hook
-                'spacemacs//adaptive-evil-highlight-persist-face))))
-
 (defun spacemacs-evil/init-evil-surround ()
   (use-package evil-surround
+    :defer t
     :init
+    (spacemacs|add-transient-hook evil-visual-state-entry-hook
+      (lambda () (require 'evil-surround))
+      lazy-load-evil-surround)
+    :config
     (progn
-      (global-evil-surround-mode 1)
       ;; `s' for surround instead of `substitute'
       ;; see motivation for this change in the documentation
       (evil-define-key 'visual evil-surround-mode-map "s" 'evil-surround-region)
-      (evil-define-key 'visual evil-surround-mode-map "S" 'evil-substitute))))
+      (evil-define-key 'visual evil-surround-mode-map "S" 'evil-substitute)
+      (global-evil-surround-mode 1))))
 
 (defun spacemacs-evil/init-evil-terminal-cursor-changer ()
   (use-package evil-terminal-cursor-changer

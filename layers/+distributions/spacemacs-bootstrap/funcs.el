@@ -11,6 +11,40 @@
 
 
 
+(defun spacemacs/loadenv ()
+  "Gets and sets all the environment variables from user shell."
+  (interactive)
+  (spacemacs-buffer/message "Importing environment variables..")
+  (require 'async nil t)
+  (async-start
+   `(lambda ()
+      ,(async-inject-variables
+        "\\`dotspacemacs-import-env-vars-shell-file-name\\'")
+      (if dotspacemacs-import-env-vars-shell-file-name
+          (let ((shell-file-name
+                 dotspacemacs-import-env-vars-shell-file-name))
+            (split-string (shell-command-to-string "env") "\n"))
+        (split-string (shell-command-to-string "env") "\n")))
+   (lambda (envvars)
+     (spacemacs-buffer/message "Imported environment variables:")
+     (dolist (env envvars)
+       (if (string-match "^[a-zA-Z_]+[a-zA-Z0-9_]*=" env)
+           (let* ((var (split-string env "="))
+                  (k (car var))
+                  (v (cadr var)))
+             (spacemacs-buffer/message "  - %s=%s" k v)
+             (when (string-equal "PATH" k)
+               (let ((paths (split-string v path-separator)))
+                 (dolist (p paths)
+                   (add-to-list 'exec-path p))))
+             (setenv k v))))
+     ;; be sure we keep the default shell in this Emacs session
+     ;; this is to prevent potential issues with packages which could
+     ;; expect a default shell
+     (setenv "SHELL" shell-file-name))))
+
+
+
 (defun spacemacs/state-color-face (state)
   "Return the symbol of the face for the given STATE."
   (intern (format "spacemacs-%s-face" (symbol-name state))))
@@ -77,7 +111,7 @@ For evil states that also need an entry to `spacemacs-evil-cursors' use
   (cond
    ((or (eq 'vim style)
         (and (eq 'hybrid style)
-             (bound-and-true-p hybrid-mode-use-evil-search-module)))
+             (bound-and-true-p hybrid-style-use-evil-search-module)))
     ;; if Evil is loaded already, just setting `evil-search-module' isn't
     ;; enough, we need to call `evil-select-search-module' as well (this is done
     ;; automatically when `evil-search-module' is changed via customize)
@@ -88,6 +122,11 @@ For evil states that also need an entry to `spacemacs-evil-cursors' use
     (if (featurep 'evil-search)
         (evil-select-search-module 'evil-search-module 'isearch)
       (setq-default evil-search-module 'isearch)))))
+
+(defun spacemacs/evil-search-clear-highlight ()
+  "Clear evil-search or evil-ex-search persistent highlights."
+  (interactive)
+  (evil-ex-nohighlight)) ; `/' highlights
 
 (defun spacemacs/evil-smart-doc-lookup ()
   "Run documentation lookup command specific to the major mode.
@@ -131,11 +170,11 @@ the boundaries of the text object."
                                           ,(regexp-quote start)
                                           ,(regexp-quote end))
      (with-eval-after-load 'evil-surround
-       (push (cons (string-to-char ,key)
-                   (if ,end
-                       (cons ,start ,end)
-                     ,start))
-             evil-surround-pairs-alist))))
+       (add-to-list 'evil-surround-pairs-alist
+                    (cons (string-to-char ,key)
+                          (if ,end
+                              (cons ,start ,end)
+                            ,start))))))
 
 (defmacro spacemacs|define-text-object-regexp (key name start-regexp end-regexp)
   "Define a text object.
