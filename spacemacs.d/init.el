@@ -73,7 +73,7 @@ This function should only modify configuration layer settings."
      sql
      html
      javascript
-
+     shell-scripts
 
      ;;  - formatting
      markdown
@@ -107,11 +107,12 @@ This function should only modify configuration layer settings."
 
      ;; tools
      docker
-     neotree
      fasd
+     neotree
+     puppet
      ranger
-     systemd
      speed-reading
+     systemd
      topcoder
      )
 
@@ -241,8 +242,8 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Inconsolata Nerd Font Cg"
-                               :size 15
+   dotspacemacs-default-font '("monospace"
+                               :size 16
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
