@@ -109,7 +109,7 @@
         "e"   'LaTeX-environment       ;; C-c C-e
         "ii"   'LaTeX-insert-item       ;; C-c C-j
         "s"   'LaTeX-section           ;; C-c C-s
-        "P"   'latex-preview-pane-mode
+        ;; "P"   'latex-preview-pane-mode
         "fe"  'LaTeX-fill-environment  ;; C-c C-q C-e
         "fp"  'LaTeX-fill-paragraph    ;; C-c C-q C-p
         "fr"  'LaTeX-fill-region       ;; C-c C-q C-r
@@ -169,7 +169,7 @@
   (setq reftex-plug-into-AUCTeX '(nil nil t t t)
         reftex-use-fonts t)
   (spacemacs/declare-prefix-for-mode 'latex-mode "mr" "reftex")
-  (spacemacs|diminish reftex-mode " Ʀ" " R")
+  (spacemacs|diminish reftex-mode " Ⓡ" " R")
   (spacemacs/set-leader-keys-for-major-mode 'latex-mode
     "rc"    'reftex-citation
     "rg"    'reftex-grep-document
@@ -225,7 +225,21 @@
 
 (defun latex/init-latex-preview-pane ()
   "Initialize latex-preview-pane package"
+  (spacemacs/declare-prefix-for-mode 'latex-mode "mpP" "preview-pane")
+  (spacemacs|diminish latex-preview-pane-mode " Ⓟ" " P")
+  (spacemacs/set-leader-keys-for-major-mode 'latex-mode
+    "pPP"   'latex-preview-pane-mode
+    )
   (use-package latex-preview-pane
     :defer t
-    )
-  )
+    :config
+    (progn
+      (spacemacs/set-leader-keys-for-major-mode 'latex-mode
+        "pPu" 'latex-preview-pane-update
+        "pPU" 'latex-preview-update
+        )
+     )
+    ))
+
+
+
