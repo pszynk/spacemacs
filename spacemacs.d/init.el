@@ -40,7 +40,7 @@ This function should only modify configuration layer settings."
      ;; ----------------------------------------------------------------
      helm
      (auto-completion :variables
-                      Color of Autumn             ;; auto-completion-complete-with-key-sequence "kj"
+                      ;; auto-completion-complete-with-key-sequence "kj"
                       auto-completion-enable-snippets-in-popup t
                       ;; auto-completion-enable-help-tooltip t
                       auto-completion-enable-sort-by-usage t)
