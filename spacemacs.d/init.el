@@ -52,7 +52,7 @@ This function should only modify configuration layer settings."
      ;; evil
      (evil-snipe :variables
                  evil-snipe-enable-alternate-f-and-t-behaviors t)
-     ;; evil-cleverparens (unstable)
+     evil-cleverparens
      vinegar
 
      ;; lang support
@@ -73,7 +73,7 @@ This function should only modify configuration layer settings."
      sql
      html
      javascript
-
+     shell-scripts
 
      ;;  - formatting
      markdown
@@ -103,10 +103,13 @@ This function should only modify configuration layer settings."
      ;;         colors-enable-nyan-cat-progress-bar t)
      ;; theming
 
+     ;; pdf-tools TODO need install dependencies
+
      ;; tools
      docker
      fasd
      neotree
+     puppet
      ranger
      speed-reading
      systemd
@@ -239,9 +242,8 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   ;dotspacemacs-default-font '("Inconsolata"
    dotspacemacs-default-font '("monospace"
-                               :size 15
+                               :size 16
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
