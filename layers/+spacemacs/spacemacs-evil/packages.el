@@ -13,7 +13,8 @@
       '(evil-anzu
         evil-args
         evil-cleverparens
-        evil-ediff
+        ;; this package has been moved, need to import it to Spacemacs
+        ;; evil-ediff
         evil-escape
         evil-exchange
         evil-goggles
@@ -312,9 +313,13 @@
   (use-package evil-surround
     :defer t
     :init
-    (spacemacs|add-transient-hook evil-visual-state-entry-hook
-      (lambda () (require 'evil-surround))
-      lazy-load-evil-surround)
+    (progn
+      (spacemacs|add-transient-hook evil-visual-state-entry-hook
+        (lambda () (require 'evil-surround))
+        lazy-load-evil-surround)
+      (spacemacs|add-transient-hook evil-operator-state-entry-hook
+        (lambda () (require 'evil-surround))
+        lazy-load-evil-surround-2))
     :config
     (progn
       ;; `s' for surround instead of `substitute'

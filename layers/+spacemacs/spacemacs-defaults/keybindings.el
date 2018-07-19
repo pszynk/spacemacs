@@ -28,6 +28,7 @@
                                        ("fC"  "files/convert")
                                        ("fe"  "emacs(spacemacs)")
                                        ("fv"  "variables")
+                                       ("fy"  "yank path")
                                        ("F"   "frame")
                                        ("g"   "git/versions-control")
                                        ("h"   "help")
@@ -203,6 +204,9 @@
   "fei" 'spacemacs/find-user-init-file
   "fed" 'spacemacs/find-dotfile
   "feD" 'spacemacs/ediff-dotfile-and-template
+  "fee" 'spacemacs/edit-env
+  "feE" 'dotspacemacs/call-user-env
+  "fe C-e" 'spacemacs/force-init-spacemacs-env
   "feR" 'dotspacemacs/sync-configuration-layers
   "fev" 'spacemacs/display-and-copy-version
   "feU"  'configuration-layer/update-packages
@@ -218,7 +222,10 @@
   "fvd" 'add-dir-local-variable
   "fvf" 'add-file-local-variable
   "fvp" 'add-file-local-variable-prop-line
-  "fy" 'spacemacs/show-and-copy-buffer-filename)
+  "fyc" 'spacemacs/copy-file-path-with-line-column
+  "fyd" 'spacemacs/copy-directory-path
+  "fyl" 'spacemacs/copy-file-path-with-line
+  "fyy" 'spacemacs/copy-file-path)
 ;; frame ----------------------------------------------------------------------
 (spacemacs/set-leader-keys
   "Ff" 'find-file-other-frame
@@ -359,6 +366,26 @@
   :mode font-lock-mode
   :documentation "Toggle syntax highlighting."
   :evil-leader "ths")
+(spacemacs|add-toggle zero-based-column-indexing
+  :documentation "Toggle column indexing starting at 0 versus 1.
+
+This is achieved by the built in functionality available in emacs 26 by changing
+the value of the `column-number-indicator-zero-based' variable. Functionality
+that does not take into acount `column-number-indicator-zero-based' will not
+respond to this toggle."
+  :status (bound-and-true-p column-number-indicator-zero-based)
+  :on (setq column-number-indicator-zero-based t)
+  :off (setq column-number-indicator-zero-based nil)
+  :on-message (concat
+                "Column indexing starts at 0 (current column is "
+                (number-to-string (current-column))
+                ")")
+  :off-message (concat
+                 "Column indexing starts at 1 (current column is "
+                 (number-to-string (1+ (current-column)))
+                 ")")
+  :evil-leader "tz")
+
 (spacemacs|add-toggle transparent-frame
   :status nil
   :on (spacemacs/toggle-transparency)
