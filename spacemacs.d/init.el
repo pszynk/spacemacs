@@ -52,7 +52,7 @@ This function should only modify configuration layer settings."
      ;; evil
      (evil-snipe :variables
                  evil-snipe-enable-alternate-f-and-t-behaviors t)
-     evil-cleverparens
+     ;; evil-cleverparens
      vinegar
 
      ;; lang support
@@ -234,7 +234,7 @@ It should only modify the values of Spacemacs settings."
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   dotspacemacs-mode-line-theme '(spacemacs :separator slant :separator-scale 1.5)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -242,7 +242,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("monospace"
+   dotspacemacs-default-font '("inconsolatacg"
                                :size 16
                                :weight normal
                                :width normal
@@ -519,8 +519,14 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  ;; for debug uncoment
+  ;; for debug uncomment
   ;; (setq debug-on-error t)
+
+  ;; FIXES
+
+  ;; font separators in emacsclient
+  (spacemacs|do-after-display-system-init
+     (spacemacs-modeline/init-spaceline))
 
 
   ;; powerline spearators
