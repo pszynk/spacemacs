@@ -63,6 +63,8 @@
     :if c-c++-enable-clang-support
     :init
     (progn
+      (when c-c++-enable-clang-format-on-save
+        (spacemacs/add-to-hooks 'spacemacs/clang-format-on-save c-c++-mode-hooks))
       (dolist (mode c-c++-modes)
         (spacemacs/declare-prefix-for-mode mode "m=" "format")
         (spacemacs/set-leader-keys-for-major-mode mode
@@ -218,7 +220,7 @@
           "gv" 'rtags-find-virtuals-at-point
           "gV" 'rtags-print-enum-value-at-point
           "gX" 'rtags-fix-fixit-at-point
-          "gY" 'rtags-cycle-overlays-on-screen)))))
+          "gY" 'rtags-cycle-through-diagnostics)))))
 
 (defun c-c++/post-init-realgud()
   (dolist (mode c-c++-modes)
