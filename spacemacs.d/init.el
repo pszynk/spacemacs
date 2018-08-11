@@ -269,7 +269,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("monospace"
+   dotspacemacs-default-font '("inconsolatacg"
                                :size 16
                                :weight normal
                                :width normal
@@ -537,7 +537,7 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  ;; for debug uncoment
+  ;; for debug uncomment
   ;; (setq debug-on-error t)
 
   ;; FIXES and WORKAROUNDS
