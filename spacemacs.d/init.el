@@ -66,8 +66,10 @@ This function should only modify configuration layer settings."
      ;;  - programming
      emacs-lisp
      (c-c++ :variables
+            c-c++-adopt-subprojects t
+            c-c++-backend 'lsp-ccls
             c-c++-default-mode-for-headers 'c++-mode
-            c-c++-enable-clang-support t)
+            c-c++-lsp-sem-highlight-rainbow t)
      (python :variables
              python-test-runner '(pytest nose))
      lua
