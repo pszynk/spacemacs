@@ -294,6 +294,7 @@ Benner and Paweł Siudak):
 - coq (thanks to Xuan Bi, Jeremy Bi and Langston Barret)
 - crystal (thanks to Sylvain Benner)
 - dhall (thanks to Colin Woodbury)
+- ietf (thanks to Christian Hopps)
 - factor (thanks to timor)
 - forth (thanks to Tim Jaeger)
 - gpu (thanks to Evan Klitzke)
@@ -310,6 +311,7 @@ Benner and Paweł Siudak):
 - protobuf (thanks to Amol Mandhane)
 - restructuredtext (thanks to Wei-Wei Guo and Kalle Lindqvist)
 - semantic-web (thanks to Andreas Textor)
+- yang (thanks to Christian Hopps)
 **** Misc
 - multiple-cursors (thanks to Codruț Constantin Gușoi and Thomas de Beauchêne)
 **** WEB services
@@ -912,6 +914,8 @@ Other:
   - Stopped configuring =fci-rule-color=, which was overriding themes that
     configured it (thanks to Victor Cuadrado Juan)
   - Added ranger-mode to golden-ratio-exclude-modes (thanks to Langston Barrett)
+  - Fixed evil surround bindings (thanks to Hoyon Mak)
+  - Improved Window Manipulation Transient state (thanks to yuhan0)
 *** Layer changes and fixes
 **** Ansible
 - Improvements:
@@ -1084,6 +1088,8 @@ Other:
     - Added ~SPC m T c~ for =coffee-cos-mode=
       (thanks to Kalle Lindqvist)
 **** Common Lisp
+- Improvements:
+  - Add eval-thing-at-point functions to Common Lisp Layer (thanks to Lukas Woell)
 - New packages:
   - Added =slime-asdf= to =slime-contribs= to enabled some slime commands like
     =,load-system= (thanks to Daniel Schoepe)
@@ -1196,6 +1202,7 @@ Other:
 - Disabled nameless by default (thanks to Codruț Constantin Gușoi, Sylvain
   Benner)
 - Activate nameless only in GUI (thanks to Sylvain Benner)
+- Add =flycheck-package= for package metadata linting (thanks to Uroš Perišić)
 **** Emoji
 - Added support for Emoji fonts on macOS and Linux (thanks to CodeFalling )
 - Setup =emojify= cache directory (thanks to Boris Buliga)
@@ -1351,6 +1358,7 @@ Other:
     (thanks to Magnus Therning)
 - Fixed jump handlers conflict for haskell and intero (thanks to CthulhuDen)
 - Fix haskell jump handler for dante (thanks to cjay)
+- Enable LSP mode using HIE.
 **** Helm
 - Limited =ripgrep= results to 512 columns by default, and added
   =spacemacs-helm-rg-max-column-number= layer variable to configure the above
@@ -1497,6 +1505,7 @@ Other:
 - Added LSP Java backend (thanks to Ivan Yonchovski)
 - Added =.dap-breakpoints= and =.lsp-session-*= (java lsp tempfiles) to .gitignore
   (thanks to Uroš Perišić)
+- Fixed prefixes for =java-mode= and =gradle-mode=
 **** Javascript
 - Improvements:
   - Leverage js-doc Yasnippet integration if available (thanks to Andriy Kmit')
@@ -1640,8 +1649,12 @@ Other:
 **** Nim
 - Added key binding ~SPC m h h~ to show symbol documentation (thanks to Valts
   Liepiņš)
+- Make =spacemacs/nim-compile-run= work with current buffer file instead of
+  defaulting to =main.nim= (thanks to Uroš Perišić)
 - Replace =company-capf= with =company-nimsuggest= in
   =company-backends-nim-mode= to improve responsiveness (thanks to Uroš Perišić)
+- Declare all prefix names (='(compile goto help)=) for =nim-mode= (thanks to
+  Uroš Perišić)
 **** Node
 - Use add-node-modules-path to automatically find local executables (thanks to
   jupl)
@@ -1781,6 +1794,7 @@ Other:
     (thanks to Liu Joey)
   - Added ~M-s-h~ to hide other windows (thanks to Bas Veeling)
 - Replace pbcopy by osx-clipboard (thanks to Minh Nguyen-Hue)
+- Fix key binding issue when Emacs is launched in daemon mode.
 **** Pandoc
 - Fixed =spacemacs/run-pandoc= not to reset =pandoc--local-settings= (thanks to
   martian-f)
@@ -1881,6 +1895,7 @@ Other:
 - Added variable =rcirc-enable-late-fix= (thanks to Miciah Masters)
 **** React
 - Improvements:
+  - Made % work on jsx tags (thanks to Thanh Vuong)
   - Use rjsx-mode for react framework (thanks to Ting Zhou)
   - Prompt user to install the =react= layer if a =.jsx= file is opened
     (thanks to Jon Hermansen)
@@ -1936,6 +1951,7 @@ Other:
 - Changed leader keys to be configured for the =projectile-rails-mode= minor
   mode instead of =ruby-mode= and =enh-ruby-mode= so that the key bindings will
   work in view file windows (thanks to Adam Sokolnicki)
+- Added missing prefixes for =ruby-mode= and =enh-ruby-mode=
 - Added key bindings: (thanks to Adam Sokolnicki)
   - ~SPC m f f b~ to find job
   - ~SPC m f f w~ to find webpack config
@@ -2035,6 +2051,7 @@ Other:
 - Added layer variable =sql-auto-indent= to toggle the use of =sql-indent= package
   (thanks to David Chen)
 - Added a code formatter for sql-mode (thanks to Seong Yong-ju)
+- Added connection between =org-mode= and =SQL layer= (thanks to Magnus Therning)
 **** Spell-checking
 - Added spell checking transient state (thanks to Francesc Elies Henar)
 - Update to flyspell-correct v0.5 (thanks to Boris Buliga)
@@ -2202,7 +2219,7 @@ Other:
   Somelauw, Soobin Rho, sorawee, SteveJobzniak, Sunghyun Hwang, Swaroop C H,
   Sylvain Benner, Szunti, Tim Stewart, timor, TinySong, Titov Andrey, Thomas de
   Beauchêne, Tomasz Cichocinski, tzhao11, Vlad Bokov, Vladimir Kochnev, Wieland
-  Hoffmann, Xiang Ji, Yi Liu, zer09, Zhige Xin)
+  Hoffmann, Xiang Ji, Yi Liu, zer09, Zhige Xin, Serghei Iakovlev)
 *** Release notes summarized
   Thanks to: Grant Shangreaux, Songpeng Zu, Igor Almeida, Miciah Dashiel Butler
   Masters, Abhishek(Compro) Prasad, Deepak Khidia, Ward Harris, Jiahao Jiang,
