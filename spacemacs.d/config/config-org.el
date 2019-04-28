@@ -5,6 +5,9 @@
 (defun psz//config-org ()
  ;;; Code:
 
+  ;; don't like automatic headers indentation
+  (setq org-adapt-indentation nil)
+
   (require 'f)
   ;; try set org-directory from env
   (setq org-directory

@@ -65,11 +65,11 @@ This function should only modify configuration layer settings."
 
      ;;  - programming
      emacs-lisp
-     (c-c++ :variables
-            c-c++-adopt-subprojects t
-            c-c++-backend 'lsp-ccls
-            c-c++-default-mode-for-headers 'c++-mode
-            c-c++-lsp-sem-highlight-rainbow t)
+     ;;(c-c++ :variables
+     ;;       c-c++-adopt-subprojects t
+     ;;       c-c++-backend 'lsp-ccls
+     ;;       c-c++-default-mode-for-headers 'c++-mode
+     ;;       c-c++-lsp-sem-highlight-rainbow t)
      (python :variables
              python-test-runner '(pytest nose))
      lua
@@ -271,11 +271,13 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Inconsolata Nerd Font"
+   ;; dotspacemacs-default-font '("Fura Code Nerd Font"
+   ; dotspacemacs-default-font '("Inconsolata Nerd Font"
+   dotspacemacs-default-font '("DejaVu Sans Mono"
                                :size 16
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1)
    ;; oO0 | 1iljJ
 
    ;; The leader key (default "SPC")
