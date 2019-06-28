@@ -23,7 +23,8 @@
                                        ("a"   "applications")
                                        ("A"   "other applications")
                                        ("b"   "buffers")
-                                       ("bN"  "new empty buffer")
+                                       ("bc"  "indirect buffers")
+                                       ("bN"  "new buffer")
                                        ("c"   "compile/comments")
                                        ("C"   "capture/colors")
                                        ("d"   "documentation")
@@ -132,8 +133,6 @@
     'universal-argument-more))
 ;; shell command  -------------------------------------------------------------
 (spacemacs/set-leader-keys "!" 'shell-command)
-;; last change  ---------------------------------------------------------------
-(spacemacs/set-leader-keys "," 'goto-last-change)
 ;; applications ---------------------------------------------------------------
 (spacemacs/set-leader-keys
   "ac"  'calc-dispatch
@@ -152,6 +151,9 @@
   "bn"    'next-buffer
   "bm"    'spacemacs/switch-to-messages-buffer
   "b N h" 'spacemacs/new-empty-buffer-left
+  "b N C-i" 'make-indirect-buffer
+  "b N i" 'clone-indirect-buffer
+  "b N I" 'clone-indirect-buffer-other-window-without-purpose
   "b N j" 'spacemacs/new-empty-buffer-below
   "b N k" 'spacemacs/new-empty-buffer-above
   "b N l" 'spacemacs/new-empty-buffer-right
@@ -288,9 +290,9 @@
   "ij" 'spacemacs/evil-insert-line-below)
 ;; format ---------------------------------------------------------------------
 (spacemacs/set-leader-keys
-  "jo" 'open-line
-  "jC" 'check-parens
+  "j(" 'check-parens
   "j=" 'spacemacs/indent-region-or-buffer
+  "jo" 'open-line
   "jS" 'spacemacs/split-and-new-line
   "jk" 'spacemacs/evil-goto-next-line-and-indent)
 
@@ -298,6 +300,7 @@
 (spacemacs/set-leader-keys
   "j0" 'spacemacs/push-mark-and-goto-beginning-of-line
   "j$" 'spacemacs/push-mark-and-goto-end-of-line
+  "jc" 'goto-last-change
   "jf" 'find-function
   "jv" 'find-variable)
 
@@ -398,7 +401,7 @@
 
 This is achieved by the built in functionality available in emacs 26 by changing
 the value of the `column-number-indicator-zero-based' variable. Functionality
-that does not take into acount `column-number-indicator-zero-based' will not
+that does not take into account `column-number-indicator-zero-based' will not
 respond to this toggle."
   :status (bound-and-true-p column-number-indicator-zero-based)
   :on (setq column-number-indicator-zero-based t)
