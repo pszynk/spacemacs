@@ -168,6 +168,8 @@
   - [[#epub][Epub]]
   - [[#pdf][Pdf]]
   - [[#speed-reading][Speed reading]]
+- [[#readmeorg-files-that-need-proper-tags][README.org files that need proper tags]]
+  - [[#zig][Zig]]
 - [[#source-control][Source control]]
   - [[#git][Git]]
   - [[#github][Github]]
@@ -2195,6 +2197,15 @@ A speed reading mode for Emacs.
 Features:
 - Support for =speed-reading= of arbitrary texts
 
+* README.org files that need proper tags
+** Zig
+[[file:+lang/zig/README.org][+lang/zig/README.org]]
+
+This layer adds support for the zig programming language [[https://ziglang.org/]]
+
+Features:
+- Syntax Highlighting
+
 * Source control
 ** Git
 [[file:+source-control/git/README.org][+source-control/git/README.org]]
@@ -2388,6 +2399,7 @@ This layer installs around 100 themes for Emacs.
 Features:
 - Have access to all included themes in this [[http://themegallery.robdor.com][theme gallery]] from [[http://www.twitter.com/robmerrell][Rob Merrell]].
 - Easily try a theme by invoking helm-themes with: ~SPC T s~.
+- Theme Spacemacs using [[https://github.com/dylanaraps/pywal][pywal]] by choosing one of the =ewal-spacemacs-*= themes.
 
 ** Theming
 [[file:+themes/theming/README.org][+themes/theming/README.org]]

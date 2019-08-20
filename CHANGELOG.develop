@@ -318,6 +318,7 @@ sane way, here is the complete list of changed key bindings
 - restructuredtext (thanks to Wei-Wei Guo and Kalle Lindqvist)
 - semantic-web (thanks to Andreas Textor)
 - yang (thanks to Christian Hopps)
+- zig (thanks to Michael Hauser-Raspe)
 **** Misc
 - multiple-cursors (thanks to Codruț Constantin Gușoi and Thomas de Beauchêne)
 **** Readers
@@ -492,6 +493,9 @@ Other:
   - Changed =dotspacemacs-default-font= =:size= from =13= (pixel size) to =10.0=
     (point size) (thanks to Aaron Zeng and duianto)
   - Updated the list of =base16= themes (thanks to kenranunderscore)
+  - Added a =spacemacs-layouts-restrict-spc-tab= variable to
+    =spacemacs/alternate-buffer= that restricts ~SPC-TAB~ to the current layouts
+    buffers (default: =nil=) (thanks to Thanh Vuong)
 - Fixed:
   - Avoid non-idempotent use of push in init code (thanks to Miciah Masters)
   - Moved Spacemacs startup progress bar to =core-progress-bar.el=, removed
@@ -599,6 +603,7 @@ Other:
   - Added Dogemacs inverted banner for dark themes: "997-banner.txt"
     (thanks to Vitor Finotti and Robby O'Connor)
   - Added reference handler as per jump handler (thanks to Fangrui Song)
+  - Added =spacemacs/iwb-region-or-buffer= (thanks to bb2020)
 *** Distribution changes
 - Refactored =spacemacs-bootstrap=, =spacemacs-ui=, and =spacemacs-ui-visual=
   layers:
@@ -823,6 +828,7 @@ Other:
     - Font scaling ~SPC z x _~ scale down
     - Frame transparency ~SPC T T _~ decrease transparency
     - Zoom frame ~SPC z f _~ zoom frame out
+  - Added ~SPC j U~ for =spacemacs/avy-open-url= (thanks to Dominik Schrempf)
 - Improvements:
   - Rewrote window layout functions for ~SPC w 1~, ~SPC w 2~, ~SPC w 3~, and
     ~SPC w 4~ (thanks to Codruț Constantin Gușoi):
@@ -921,6 +927,14 @@ Other:
     - ~SPC h T e~ for =emacs-tutorial= (aliased from =help-with-tutorial=)
     - ~SPC h T v~ for =evil-tutor-start=
   - Improved Window Manipulation Transient state (thanks to yuhan0)
+  - Added a =spacemacs-layouts-restricted-functions= variable to restrict
+    functions to the current layouts buffers
+    Default: '(spacemacs/window-split-double-columns
+               spacemacs/window-split-triple-columns
+               spacemacs/window-split-grid)
+    (thanks to Thanh Vuong)
+  - Added a link to =spacemacs|create-align-repeat-x= in the docstring for
+     =align-repeat-= commands (thanks to Troy Pracy)
 - Fixed:
   - Fixed ~h~ key binding in compilation and grep buffers
     (thanks to Sylvain Benner)
@@ -1048,6 +1062,9 @@ Other:
   - Required =ivy= to load =counsel-projectile= (thanks to Thanh Vuong)
   - Make =search-engine= layer support custom keywords for =engine-mode= (thanks to Maximilian Wolff)
   - Fixed =search-engine= layer customization issue (thanks to Haisheng Wu)
+  - Replaced deprecated =avy--generic-jump= with =avy-jump=
+    (thanks to Dominik Schrempf)
+  - Switch recreated messages buffer to =evil-normal-state= (thanks to duianto)
 *** Layer changes and fixes
 **** Agda
 - Fixes
@@ -1072,6 +1089,7 @@ Other:
 **** Asm
 - Improvements:
   - Added support for =company= package declaration (thanks to Kalle Lindqvist)
+  - Added jump handlers for =nasm-mode= (thanks to Benjamin Levy)
 **** Auto-completion
 - New packages:
   - Added =yasnippet-snippets= package (thanks to Jack Kamm)
@@ -1096,6 +1114,9 @@ Other:
 - Key bindings:
   - Removed ~C-f~ because it interfered with the default key binding for
     =forward-char= (thanks to scturtle and duianto)
+**** Autohotkey
+- Key bindings:
+  - Added names to autohotkey mode prefixes (thanks to Ying Qu)
 **** C-C++
 - Breaking changes:
   - Moved =cmake-ide= and cmake script support to separate =cmake= layer
@@ -1125,7 +1146,10 @@ Other:
     (thanks to Fangrui Song and Codruț Constantin Gușoi)
   - Added =org-babel= support (thanks to Michael Rohleder)
   - Added debugger integration via =dap= layer
-  - Added detecting ".ccls" for ccls powered projects.
+  - Added detecting ".ccls" for ccls powered projects
+  - Fixed the =c-c++-default-mode-for-headers= should not affect the default
+    behavior that opening a .h file will turn C or C++ mode depending on
+    language used in Emacs > 26.1+ (thanks to Lin Sun)
 - Key bindings:
   - ~SPC m = =~ clang-format current region or buffer (thanks to Dela Anthonio)
   - ~SPC m = f~ clang-format current function (thanks to Dela Anthonio)
@@ -2140,6 +2164,7 @@ Other:
 - Added support for CUSTOM_ID in latex exports (thanks to Compro-Prasad)
 - Added ~SPC m i L~ as =org-cliplink= into =org= layer (thanks to bb2020)
 - Added =ox-jira= as org export backend (thanks to Sebastian Nagel)
+- Load =helm-org= package (thanks to Simon Pintarelli)
 **** Osx
 - Fixed OSX mapping issue (thanks to Joey Liu)
 - Added layer variables to customize modifier behaviors on macOS:
@@ -2362,6 +2387,7 @@ Other:
 - Added prefixes for ruby major mode keybindings (thanks to Seong Yong-ju)
 - Added =lsp= and =dap= support (thanks to Billy Kaplan)
 - Fixed lazy loading of =ruby-test-mode= (thanks to Michael Franz Aigner)
+- Removed stray =test.rb= file (thanks to Michael Hauser-Raspe)
 **** Ruby on Rails
 - Changed leader keys to be configured for the =projectile-rails-mode= minor
   mode instead of =ruby-mode= and =enh-ruby-mode= so that the key bindings will
@@ -2566,6 +2592,7 @@ Other:
 - Remove themes that were deleted from Melpa (thanks to Henrique Jung)
 - Added =eziam-theme= and =kaolin-themes= (thanks to Sylvain Benner)
 - Added =doom-themes= (thanks to Codruț Constantin Gușoi)
+- Created and added =ewal-spacemacs-themes= (thanks to Uroš Perišić)
 **** Tmux
 - Prevent =tmux-command= at GUI mode (thanks to Isaac Zeng)
 - Fixed regression in tmux by setting keybindings using =use-package=
@@ -2577,6 +2604,8 @@ Other:
   ~C-x w 0~, ~SPC 0~ and ~M-0~ call the same command (thanks to duianto, Miciah)
 - Loaded =treemacs-projectile= key binding ~C-c C-p p~ with Treemacs
   (thanks to duianto)
+- Handle ~SPC p t~ when =projectile-project-root= is nil (thanks to Trapez
+  Breen)
 **** Typescript
 - Call tsfmt with extension of current buffer for TSX formatting
   (thanks to Victor Andrée)
@@ -2673,6 +2702,8 @@ Other:
 - Added manual semantic completion function for company (thanks to Nir Friedman)
 - Fixed searching for compilation DB in subdirectories
   (thanks to Alexander Dalshov)
+**** Zig
+- Added syntax highlighting (thanks to Michael Hauser-Raspe)
 *** Various improvements
 - Lots of improvement with CI and documentation exporting
   (thanks to Eugene Yaremenko)
