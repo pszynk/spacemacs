@@ -308,6 +308,7 @@ sane way, here is the complete list of changed key bindings
 - json (thanks to Sylvain Benner, Boris Buliga and Tommi Komulainen)
 - jsonnet (thanks to liztio and Robby O'Connor)
 - julia (thanks to Adam Beckmeyer and Guido Kraemer)
+- kivy (thanks to Ryota Kayanuma)
 - kotlin (thanks to Shanavas M)
 - pact (thanks to Colin Woodbury)
 - perl5 (thanks to Troy Hinckley, Jinseop Kim and Michael Rohleder)
@@ -1080,12 +1081,14 @@ Other:
 - Improvements:
   - Added support for multiple vault password files, see the layer =README.org=
     (thanks to Sylvain Benner)
+  - Simplified filename matching re (thanks to Anatoli Babenia)
 - Fixes:
   - Fixed ansible-doc-mode error on ~SPC h d k~
     (thanks to Codruț Constantin Gușoi)
   - Fixed =error void function ansible: auto-decrypt-encrypt=
     (thanks to Sylvain Benner)
   - Matched upstream Emacs coding convention names (thanks to Ayush Goyal)
+  - Fixed void-variable =company-backends= (thanks to duianto)
 **** Asm
 - Improvements:
   - Added support for =company= package declaration (thanks to Kalle Lindqvist)
@@ -1196,6 +1199,7 @@ Other:
 - New packages:
   - Added =sayid= debugger (thanks to Daniel Manila and Arne Brasseur)
   - Added =flycheck-clojure= linters (thanks to Eugene Yaremenko)
+  - Added =clj-kondo= to Clojure linters (thanks to Luo Tian and John Stevenson)
 - Improvements:
   - Store cider REPL history in spacemacs cache (thanks to Ryan Fowler)
   - Remove backtick from smartparens pairs for Clojure
@@ -1250,6 +1254,8 @@ Other:
     (thanks to John Stevenson)
   - Restore standard =SPC m s i= binding for =cider-jack-in-clj=
     (thanks to Russell Mull)
+  - ~SPC m h d~ new keybinding for =cider-clojuredocs= (thanks to Sam Hedin)
+  - Removed ~SPC m h g~ for =grimoire= as it is deprecated (thanks to Sam Hedin)
 - Fixes:
   - Remove `cider.nrepl/cider-middleware` in lein quick start setting
   - Fixed =cider-inspector-prev-page= binding, also add ~p~ as another key
@@ -1272,6 +1278,7 @@ Other:
     (thanks to Timo Freiberg)
   - Change run-all-tests alias to run-project-tests (thanks to Timo Freiberg)
   - Fixed post-init of parinfer in the clojure layer (thanks to Martin Račák)
+  - Fixed jumping backwards after =cider-find-var= (thanks to Dieter Komendera)
 **** Coffeescript
 - Improvements:
   - Added basic autocompletion (thanks to Codruț Constantin Gușoi)
@@ -1406,6 +1413,7 @@ Other:
 -  Change binding of  =alchemist-project-find-test= from
   ~SPC m p t~ to ~SPC m t F~ (thanks to Lyuben Petrov)
 - Mark alchemist jump handler as async (thanks to Lukasz Czaplinski)
+- Added elixir-ls backend (thanks to mpanarin)
 **** Elm
 - Fixed flycheck initialization (thanks to Kevin W. van Rooijen)
 - Added =elm-test-runner= (thanks to Juan Edi)
@@ -1490,6 +1498,8 @@ Other:
 **** GitHub
 - Packages:
   - Added new packages =forge= (thanks to Miciah Dashiel Butler Masters)
+  - Do not install =forge= on Windows by default, see =README.org= of the layer
+    (thanks to Sylvain Benner)
   - Remove package =github-browse-file= which has been replaced by
    =browse-at-remote= in =version-control= layer
 - Key bindings:
@@ -1543,6 +1553,11 @@ Other:
 - Show magit-log-select and diff in two windows (thanks to duianto)
 - Fixed magit conflicting with golden-ratio (thanks Eric Zhang)
 - Hide with-editor mode-line indicator: =WE= (thanks to duianto)
+**** Gnus
+- Key bindings:
+  - Added ~g r~ for =gnus-group-get-new-news= (thanks to Matthew Leach)
+  - Added ~O~ prefix in evil state for =gnus-group-group-map=
+    (thanks to Matthew Leach)
 **** Go
 - Improved go test output buffer behavior (thanks to Denis Bernard)
 - Configurable extra arguments to go run (thanks to Enze Chi)
@@ -1581,6 +1596,8 @@ Other:
   (thanks to Tim Heckman)
 - Refactored two variables =go-use-gometalinter= and =go-use-golangci-lint= to
   one =go-linter= (thanks to Robert Zaremba)
+- Added Testify support (thanks to Mathieu Post)
+- Added setup instructions for =gopls= (thanks to pancho horrillo)
 **** Graphviz
 - Use graphviz package from melpa (thanks to Matthew Boston)
 **** Groovy
@@ -1846,6 +1863,8 @@ Other:
 - Improved support for workman keyboard layout (thanks to Benjamin Reynolds)
 - Added =after-config= hooks for lazy-loaded packages (thanks to CharlesHD)
 - Added undo-tree visualizer mapping (thanks to CharlesHD)
+**** Kivy
+- Added the =kivy= package (thanks to Nasser Alshammari and Ryota Kayanuma)
 **** LaTeX
 - New package =magic-latex-buffer= (thanks to benquebec)
 - New layer variable =latex-enable-magic= to enable =magic= symbols in latex
@@ -1946,7 +1965,6 @@ Other:
 - Added ebuild-mode (thanks to Kai Wohlfahrt)
 - Added the vala programming language (thanks to Steven Allen)
 - Added hoon (thanks to Hunter Haugen)
-- Added kivy (thanks to Nasser Alshammari)
 **** Mu4e
 - Added custom Spacemacs layout for =mu4e= buffers (thanks to Benjamin Reynolds)
 - Key bindings:
@@ -2425,6 +2443,8 @@ Other:
   - Evilify =ensime= search in insert/normal mode (thanks to Diego Alvarez)
 - Remove duplicated code (thanks to Tetsuro Takemoto)
 - Added ENSIME jump handlers (thanks to Joao Azevedo)
+- Added scala-lsp and metals as an additional backend for scala
+  (thanks to Rodolfo Hansen)
 **** Scheme
 - Added missing =parinfer= package declaration (thanks to Kalle Lindqvist)
 - Update install docs for Chicken 5 changes (thanks to Grant Shangreaux)
@@ -2592,8 +2612,8 @@ Other:
 - Remove themes that were deleted from Melpa (thanks to Henrique Jung)
 - Added =eziam-theme= and =kaolin-themes= (thanks to Sylvain Benner)
 - Added =doom-themes= (thanks to Codruț Constantin Gușoi)
-- Created and added =ewal-spacemacs-themes= (thanks to Uroš Perišić)
 - Added =chocolate-theme= (thanks to Henrique Jung)
+- Updated =doom-themes= list to reflect upstream (thanks to Dominic Pearson)
 **** Tmux
 - Prevent =tmux-command= at GUI mode (thanks to Isaac Zeng)
 - Fixed regression in tmux by setting keybindings using =use-package=

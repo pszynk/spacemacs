@@ -75,6 +75,7 @@
     - [[#extra-languages][Extra languages]]
     - [[#faust][Faust]]
     - [[#gpu][Gpu]]
+    - [[#kivy][Kivy]]
     - [[#octave][Octave]]
     - [[#prolog][Prolog]]
     - [[#sql][Sql]]
@@ -394,7 +395,7 @@ Features:
 ** Mu4e
 [[file:+email/mu4e/README.org][+email/mu4e/README.org]]
 
-This layer adds support for the Mu4e email client.
+This layer adds support for the =Mu4e= email client.
 
 Features:
 - Search, read, reply, move, and delete email.
@@ -402,7 +403,7 @@ Features:
 - UI optimized for speed: quick keystrokes for common actions.
 - Very extendable and customizable.
 - Integration with Helm.
-- Maildir summary using [[https://github.com/agpchil/mu4e-maildirs-extension][mu4e-mailidrs-extension]]
+- Maildir summary using [[https://github.com/agpchil/mu4e-maildirs-extension][mu4e-mailidirs-extension]]
 - Notifications using [[https://github.com/iqbalansari/mu4e-alert][mu4e-alert]]
 
 ** Notmuch
@@ -1037,7 +1038,6 @@ Features:
   - Android Logcat (not associated with any file types by default)
   - Gentoo ebuilds
   - Hoon
-  - Kivy
   - MATLAB
   - QML
   - OpenScad
@@ -1081,6 +1081,14 @@ Features:
   - =.tese= (Shaders)
   - =.frag= (Shaders)
   - =.comp= (Shaders)
+
+*** Kivy
+[[file:+lang/kivy/README.org][+lang/kivy/README.org]]
+
+This layer adds support for Kivy, cross-platform GUI framework for Python.
+
+Features:
+- Syntax Highlighting
 
 *** Octave
 [[file:+lang/octave/README.org][+lang/octave/README.org]]
@@ -1635,6 +1643,9 @@ Features:
 This layer adds support for [[http://elixir-lang.org/][Elixir]].
 
 [[https://github.com/tonini/alchemist.el][Alchemist]] brings the Elixir tooling to Emacs and comes with a bunch of features.
+[[https://github.com/emacs-lsp/lsp-mode][Lsp-mode]] brings IDE like features following Language Server Protocol, through [[https://github.com/JakeBecker/elixir-ls][elixir-ls]]
+
+As Alchemist is no longer maintained, elixir-ls is a preferred solution, even though it has less features at the moment.
 
 Features:
 - Powerful IEx integration
@@ -1937,6 +1948,7 @@ This layer adds support for the Scala language to Spacemacs.
 
 Features:
 - Syntax highlighting
+- Support for language backend. Either using [[https://ensime.github.io/][ENSIME]] or [[https://scalameta.org/metals/][Metals]]
 - Auto-completion
 - Syntax-checking
 - Refactoring
@@ -1946,7 +1958,6 @@ Features:
 - Eldoc integration
 - Test execution directly from Emacs
 - Automatic replacement of ASCII arrows with unicode ones
-- Automatic starting/stopping of [[https://ensime.github.io/][ENSIME]] IDE server
 
 **** Sml
 [[file:+lang/sml/README.org][+lang/sml/README.org]]
@@ -2399,7 +2410,6 @@ This layer installs around 100 themes for Emacs.
 Features:
 - Have access to all included themes in this [[http://themegallery.robdor.com][theme gallery]] from [[http://www.twitter.com/robmerrell][Rob Merrell]].
 - Easily try a theme by invoking helm-themes with: ~SPC T s~.
-- Theme Spacemacs using [[https://github.com/dylanaraps/pywal][pywal]] by choosing one of the =ewal-spacemacs-*= themes.
 
 ** Theming
 [[file:+themes/theming/README.org][+themes/theming/README.org]]
