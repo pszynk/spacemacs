@@ -830,6 +830,9 @@ Other:
     - Frame transparency ~SPC T T _~ decrease transparency
     - Zoom frame ~SPC z f _~ zoom frame out
   - Added ~SPC j U~ for =spacemacs/avy-open-url= (thanks to Dominik Schrempf)
+  - Added workspaces transient state key bindings (thanks to duianto):
+    - ~SPC l w s~ =spacemacs/single-win-workspace= (exits the TS)
+    - ~SPC l w S~ =spacemacs/single-win-workspace=
 - Improvements:
   - Rewrote window layout functions for ~SPC w 1~, ~SPC w 2~, ~SPC w 3~, and
     ~SPC w 4~ (thanks to Codruț Constantin Gușoi):
@@ -936,6 +939,7 @@ Other:
     (thanks to Thanh Vuong)
   - Added a link to =spacemacs|create-align-repeat-x= in the docstring for
      =align-repeat-= commands (thanks to Troy Pracy)
+  - Improved TS formatting: workspaces & layouts (thanks to duianto)
 - Fixed:
   - Fixed ~h~ key binding in compilation and grep buffers
     (thanks to Sylvain Benner)
@@ -1309,6 +1313,7 @@ Other:
 - Key bindings:
   - Fixed key binding ~g C~ (thanks to dubnde)
   - New ~SPC m g =~ to find assignments to a symbol (thanks to dubnde)
+- Make pycscope binary configurable (thanks to Gonéri Le Bouder)
 **** CSharp
 - Improvements:
   - Enabled =flycheck= by default (thanks to Saulius Menkevičius)
@@ -1471,6 +1476,7 @@ Other:
 - Refactor keybindings for =ess-mode= and =ess-julia-mode=
   (thanks to Guido Kraemer and bmag)
 - Added Julia repl to =spacemacs/ess-start-repl= (thanks to Guido Kraemer)
+- Optimize Julia layer to provide better dev experience (thanks to Guido Kraemer)
 - Reorganize key bindings (refer to =ESS= section in Breaking Changes above)
 - Added =xref= integration (thanks to Guido Kraemer)
 - Update ess-disable-underscore-assign for ESS 18.10 (thanks to Leonard Lausen)
@@ -1559,45 +1565,57 @@ Other:
   - Added ~O~ prefix in evil state for =gnus-group-group-map=
     (thanks to Matthew Leach)
 **** Go
-- Improved go test output buffer behavior (thanks to Denis Bernard)
-- Configurable extra arguments to go run (thanks to Enze Chi)
-- Configurable extra arguments to go test (thanks to Ian Clark)
-- Added =godoctor= (thanks to TinySong and Eivind Fonn)
-  - Key bindings:
-    - Added ~SPC m r n~ to rename
-    - Added ~SPC m r e~ to extract
-    - Added ~SPC m r t~ to toggle
-    - Added ~SPC m r d~ for godoc
-- Added =GOROOT= to list of variables copied from shell environment
-  (thanks to Andy Lindeman)
-- Convert remote file name to local name, stripping trampy stuff
-  (thanks to Josh Santos)
-- Added =go-tag= (thanks to brantou)
-- Added =go-gen-test= (thanks to Cosmin Cojocar and Sylvain Benner):
-  - Key bindings:
+- Deprecated:
+  - Dropped support for deprecated =gometalinter= (thanks to pancho horrillo)
+- Layer variables:
+  - Add =go-format-before-save= with a default value of nil
+    (thanks to Jon Erik Del Rosario Suero)
+  - Refactored two variables =go-use-gometalinter= and =go-use-golangci-lint= to
+    one =go-linter= (thanks to Robert Zaremba)
+- Improvements:
+  - Added =LSP= support (thanks to Lupco Kotev)
+  - Set =lsp-prefer-flymake= to =:none= when =Go= layer is using =LSP=
+    (thanks to Tim Heckman)
+  - Improved go test output buffer behavior (thanks to Denis Bernard)
+  - Configurable extra arguments to =go run= (thanks to Enze Chi)
+  - Configurable extra arguments to =go test= (thanks to Ian Clark)
+  - Added toggle for running =gofmt= before save (thanks to Jon Erik Del Suero)
+  - Added toggle control for verbose go test output (thanks to Enze Chi)
+  - Added =go-gen-test= (thanks to Cosmin Cojocar and Sylvain Benner)
+  - Added =go-impl= (thanks to Cosmin Cojocar)
+  - Added =godoctor= (thanks to TinySong and Eivind Fonn)
+  - Added =go-tag= (thanks to brantou)
+  - Added =go-fill-struct= (thanks to Cosmin Cojocar)
+  - Added =golangci-lint= support (thanks to Lupco Kotev)
+  - Added =GOROOT= to list of variables copied from shell environment
+    (thanks to Andy Lindeman)
+  - Added =Testify= support (thanks to Mathieu Post)
+  - Convert remote file name to local name, stripping trampy stuff
+    (thanks to Josh Santos)
+  - Configure =go-mode= to use the =gopkgs= tool to find available Go packages
+    faster (thanks to Cosmin Cojocar)
+  - Support editorconfig setting of =tab-width= to nil (thanks to lawrsp)
+  - Added setup instructions for =gopls= (thanks to pancho horrillo)
+- Key bindings
+  - =godoctor= key bindings (thanks to TinySong and Eivind Fonn):
+    - ~SPC m r n~ to rename
+    - ~SPC m r e~ to extract
+    - ~SPC m r t~ to toggle
+    - ~SPC m r d~ for godoc
+  - =go-gen-test= key bindings (thanks to Cosmin Cojocar and Sylvain Benner):
     - ~SPC m t g g~ to generate tests for the function in the active region
     - ~SPC m t g f~ to generate tests for all exported functions
     - ~SPC m t g F~ to generate tests for all functions
-- Configure =go-mode= to use the =gopkgs= tool to find available Go packages
-  faster (thanks to Cosmin Cojocar)
-- Added =go-fill-struct= and key binding ~SPC m r s~ to fill struct with default
-  values (thanks to Cosmin Cojocar)
-- Added =go-impl= and key binding ~SPC m r i~ to generate method stubs for an
-  interface (thanks to Cosmin Cojocar)
-- Fixed loading of the =GOPATH=, =GOROOT=, and =GO15VENDOREXPERIMENT=
-  environment variables (thanks to Joshua Santos)
-- Added toggle for running =gofmt= before save (thanks to Jon Erik D Suero)
-  - Key bindings: ~SPC m =~ to run =gofmt= manually
-- Support editorconfig setting of =tab-width= to nil (thanks to lawrsp)
-- Added lsp support (thanks to Lupco Kotev)
-- Added golangci-lint support (thanks to Lupco Kotev)
-- Added toggle control for verbose go test output (thanks to Enze Chi)
-- Set lsp-prefer-flymake to :none when Go layer is using LSP
-  (thanks to Tim Heckman)
-- Refactored two variables =go-use-gometalinter= and =go-use-golangci-lint= to
-  one =go-linter= (thanks to Robert Zaremba)
-- Added Testify support (thanks to Mathieu Post)
-- Added setup instructions for =gopls= (thanks to pancho horrillo)
+  - Added ~SPC m r s~ to fill struct with default values
+    (thanks to Cosmin Cojocar)
+  - Added ~SPC m r i~ to generate method stubs for an interface
+    (thanks to Cosmin Cojocar)
+  - Added ~SPC m =~ to run =gofmt= manually (thanks to Jon Erik Del Suero)
+- Fixes:
+  - Fixed loading of the =GOPATH=, =GOROOT=, and =GO15VENDOREXPERIMENT=
+    environment variables (thanks to Joshua Santos)
+  - Fixed =go-run-test-current-function= for vanilla tests and gocheck suite
+    tests (thanks to Mathieu Post)
 **** Graphviz
 - Use graphviz package from melpa (thanks to Matthew Boston)
 **** Groovy
@@ -1618,6 +1636,7 @@ Other:
 - Made gtags toggle major mode specific (thanks to Sylvain Benner)
 - Fixed issue =counsel-gtags= command doesn't work in c-c++ layer
   (thanks to kekenow)
+- Fixed a typo by spelling counsel correctly (thanks to kccai)
 **** Haskell
 - Disabled electric indent for cabal-mode (thanks to Benno Fünfstück)
 - Added dante support to haskell layer (thanks to Kyle McKean)
@@ -1634,57 +1653,64 @@ Other:
   (thanks to cjay, CthulhuDen and Magnus Therning)
 - Included =attrap= when =dante= is used (thanks to Pepe Iborra)
 **** Helm
-- Limited =ripgrep= results to 512 columns by default, and added
-  =spacemacs-helm-rg-max-column-number= layer variable to configure the above
-  limit (thanks to Aaron Jensen, Michael Hauser-Raspe, and Sylvain Benner)
-- Key bindings for directory search (thanks to Tim Jäger and Eivind Fonn):
-  - ~SPC s d for =spacemacs/helm-dir-smart-do-search=
-  - ~SPC s D for =spacemacs/helm-dir-smart-do-search-region-or-symbol=
-  - ~SPC s a d for =spacemacs/helm-dir-do-ag=
-  - ~SPC s a D for =spacemacs/helm-dir-do-ag-region-or-symbol=
-  - ~SPC s k d for =spacemacs/helm-dir-do-ack=
-  - ~SPC s k D for =spacemacs/helm-dir-do-ack-region-or-symbol=
-  - ~SPC s r d for =spacemacs/helm-dir-do-rg=
-  - ~SPC s r D for =spacemacs/helm-dir-do-rg-region-or-symbol=
-  - ~SPC s t d for =spacemacs/helm-dir-do-pt=
-  - ~SPC s t D for =spacemacs/helm-dir-do-pt-region-or-symbol=
-- Don't change =helm-bookmarks= keys too early when helm-mode is enabled
-  (thanks to bmag)
-- Change the default actions for =helm-find-files=, =helm-buffers-list=, and
-  other file- or buffer-related Helm interfaces to handle multiple marked
-  candidates by distributing buffers over existing windows until the action has
-  either assigned all buffers or run out of windows (thanks to Nir Friedman)
-- Fixed signature of =spacemacs//display-helm-window= (thanks to Jack Kamm)
-- Fixed initialization by calling =helm-mode= when Helm is initialized=
-  (thanks to bet4it).
-- Fixed actions in Helm transient state (thanks to Troy Hinckley)
-- Fixed conflict with new Magit transient key bindings
-  (thanks to Sylvain Benner)
-- Added support for editing the =helm-find-files= buffer from the Helm transient
-  state (thanks to Troy Hinckley)
-- Fixed smex package integration (thanks to Troy Hinckley)
-- Fixed winum integration (thanks to Sylvain Benner)
-- Fixed "Invalid face reference" error in Helm transient state
-  (thanks to duianto)
-- Hide lighter (thanks to Sylvain Benner and duianto)
-- Lazy load =helm= based on key bindings (thanks to Sylvain Benner)
-- Fixed error from =spacemacs/helm-files-smart-do-search= on non-file buffers
-  (thanks to Miciah Masters)
-- Added guard to check if =winum= is loaded (thanks to Dan Girshovich)
-- Fixed regression: void function =helm-current-directory= on =C-x C-f=
-  (thanks to bmag)
-- Fixed opening files from buffers without winum
-  (thanks to Codruț Constantin Gușoi)
-- Removed ~SPC s w w~ key binding for =helm-wikipedia-suggest=, which was
-  removed upstream.
-- Load helm before =read-file-name= and =completing-read=
-  (thanks duianto and thanks Miciah for a more elegant solution)
-- Added key binding `sC` for `helm-swoop-clear-cache` (thanks to Yang Qian)
-- Fixed =spacemacs//helm-open-buffers-in-windows= when opening more files than
-  available windows (thanks to Juha Jeronen)
-- Load helm before =completion-at-point= (thanks to duianto)
-- Updated =helm-xref= to set the correct =xref-show-xrefs-function= for Emacs 27
-  (thanks to Junxuan)
+- Improvements:
+  - Load helm before =read-file-name= and =completing-read=
+    (thanks duianto and thanks Miciah for a more elegant solution)
+  - Load helm before =completion-at-point= (thanks to duianto)
+  - Filter out useless buffers from =helm-mini= on ~SPC b b~, all useless
+    buffers can be listed using ~SPC b U~ (thanks to Thomas de Beauchêne)
+  - Limited =ripgrep= results to 512 columns by default, and added
+    =spacemacs-helm-rg-max-column-number= layer variable to configure the above
+    limit (thanks to Aaron Jensen, Michael Hauser-Raspe, and Sylvain Benner)
+  - Don't change =helm-bookmarks= keys too early when helm-mode is enabled
+    (thanks to bmag)
+  - Change the default actions for =helm-find-files=, =helm-buffers-list=, and
+    other file- or buffer-related Helm interfaces to handle multiple marked
+    candidates by distributing buffers over existing windows until the action
+    has either assigned all buffers or run out of windows
+    (thanks to Nir Friedman)
+  - Added support for editing the =helm-find-files= buffer from the Helm
+    transient state (thanks to Troy Hinckley)
+  - Hide lighter (thanks to Sylvain Benner and duianto)
+  - Lazy load =helm= based on key bindings (thanks to Sylvain Benner)
+  - Added guard to check if =winum= is loaded (thanks to Dan Girshovich)
+  - Updated =helm-xref= to set the correct =xref-show-xrefs-function= for
+    Emacs 27 (thanks to Junxuan)
+- Key bindings:
+  - Added Key bindings for directory search (thanks to Tim Jäger and Eivind Fonn):
+    - ~SPC s d for =spacemacs/helm-dir-smart-do-search=
+    - ~SPC s D for =spacemacs/helm-dir-smart-do-search-region-or-symbol=
+    - ~SPC s a d for =spacemacs/helm-dir-do-ag=
+    - ~SPC s a D for =spacemacs/helm-dir-do-ag-region-or-symbol=
+    - ~SPC s k d for =spacemacs/helm-dir-do-ack=
+    - ~SPC s k D for =spacemacs/helm-dir-do-ack-region-or-symbol=
+    - ~SPC s r d for =spacemacs/helm-dir-do-rg=
+    - ~SPC s r D for =spacemacs/helm-dir-do-rg-region-or-symbol=
+    - ~SPC s t d for =spacemacs/helm-dir-do-pt=
+    - ~SPC s t D for =spacemacs/helm-dir-do-pt-region-or-symbol=
+  - Added ~SPC b U~ to list all useless buffers(thanks to Thomas de Beauchêne)
+  - Added ~SPC s C~ for =helm-swoop-clear-cache= (thanks to Yang Qian)
+  - Removed ~SPC s w w~ key binding for =helm-wikipedia-suggest=, which was
+    removed upstream.
+- Fixes
+  - Fixed signature of =spacemacs//display-helm-window= (thanks to Jack Kamm)
+  - Fixed initialization by calling =helm-mode= when Helm is initialized=
+    (thanks to bet4it).
+  - Fixed actions in Helm transient state (thanks to Troy Hinckley)
+  - Fixed conflict with new Magit transient key bindings
+    (thanks to Sylvain Benner)
+  - Fixed smex package integration (thanks to Troy Hinckley)
+  - Fixed winum integration (thanks to Sylvain Benner)
+  - Fixed "Invalid face reference" error in Helm transient state
+    (thanks to duianto)
+  - Fixed error from =spacemacs/helm-files-smart-do-search= on non-file buffers
+    (thanks to Miciah Masters)
+  - Fixed regression: void function =helm-current-directory= on =C-x C-f=
+    (thanks to bmag)
+  - Fixed opening files from buffers without winum
+    (thanks to Codruț Constantin Gușoi)
+  - Fixed =spacemacs//helm-open-buffers-in-windows= when opening more files than
+    available windows (thanks to Juha Jeronen)
 **** HTML
 - Added impatient-mode under ~SPC m i~ (thanks to geo7)
 - Added =counsel-css= as an =ivy= alternative to =helm-css-scss=
@@ -1762,6 +1788,7 @@ Other:
 - Display results count properly in prompt (thanks to yuhan0)
 - Fixed typos in spacemacs/search-dir* bindings (thanks to yuhan0)
 - Added =ivy-ret-visits-directory= variable (thanks to bb2020)
+- Fixed definitions of extra actions R and D for recentf (thanks to madand)
 **** Imenu-list
 - Changed ~SPC b i~ to ~SPC b t~ for =imenu= tree view
   (thansk to Sylvain Benner)
@@ -1773,6 +1800,8 @@ Other:
 - Added missing optional argument for the =jabber-alert-echo= function to fix
   =wrong-number-of-arguments= error when jabber receives a new notification
   (thanks to Aleksei Fedotov)
+**** Json
+- Added variable =json-fmt-on-save= to run the selected formatter on save.
 **** Jsonnet
 - Fixed flycheck support in jsonnet files (thanks to Vikash Balasubramanian)
 **** Java
@@ -1798,6 +1827,8 @@ Other:
 - Added LSP Java backend (thanks to Ivan Yonchovski)
 - Added =.dap-breakpoints= and =.lsp-session-*= (java lsp tempfiles) to
   .gitignore (thanks to Uroš Perišić)
+- Added =transient= (package update temp folder) to
+  .gitignore (thanks to Jarosław Górny)
 - Fixed prefixes for =java-mode= and =gradle-mode=
 - New =lsp= backend keybindings
   - ~SPC m r c i~ convert to static import
@@ -1881,6 +1912,7 @@ Other:
 **** Lua
 - Added support for auto-completion with =company= (thanks to halfcrazy)
 **** Language Server Protocol (LSP)
+- Added core keybindings and prefix declarations for all LSP-based language layers, and helper functions to bind server-specific extensions (thanks to Cormac Cannon).
 - Replace lsp-capabilities keybinding with lsp-describe-session
   (thanks to Bryan Tan)
 - Added lsp-prefer-flymake variable (thanks to Juuso Valkeejärvi)
@@ -1896,6 +1928,7 @@ Other:
 - Added package =helm-lsp=
   - ~SPC m g s~ to find symbol in current project
   - ~SPC m g S~ to find symbol in all projects
+- Disabled =helm-lsp= keybindings when =ivy= layer enabled (Cormac Cannon)
 - Deleted =fix-lsp-company-prefix= since =company-lsp= is doing that handling.
 - Fixed a delay when declaring prefixes for mode (thanks to Thanh Vuong)
 - Required =helm= or =treemacs= to download =helm-lsp= or =lsp-treemacs=
@@ -2255,8 +2288,8 @@ Other:
 - Added key binding ~SPC m r f~ to fix missing import statements
   (thanks to Volodymyr Vitvitskyi)
 - Use =python-mode= for SCons script files (thanks to shanemikel)
-- Added LSP support, which can be used by enabling the =lsp= layer and setting
-  the =python= layer's =python-backend= variable to =lsp=
+- Added LSP support, which can be enabled by setting the =python= layer's
+  =python-backend= variable to =lsp=
   (thanks to Yuan Fu and Sylvain Benner).
 - The LSP backend can use either the =pyls= (default) server or the =mspyls=
   (Microsoft) implementation, which may be selected by setting the
@@ -2302,6 +2335,7 @@ Other:
 - Added support for 'black' formatter (thanks to Mike Macpherson)
 - Enabled =eldoc= for =anaconda-mode= (thanks to Vikash Balasubramanian)
 - Various fixes for =lsp-python-ms= setup (thanks to Trapez Breen)
+- Added lazy loading of =lsp-python-ms= (thanks to Ying Qu)
 **** Racket
 - Restore smart closing paren behavior in racket-mode (thanks to Don March)
 - Updated racket logo (thanks to Vityou)
@@ -2310,6 +2344,7 @@ Other:
 - Key bindings:
   - Added ~j D~ to jump other window (thanks to Rich Alesi)
   - Added ~-~ to enter (thanks to Rich Alesi)
+- Load =helm= before =ranger= (thanks to duianto)
 **** Rcirc
 - New variable =rcirc-enable-late-fix= to enable or disable the included
   =rcirc-late-fix= package (disabled by default).
@@ -2746,10 +2781,10 @@ Other:
   Diego Alvarez, Diego Berrocal, Dietrich Daroch, Dinesh Bhosale, Dominik
   Schrempf, Doug Beardsley, dubnde, duianto, eldios, EMayej, Eugene Yaremenko,
   Evan Klitzke, Evan Niessen-Derry, firemiles, Florian Bruhin, Fuqiao Xue,
-  Garrett Johnson, Grant Shangreaux, Guido Kraemer, Henrique Jung, Henry Hirsch,
-  Henry Marshall, hornuda, Hong Xu, Ivan Fedorov, Ivan Kryvoruchko, J. Patrick
-  Lanigan, Jaremy Creechley, Jason Axelson, Jesse Cooke, Jethro Shuwen Sun, JI
-  Xiang, Jim Deville, Jody Frankowski, Joe Hillenbrand, John Eismeier, John
+  Gabriel Arrillaga, Garrett Johnson, Grant Shangreaux, Guido Kraemer, Henrique Jung,
+  Henry Hirsch, Henry Marshall, hornuda, Hong Xu, Ivan Fedorov, Ivan Kryvoruchko,
+  J. Patrick Lanigan, Jaremy Creechley, Jason Axelson, Jesse Cooke, Jethro Shuwen Sun,
+  JI Xiang, Jim Deville, Jody Frankowski, Joe Hillenbrand, John Eismeier, John
   Wood, Jon Tippens, Jonas Strømsodd, Jonathan Arnett, Jonathan Chen, Jonathan
   Gillett, Josh Greenwood, Joshua Santos, Justin Stone, Kainalu Hagiwara, Kalle
   Lindqvist, Kechao Cai, Keith Simmons, Keith Wygant, Kevin Ji, Kristoffer
