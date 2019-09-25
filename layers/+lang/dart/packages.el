@@ -25,16 +25,19 @@
   (interactive)
   (dart-server-show-hover t))
 
-(defun dart/init-dart-mode ())
-
-(defun dart/init-dart-server ()
-  (use-package dart-server
+(defun dart/init-dart-mode ()
+  (use-package dart-mode
     :defer t
     :mode "\\.dart\\'"
     :init
+    (add-hook 'dart-mode-local-vars-hook
+              #'spacemacs//dart-setup-backend-lsp)))
+
+(defun dart/init-dart-server ()
+  (use-package dart-server
+    :after dart-mode
+    :init
     (progn
-      (add-hook 'dart-mode-local-vars-hook
-                #'spacemacs//dart-setup-backend-lsp)
       (spacemacs/declare-prefix-for-mode 'dart-mode "mf" "find")
       (spacemacs/declare-prefix-for-mode 'dart-mode "mh" "help")
       (spacemacs/set-leader-keys-for-major-mode 'dart-mode
@@ -46,12 +49,15 @@
         ;; There's an upstream issue with this command:
         ;; dart-server-find-refs on int opens a dart buffer that keeps growing in size #11
         ;; https://github.com/bradyt/dart-server/issues/11
+        ;; When/if it's fixed, add back the key binding:
+        ;; ~SPC m f f~ Find reference at point.
+        ;; to the readme.org key binding table.
         ;; "ff" 'dart-server-find-refs
         "fe" 'dart-server-find-member-decls
         "fr" 'dart-server-find-member-refs
         "fd" 'dart-server-find-top-level-decls)
 
-      (add-to-list 'spacemacs-jump-handlers-dart-server
+      (add-to-list 'spacemacs-jump-handlers-dart-mode
                    '(dart-server-goto :async t))
 
       (evil-define-key 'insert dart-server-map
@@ -60,8 +66,7 @@
 
       (evil-set-initial-state 'dart-server-popup-mode 'motion)
       (evil-define-key 'motion dart-server-popup-mode-map
-        (kbd "gr") 'dart-server-do-it-again))
-    :config (dart-mode)))
+        (kbd "gr") 'dart-server-do-it-again))))
 
 (defun dart/init-flutter ()
   (use-package flutter
