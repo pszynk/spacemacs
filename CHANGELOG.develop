@@ -501,6 +501,9 @@ Other:
   - Added a =spacemacs-layouts-restrict-spc-tab= variable to
     =spacemacs/alternate-buffer= that restricts ~SPC-TAB~ to the current layouts
     buffers (default: =nil=) (thanks to Thanh Vuong)
+  - Use a unique variable for each transient state's full-hint toggle function
+    so that toggling the full hint in one transient state does not affect other
+    transient states (thanks to Miciah Dashiel Butler Masters)
 - Fixed:
   - Avoid non-idempotent use of push in init code (thanks to Miciah Masters)
   - Moved Spacemacs startup progress bar to =core-progress-bar.el=, removed
@@ -1765,8 +1768,11 @@ Other:
 - Added missing prefixes for =web-mode= and =css-mode= (thanks to Uroš Perišić)
 - Fixed ~TAB~ indenting in =web-mode= (thanks to Christopher Eames)
 - Added =lsp= support for =css-mode=, =less-css-mode=, and =scss-mode=
+  (thanks to Seong Yong-ju)
 - Added support for =prettier= formatter in HTML buffers
-- Added support for .svelte files
+  (thanks to Anton Alekseev)
+- Added support for =.svelte= files (thanks to Javier Candeira)
+- Added =lsp= support for =html= buffers (thanks to Thanh Vuong)
 **** Hy
 - Added support for virtual envs (thanks to Danny Freeman)
 - Key bindings:
@@ -1828,6 +1834,8 @@ Other:
 - Fixed typos in spacemacs/search-dir* bindings (thanks to yuhan0)
 - Added =ivy-ret-visits-directory= variable (thanks to bb2020)
 - Fixed definitions of extra actions R and D for recentf (thanks to madand)
+- Renamed =counsel-more-chars= to =ivy-more-chars= to match upstream
+  (thanks to duianto)
 **** Imenu-list
 - Changed ~SPC b i~ to ~SPC b t~ for =imenu= tree view
   (thansk to Sylvain Benner)
@@ -2214,9 +2222,13 @@ Other:
     - ~SPC a o J t j~ Convert the TODO item at point to a Jira ticket
   - Added ~SPC m C p~ =org-pomodoro= in =org-journal-mode=
     (thanks to Mariusz Klochowicz)
-- Key binding changes for archiving (thanks to Ag Ibragimov):
-  - Added ~SPC m s a~ to toggle archive tag for subtree
-  - Added ~SPC m s A~ to archive subtree (previously ~SPC m s a~)
+  - Key binding changes for archiving (thanks to Ag Ibragimov):
+    - Added ~SPC m s a~ to toggle archive tag for subtree
+    - Added ~SPC m s A~ to archive subtree (previously ~SPC m s a~)
+  - Added ~SPC m i L~ as =org-cliplink= into =org= layer (thanks to bb2020)
+  - Documented more insertion bindings (thanks to Lorenzo Manacorda):
+    - ~C-RET~   Insert heading at end of current subtree
+    - ~C-S-RET~ Insert TODO heading at end of current subtree
 - Made =org= layer depend on =spacemacs-org= (thanks to Eivind Fonn)
 - Remove =mu4e= and =notmuch= from =org= (thanks to Sylvain Benner)
 - Use evil-org from MELPA (thanks to Eivind Fonn)
@@ -2256,7 +2268,6 @@ Other:
 - Replace ox-reveal with org-re-reveal (thanks to Magnus Therning)
 - Added epub support (thanks to vishvanath45)
 - Added support for CUSTOM_ID in latex exports (thanks to Compro-Prasad)
-- Added ~SPC m i L~ as =org-cliplink= into =org= layer (thanks to bb2020)
 - Added =ox-jira= as org export backend (thanks to Sebastian Nagel)
 - Added =helm-org= package (thanks to Simon Pintarelli)
 **** Osx
@@ -2438,6 +2449,8 @@ Other:
   - Configure =emmet-mode= to expand classes using =className= instead of =class=
     (thanks to Sylvain Benner)
   - Open =.jsx= files with =rjsx-mode= (thanks to Thomas de Beauchêne)
+  - Made =react= layer respect =javascript= layers variable
+    =javascript-fmt-on-save= (thanks to Tommy Groshong)
 - Key bindings:
   - Added =import-js= support with key bindings:
     - ~SPC m i i~ to mport the module for the variable under the cursor
@@ -2802,6 +2815,8 @@ Other:
   - Added smerge transient state key bindings (thanks to duianto):
     ~SPC g r e >~ ediff
     ~SPC g r K >~ kill current
+  - Added current and total conflicts to smerge transient state's hint
+    (thanks to Miciah Dashiel Butler Masters)
 - New packages:
   - =browse-at-remote= which replaces =github-browse-file=
   (thanks Eugene Yaremenko)
@@ -2862,14 +2877,16 @@ Other:
   Schneider, Pawan Dubey, Paweł Siudak, Phil Pirozhkov, Philippe Bourdages,
   Piotr Grzesik, Rafi Khan, Rand01ph, rakyi, Raymond Wanyoike, Reverend Homer,
   Robby O'Connor, Rhommel Lamas, Sam Pablo Kuper, Saulius Menkevičius, sduthil,
-  Sergio Ugalde, Shane Kilkelly, Sid Kapur, Somelauw, Soobin Rho, sorawee,
-  SteveJobzniak, Sunghyun Hwang, Swaroop C H, Sylvain Benner, Szunti, Tim
-  Stewart, timor, TinySong, Titov Andrey, Thomas de Beauchêne, Tomasz
-  Cichocinski, Trey Merkley, tzhao11, Vincent Taing, Vlad Bokov, Vladimir
-  Kochnev, Wieland Hoffmann, Witoslaw Koczewski, Xiang Ji, Yi Liu, Zane
-  Sterling, zer09, Zhige Xin, Serghei Iakovlev)
+  Sergio Ugalde, Shane Kilkelly, Sid Kapur, Som Poddar, Somelauw, Soobin Rho,
+  sorawee, SteveJobzniak, Sunghyun Hwang, Swaroop C H, Sylvain Benner, Szunti,
+  Thijs Vermeir, Tim Stewart, timor, TinySong, Titov Andrey, Thomas de
+  Beauchêne, Tomasz Cichocinski, Trey Merkley, tzhao11, Vincent Taing, Vlad
+  Bokov, Vladimir Kochnev, Wieland Hoffmann, Witoslaw Koczewski, Xiang Ji, Yi
+  Liu, Zane Sterling, zer09, Zhige Xin, Serghei Iakovlev)
 **** Documentation and website
   - Updated DOCUMENTATION.org to fix the example for how to change the separator style
+  - README.md:
+    - Fixed macOS documentation to install fonts (thanks to Sergio Morales)
 *** Release notes summarized
   Thanks to: Grant Shangreaux, Songpeng Zu, Igor Almeida, Miciah Dashiel Butler
   Masters, Abhishek(Compro) Prasad, Deepak Khidia, Ward Harris, Jiahao Jiang,
