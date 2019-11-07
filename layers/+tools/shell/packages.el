@@ -228,13 +228,16 @@
       (setq shell-pop-window-position shell-default-position
             shell-pop-window-size     shell-default-height
             shell-pop-term-shell      shell-default-term-shell
-            shell-pop-full-span       shell-default-full-span
-            shell-pop-in-after-hook   #'evil-insert-state)
+            shell-pop-full-span       shell-default-full-span)
       (make-shell-pop-command "eshell" eshell)
       (make-shell-pop-command "term" term shell-pop-term-shell)
       (make-shell-pop-command "ansi-term" ansi-term shell-pop-term-shell)
       (make-shell-pop-command "inferior-shell" inferior-shell)
       (make-shell-pop-command "multiterm" multiterm)
+
+      (let* ((initial-shell-mode-name (format "%S-mode" shell-default-shell))
+             (initial-shell-mode (intern initial-shell-mode-name)))
+        (evil-set-initial-state initial-shell-mode 'insert))
 
       (add-hook 'term-mode-hook 'ansi-term-handle-close)
 
@@ -310,9 +313,20 @@
 
     :config
     (progn
+      (setq vterm-shell shell-default-term-shell)
+
+      (define-key vterm-mode-map (kbd "M-n") 'vterm-send-down)
+      (define-key vterm-mode-map (kbd "M-p") 'vterm-send-up)
+      (define-key vterm-mode-map (kbd "M-y") 'vterm-yank-pop)
+      (define-key vterm-mode-map (kbd "M-/") 'vterm-send-tab)
+
+      (evil-define-key 'insert vterm-mode-map (kbd "C-y") 'vterm-yank)
+
       (evil-define-key 'normal vterm-mode-map
         [escape] 'vterm--self-insert
-        [return] 'vterm--self-insert)
+        [return] 'vterm--self-insert
+        (kbd "p") 'vterm-yank
+        (kbd "u") 'vterm-undo)
 
       (add-hook 'vterm-mode-hook 'spacemacs/disable-hl-line-mode)
 
