@@ -1148,6 +1148,8 @@ Other:
     (thanks to Ayush Goyal)
   - Fixed backends when =auto-completion-enable-snippets-in-popup= is nil
     (thanks to Sylvain Benner)
+  - Removed the assumption that ~C-k~ was bound to =evil-insert-digraph= after
+    closing/finishing a company completion (thanks to lovrolu)
 - Key bindings:
   - Removed ~C-f~ because it interfered with the default key binding for
     =forward-char= (thanks to scturtle and duianto)
@@ -2138,6 +2140,8 @@ Other:
   - ~SPC s m s r~ =set-rectangular-region-anchor=
   - ~SPC s m s s~ =mc/sort-regions=
   - ~SPC s m s t~ =mc/reverse-regions=
+- Fixed initialization (thanks to Seong Yong-ju)
+- Moved =evil-mc= key bindings to =evil-mc-key-map= (thanks to Seong Yong-ju)
 **** Neotree
 - Made neotree an optional instead of a default layer
 - Move neotree to its own layer in new +filetree folder
@@ -2902,6 +2906,10 @@ Other:
   - ~SPC x P~ paste item from history (cliphist must be enabled)
   - ~SPC x R~ rectangle paste item from history (cliphist must be enabled)
   - ~SPC x s~ select item from history (cliphist must be enabled)
+**** Yaml
+- Improvements:
+  - Updated docs to include the =yaml-yamllint= flycheck checker
+    (thanks to Nam Nguyen)
 **** Ycmd
 - Search for =compile_commands.json= in build sub-directory
   (thanks to Amos Bird and Eivind Fonn)
