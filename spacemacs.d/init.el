@@ -254,10 +254,15 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(spacemacs-dark
+   dotspacemacs-themes '(gruvbox-dark-soft
+                         gruvbox-light-soft
+                         gruvbox-dark-medium
+                         gruvbox-light-medium
+                         gruvbox-dark-hard
+                         gruvbox-light-hard
+                         spacemacs-dark
                          spacemacs-light
-                         sanityinc-solarized-dark
-                         sanityinc-solarized-light)
+                         )
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -266,7 +271,7 @@ It should only modify the values of Spacemacs settings."
    ;; refer to the DOCUMENTATION.org for more info on how to create your own
    ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator slant :separator-scale 1.5)
+   dotspacemacs-mode-line-theme 'doom
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -274,14 +279,14 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   ;; dotspacemacs-default-font '("Fura Code Nerd Font"
+   ;; testing chars --- oO0 | 1iljJ
+   ; dotspacemacs-default-font '("Fura Code Nerd Font"
    ; dotspacemacs-default-font '("Inconsolata Nerd Font"
-   dotspacemacs-default-font '("DejaVu Sans Mono"
-                               :size 16
+   dotspacemacs-default-font '("monospace"
+                               :size 18
                                :weight normal
                                :width normal
                                :powerline-scale 1)
-   ;; oO0 | 1iljJ
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
