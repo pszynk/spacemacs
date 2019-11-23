@@ -168,6 +168,10 @@ the [[file:CHANGELOG.org][CHANGELOG.org]] file.
   - Swapped key bindings for better usability (thanks to Tony Lotts):
     - ~SPC m s s~ for =haskell-interactive-switch=
     - ~SPC m s S~ for =spacemacs/haskell-interactive-bring=
+***** LSP
+- Key bindings;
+  - Change jump back to last mark from ~SPC m g p~ to ~SPC m g b~
+    to follow the keybindings convention (thanks to Magnus Therning)
 ***** IPython notebook
 - Key bindings;
   - Change prefix from ~SPC a i~ to ~SPC a y~ (thanks to Swaroop C H)
@@ -177,6 +181,7 @@ the [[file:CHANGELOG.org][CHANGELOG.org]] file.
 - CoffeeScript support has been extracted from the =javascript= layer into the
   new =coffeescript= layer.
 - Added missing prefix for =js2-mode=
+- Added =eslint_d= support (thanks to Seong Yong-ju)
 ***** Markdown
 - Key bindings:
   - Removed ~SPC m i I~ for =markdown-insert-reference-image=
@@ -325,6 +330,7 @@ sane way, here is the complete list of changed key bindings
 - perl6 (thanks to Bahtiar Gadimov and yuhan0)
 - prolog (thanks to Newres Al Haider)
 - reasonml (thanks to fredyr and Dave Aitken)
+- solidity (thanks to Brooklyn Zelenka and Seong Yong-ju)
 - protobuf (thanks to Amol Mandhane)
 - restructuredtext (thanks to Wei-Wei Guo and Kalle Lindqvist)
 - semantic-web (thanks to Andreas Textor)
@@ -375,6 +381,7 @@ sane way, here is the complete list of changed key bindings
 *** Renamed layers
 - =extra-langs= renamed to =major-modes= (thanks to Eivind Fonn)
 - =pdf-tools= renamed to =pdf=
+- =mercury-layer= renamed to =mercury=
 *** Removed layers
 - evil-cleverparens (moved to =spacemacs-evil=)
 - extra-langs (replaced by =ad-hoc= layers)
@@ -416,6 +423,7 @@ sane way, here is the complete list of changed key bindings
     =.spacemacs.template= (thanks to Ying Qu)
 Other:
   - =.gitignore= now ignores tag files and the bbdb database.
+  - =.gitignore= now ignores org-journal-cache-file (thanks to Benjamin Hipple)
   - Added =vim-style-visual-feedback= and =hybrid-style-visual-feedback= style
     variables to enable =evil-goggles= pulse in the Vim and Hybrid editing
     styles, respectively; disabled by default (thanks to Sylvain Benner)
@@ -556,6 +564,7 @@ Other:
     =spacemacs/ivy-persp-switch-project=):
     - Fixed the default action to display the home buffer in the new layout.
     - Added actions to copy the current layout or create a new project layout.
+    - Added action for opening project in dired. (thanks to Magnus Therning)
   - Resolve symlinks in warning message about duplicate layers
     (thanks to Ben Gamari)
   - Check toggle condition in status function (thanks to Eivind Fonn)
@@ -849,6 +858,15 @@ Other:
   - Added visual-line-navigation keys (thanks to duianto)
     - ~up~ =evil-previous-visual-line=
     - ~down~ =evil-next-visual-line=
+  - Added ~a~ for =ace-window= to window manipulation transient state
+    (thanks to fleimgruber)
+  - Added =dired= evil search next/prev key bindings (thanks to duianto):
+    - With the =vim= editing style in =normal= state:
+      - ~n~ =evil-ex-search-next=
+      - ~N~ =evil-ex-search-previous=
+    - With the =hybrid= editing style in =normal= state:
+      - ~n~ =evil-search-next=
+      - ~N~ =evil-search-previous=
 - Improvements:
   - Rewrote window layout functions for ~SPC w 1~, ~SPC w 2~, ~SPC w 3~, and
     ~SPC w 4~ (thanks to Codruț Constantin Gușoi):
@@ -960,6 +978,8 @@ Other:
     - Switch to Project Perspective and Show Recent Files
     - Switch to Project Perspective and Search
     (thanks to Gia Thanh Vuong)
+  - Enabled =doom= mode-line theme to respect
+    =dotspacemacs-display-default-layout= (thanks to Jake Romer)
 - Fixed:
   - Fixed ~h~ key binding in compilation and grep buffers
     (thanks to Sylvain Benner)
@@ -1486,6 +1506,7 @@ Other:
 **** Emacs Lisp
 - Key bindings:
   - Added ~c~ to continue in edebug mode (thanks to hodge)
+  - Added ~SPC m g b~ to jump back to previous point (thanks to Magnus Therning)
 - Identify Cask files as emacs lisp ones (thanks to Adrien Becchis)
 - Added =overseer= ert test runner (thanks to Adrien Becchis)
   - Key bindings:
@@ -1813,8 +1834,12 @@ Other:
 - Added support for =.svelte= files (thanks to Javier Candeira)
 - Added =lsp= support for =html= buffers (thanks to Thanh Vuong)
 **** Hy
+- Added support for pipenv (thanks to Cazim Hysi)
+- Updated Hy layer to current Hy mode (thanks to Cazim Hysi)
 - Added support for virtual envs (thanks to Danny Freeman)
 - Key bindings:
+  - Added ~SPC m v~ prefix for virtualenvs
+  - Added ~SPC m v p~ prefix for pipenv
   - Added ~SPC m h~ prefix for =help=
   - Added ~SPC m e~ prefix to mirror the eval bindings of other Lisps
   - Changed ~SPC m s s~ (i.e. =start-or-switch-to-shell=) to ~SPC m '~
@@ -1908,41 +1933,46 @@ Other:
 **** Jsonnet
 - Fixed flycheck support in jsonnet files (thanks to Vikash Balasubramanian)
 **** Java
-- Added support for multiple backends. Supported backends are: =meghanada=,
-  =eclim=. The default backend is =meghanada=.
 - Key bindings:
   - ~SPC m e e~ is now to fix error around point. Use ~SPC e~ prefix to navigate
     between errors.
   - ~SPC m p r~ to run project (thanks to Willian Ver Valem Paiva)
   - ~SPC r n~ for =eclim-java-new= (thanks to Dela Anthonio)
-- Replace usage of =ensime-print-type-at-point= by =ensime-type-at-point=
-  (thanks to Joao Azevedo)
-- Added defalias for =ensime-type-at-point= for compatibility
-  (thanks to Eivind Fonn)
-- Added ENSIME jump handlers (thanks to Joao Azevedo)
-- Improved maven and gradle support (thanks to Sylvain Benner)
-- Made java layer depend on groovy layer (thanks to Sylvain Benner)
-- Fixed syntax typo in configuration (thanks to EMayej)
-- Added =org-babel= support (thanks to Michael Rohleder)
-- Remove broken ENSIME key bindings (thanks to Bjarke Vad Andersen)
-- Fixed yanking types (thanks to Bjarke Vad Andersen)
-- Fixed gtags related initialization (thanks to Guido Kraemer)
-- Added LSP Java backend (thanks to Ivan Yonchovski)
-- Added =.dap-breakpoints= and =.lsp-session-*= (java lsp tempfiles) to
-  .gitignore (thanks to Uroš Perišić)
-- Added =transient= (package update temp folder) to
-  .gitignore (thanks to Jarosław Górny)
-- Fixed prefixes for =java-mode= and =gradle-mode=
-- New =lsp= backend keybindings
-  - ~SPC m r c i~ convert to static import
-  - ~SPC m r a t~ add throws exception
-  - ~SPC m r a a~ assign all parameters to fields
-  - ~SPC m r a f~ assign parameter to field
-  - ~SPC m r g g~ to generate getters/setters
-  - ~SPC m r g e~ to generate =equals= and =hashCode= methods
-  - ~SPC m r g t~ to generate =toString= method
-  - ~SPC m r g o~ to generate method overrides
-  - ~SPC m c p~ create spring boot project
+  - New =lsp= backend keybindings
+    - ~SPC m r c i~ convert to static import
+    - ~SPC m r a t~ add throws exception
+    - ~SPC m r a a~ assign all parameters to fields
+    - ~SPC m r a f~ assign parameter to field
+    - ~SPC m r g g~ to generate getters/setters
+    - ~SPC m r g e~ to generate =equals= and =hashCode= methods
+    - ~SPC m r g t~ to generate =toString= method
+    - ~SPC m r g o~ to generate method overrides
+    - ~SPC m c p~ create spring boot project
+      (thanks to Ivan Yonchovski)
+- Improvements:
+  - Added support for multiple backends. Supported backends are: =meghanada=,
+    =eclim=. The default backend is =meghanada=. (thanks to Ivan Yonchovski)
+  - Added =ENSIME= jump handlers (thanks to Joao Azevedo)
+  - Improved =maven= and =gradle= support (thanks to Sylvain Benner)
+  - Made =java= layer depend on =groovy= layer (thanks to Sylvain Benner)
+  - Added =org-babel= support (thanks to Michael Rohleder)
+  - Remove broken =ENSIME= key bindings (thanks to Bjarke Vad Andersen)
+  - Added LSP Java backend (thanks to Ivan Yonchovski)
+  - Added =.dap-breakpoints= and =.lsp-session-*= (java lsp tempfiles) to
+    .gitignore (thanks to Uroš Perišić)
+  - Added =transient= (package update temp folder) to
+    .gitignore (thanks to Jarosław Górny)
+- Fixes:
+  - Replace usage of =ensime-print-type-at-point= by =ensime-type-at-point=
+    (thanks to Joao Azevedo)
+  - Added defalias for =ensime-type-at-point= for compatibility
+    (thanks to Eivind Fonn)
+  - Fixed syntax typo in configuration (thanks to EMayej)
+  - Fixed yanking types (thanks to Bjarke Vad Andersen)
+  - Fixed gtags related initialization (thanks to Guido Kraemer)
+  - Fixed prefixes for =java-mode= and =gradle-mode= (thanks to Seong Yong-ju)
+  - Enabled =lsp-java= when the =java-backend= is =nil= and the =lsp= layer is
+    enabled (thanks to Ivan Yonchovski)
 **** Javascript
 - Improvements:
   - Leverage js-doc Yasnippet integration if available (thanks to Andriy Kmit')
@@ -2148,6 +2178,10 @@ Other:
   - ~SPC s m s t~ =mc/reverse-regions=
 - Fixed initialization (thanks to Seong Yong-ju)
 - Moved =evil-mc= key bindings to =evil-mc-key-map= (thanks to Seong Yong-ju)
+- Added =evil-mc= make cursors from selection key bindings:
+  - ~grI~ =evil-mc-make-cursor-in-visual-selection-beg=
+  - ~grA~ =evil-mc-make-cursor-in-visual-selection-end=
+  (thanks to duianto)
 **** Neotree
 - Made neotree an optional instead of a default layer
 - Move neotree to its own layer in new +filetree folder
@@ -2518,6 +2552,7 @@ Other:
   - Open =.jsx= files with =rjsx-mode= (thanks to Thomas de Beauchêne)
   - Made =react= layer respect =javascript= layers variable
     =javascript-fmt-on-save= (thanks to Tommy Groshong)
+  - Added =eslint_d= support (thanks to Seong Yong-ju)
 - Key bindings:
   - Added =import-js= support with key bindings:
     - ~SPC m i i~ to mport the module for the variable under the cursor
@@ -2604,6 +2639,7 @@ Other:
   - Added ~SPC m c v~ to run "cargo check" command (thanks to Victor Polevoy)
 - Added rust lsp completion with company and bindings (thanks to Justin)
 - Added debugger integration via =dap= layer
+- Fixed rust dap integration (thanks to Tommi Komulainen)
 **** Sailfish-Developer
 - Key bindings:
   - Added =sailfish-scratchbox= key bindings (thanks to Victor Polevoy):
@@ -2707,8 +2743,13 @@ Other:
 - Fixed documentation issues with slack and emoji layers
   (thanks to Benjamin Reynolds)
 - Fixed =helm= menu display (thanks to Leslie Shawn Russell)
+- Fixed function name bug in react layer fmt-on-save (thanks to Tommy Groshong)
 **** Smex
 - Fixed ~SPC m :~ for current major mode commands (thanks to tinysong)
+**** Solidity
+- Key bindings:
+  - Added ~SPC m g~ Estimate gas at point
+    (thanks to Brooklyn Zelenka and Seong Yong-ju)
 **** Source control
 - Install orgit only when org package is used (thanks to Boris Buliga)
 - Defer git-gutter loading (thanks to Aaron Jensen)
@@ -2822,6 +2863,9 @@ Other:
 - Made sure treemacs' minor modes will be disabled when they are configured
   to be off.
 - Add =tag= as an accepted value for option =treemacs-use-follow-mode=.
+- Deprecated =treemacs-use-collapsed-directories=. Flattening directories should
+  be controlled by directly setting =treemacs-collapse-dirs=.
+- Fixed "width (un)locked" message appearing when treemacs is loaded.
 **** Typescript
 - Call tsfmt with extension of current buffer for TSX formatting
   (thanks to Victor Andrée)
@@ -2860,6 +2904,7 @@ Other:
 - Added a =typescript-lsp-linter= variable to allow for disabling =lsp= as a
   linter, when =lsp= is set as the backend (thanks to Thanh Vuong)
 - Fix =tide= with =tsx= files (thanks to Aaron Jensen)
+- Added =eslint_d= support (thanks to Seong Yong-ju)
 **** Vagrant
 - Key bindings:
   - move key bindings prefix to ~SPC a V~ (thanks to Thomas de Beauchêne)
@@ -2942,8 +2987,8 @@ Other:
   Alexandros Kotzias, Andrew Grangaard, Andrew Vit, Andriy Senyshyn, Anton
   Latukha, Antonio Miranda, Anurag Sharma, Archenoth, Ather Sharif, Artur
   Juraszek, Benjamin Reynolds, Bernhard Schommer, Billy Wade, bmag, Boris
-  Buliga, Boris Wong, Carl Lange, Chase Adams, Christian Bäuerlein, Cibin
-  Mathew, CL123123, Codruț Constantin Gușoi, Compro-Prasad, cormacc, Daniel
+  Buliga, Boris Wong, Carl Lange, Cazim Hysi, Chase Adams, Christian Bäuerlein,
+  Cibin Mathew, CL123123, Codruț Constantin Gușoi, Compro-Prasad, cormacc, Daniel
   Hodson, Daniel Le, Daniel Molina, Darkhan, David Florness, David Parrish,
   David Vo, davidpham87, Deepu Mohan Puthrote, Dela Anthonio, Diego Alvarez,
   Diego Berrocal, Dietrich Daroch, Dinesh Bhosale, Dominik Schrempf, Doug
