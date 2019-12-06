@@ -92,7 +92,8 @@ This function should only modify configuration layer settings."
      version-control
 
      ;; modes
-     org
+     (org :variables
+          org-enable-reveal-js-support t)
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -280,10 +281,12 @@ It should only modify the values of Spacemacs settings."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    ;; testing chars --- oO0 | 1iljJ
-   ; dotspacemacs-default-font '("Fura Code Nerd Font"
-   ; dotspacemacs-default-font '("Inconsolata Nerd Font"
-   dotspacemacs-default-font '("monospace"
-                               :size 18
+   ;; dotspacemacs-default-font '("monospace"
+   ;; dotspacemacs-default-font '("Input Nerd Font Mono"
+   ;; dotspacemacs-default-font '("Inconsolata Nerd Font"
+   ;; dotspacemacs-default-font '("Fura Code Nerd Font Mono"
+   dotspacemacs-default-font '("FantasqueSansMono Nerd Font Mono"
+                               :size 20
                                :weight normal
                                :width normal
                                :powerline-scale 1)
