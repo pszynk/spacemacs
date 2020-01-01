@@ -92,7 +92,10 @@ This function should only modify configuration layer settings."
      version-control
 
      ;; modes
-     org
+     (org :variables
+          org-enable-github-support t
+          org-enable-reveal-js-support t)
+
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -280,10 +283,10 @@ It should only modify the values of Spacemacs settings."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    ;; testing chars --- oO0 | 1iljJ
-   ; dotspacemacs-default-font '("Fura Code Nerd Font"
-   ; dotspacemacs-default-font '("Inconsolata Nerd Font"
-   dotspacemacs-default-font '("monospace"
-                               :size 18
+   ;; dotspacemacs-default-font '("Inconsolata Nerd Font"
+   ;; dotspacemacs-default-font '("monospace"
+   dotspacemacs-default-font '("Fira Code"
+                               :size 17
                                :weight normal
                                :width normal
                                :powerline-scale 1)
@@ -579,7 +582,7 @@ before packages are loaded."
     ;;   ;; ispell-set-spellchecker-params has to be called
     ;;   ;; before ispell-hunspell-add-multi-dic will work
     (ispell-set-spellchecker-params)
-    (ispell-hunspell-add-multi-dic "pl_PL,en_GB")
+    (ispell-hunspell-add-multi-dic "pl_PL,en_US")
   )
 
   ;; browser to chromium
