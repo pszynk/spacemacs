@@ -64,11 +64,14 @@ This function should only modify configuration layer settings."
 
      ;;  - programming languages
      emacs-lisp
-     ;;(c-c++ :variables
-     ;;       c-c++-adopt-subprojects t
+     (c-c++ :variables
      ;;       c-c++-backend 'lsp-ccls
-     ;;       c-c++-default-mode-for-headers 'c++-mode
-     ;;       c-c++-lsp-sem-highlight-rainbow t)
+           c-c++-default-mode-for-headers 'c++-mode
+           ;; c++-enable-organize-includes-on-save t
+           ;; c-c++-enable-clang-format-on-save t
+           c-c++-enable-auto-newline t
+           c-c++-adopt-subprojects t
+           c-c++-lsp-enable-semantic-highligh 'rainbow)
      (python :variables
              python-backend 'lsp
              python-test-runner '(pytest nose))
@@ -668,6 +671,7 @@ before packages are loaded."
   (when (file-exists-p custom-file)
     (load-file custom-file))
   )
+
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
