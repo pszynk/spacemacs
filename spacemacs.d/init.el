@@ -80,6 +80,8 @@ This function should only modify configuration layer settings."
      html
      javascript
      shell-scripts
+     ;;  - other languages (i.e. pkgbuild)
+     major-modes
 
      ;;  - formatting
      markdown
