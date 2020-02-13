@@ -625,6 +625,8 @@ Other:
     (thanks to Mpho Jele)
   - Replaced =destructuring-bind= with =cl-destructuring-bind=
     (thanks to duianto)
+  - Ignore nils in dotspacemacs-configuration-layers (thanks to Ag)
+  - Fixed redundant package version checking during update (thanks to aaronjensen)
 - Other:
   - New function =configuration-layer/message= to display message in
     =*Messages*= buffer (thanks to Sylvain Benner)
@@ -1266,6 +1268,7 @@ Other:
   - Fixed =evilified-state=, mapped ~C-w~ to =evil-window-map=
     (thanks to Muneeb Shaikh)
   - Fixed ~SPC h f~ =helm-spacemacs-help-faq= (thanks to duianto)
+  - Fixed =cl= package deprecated =letf= (thanks to duianto)
 *** Layer changes and fixes
 **** Agda
 - Fixes
@@ -1309,6 +1312,7 @@ Other:
   - Use =counsel-company= to show completion candidates
     (thanks to Kalle Lindqvist)
   - Added =company-semantic= as a default company backend (thanks to bet4it)
+  - Don't install =company-statistics= unless necessary (thanks to Tianshu Wang)
 - Fixes:
   - Check if =dotspacemacs-directory-snippets-dir= exists before adding it
     (thanks to Wojciech Wojtyniak)
@@ -1748,6 +1752,11 @@ Other:
     - ~SPC m r~ for predefined keymap =ess-extra-map=
     - ~SPC m w~ for predefined keymap =ess-r-package-dev-map=
     - ~SPC m d~ for predefined keymap =ess-dev-map=
+  - Change some leader keys (thanks to Seong Yong-ju)
+    - ~SPC m E~ for predefined keymap =ess-extra-map=
+    - ~SPC m D~ for predefined keymap =ess-r-package-dev-map=
+    - ~SPC m d~ for predefined keymap =ess-dev-map=
+  - Removed noweb bindings since it no longer works (thanks to Seong Yong-ju)
 - Fixed issue with read-only REPL buffer (thanks to Jack Kamm)
 - Added ess layer variable =ess-disable-underscore-assign= (thanks to Jack Kamm)
 - Remove =ess-R-object-popup= from ess layer (thanks to Naylyn Gaffney)
@@ -1760,6 +1769,7 @@ Other:
 - Update ess-disable-underscore-assign for ESS 18.10 (thanks to Leonard Lausen)
 - Update layer with the latest upstream changes (thanks to Guido Kraemer)
 - Evilified states for ess help buffer (thanks to ft)
+- Added LSP support for R (thanks to Seong Yong-ju)
 **** Evil snipe
 - Must always explicitly enable =evil-snipe-mode= even when
   =evil-snipe-override-mode= is enabled (thanks to Sylvain Benner)
@@ -2154,6 +2164,7 @@ Other:
   (thanks to Carlos Ibáñez and Juuso Valkeejärvi)
 - Fix visual selection expansion across the buffer on `SPC s S` and `SPC s B`
   (thanks to Andriy Kmit)
+- Fixed =cl= package deprecated =letf*= (thanks to duianto)
 **** Imenu-list
 - Changed ~SPC b i~ to ~SPC b t~ for =imenu= tree view
   (thansk to Sylvain Benner)
@@ -2457,8 +2468,6 @@ Other:
   function (thanks to Profpatsch)
 - Associate nix-mode with .nix files (thanks to jpathy)
 - Updated layer banner (thanks to kalium)
-- Added option =nixos-enable-company= to toggle company auto-completion
-  (thanks to bhipple)
 **** Nim
 - Added key binding ~SPC m h h~ to show symbol documentation
   (thanks to Valts Liepiņš)
@@ -2777,6 +2786,7 @@ Other:
 - Fix =Ipython= path on windows (thanks to Daniel K)
 - Make =inferior-python-mode= do not use tabs (thanks to tsoernes)
 - Automatic use the =lsp= as =python-formater= when =lsp= is enabled (thanks sunlin7)
+- Fixed directory selection for self compiled mspyls (thanks Jee Lee)
 **** Racket
 - Restore smart closing paren behavior in racket-mode (thanks to Don March)
 - Updated racket logo (thanks to Vityou)
@@ -3127,7 +3137,7 @@ Other:
 - Added =eziam-theme= and =kaolin-themes= (thanks to Sylvain Benner)
 - Added =doom-themes= (thanks to Codruț Constantin Gușoi)
 - Added =chocolate-theme= (thanks to Henrique Jung)
-- Updated =doom-themes= list to reflect upstream (thanks to Dominic Pearson)
+- Updated =doom-themes= list to reflect upstream (thanks to Dominic Pearson, Muneeb Shaikh)
 **** Tmux
 - Prevent =tmux-command= at GUI mode (thanks to Isaac Zeng)
 - Fixed regression in tmux by setting keybindings using =use-package=
