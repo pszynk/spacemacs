@@ -66,6 +66,7 @@
   - [[#alda-layer][Alda Layer]]
   - [[#pianobar][Pianobar]]
   - [[#spotify][Spotify]]
+  - [[#tidalcycles][TidalCycles]]
 - [[#operating-systems][Operating systems]]
   - [[#kubernetes][Kubernetes]]
   - [[#nixos][NixOS]]
@@ -230,6 +231,7 @@
   - [[#systemd][Systemd]]
   - [[#tern][Tern]]
   - [[#terraform][Terraform]]
+  - [[#tide-layer][Tide Layer]]
   - [[#tmux][Tmux]]
   - [[#transmission][Transmission]]
   - [[#vagrant][Vagrant]]
@@ -671,7 +673,7 @@ Features:
 [[file:+intl/keyboard-layout/README.org][+intl/keyboard-layout/README.org]]
 
 This layer configures some key bindings in Spacemacs, to make it compatible with
-keyboard layouts that differs from the traditional =en-us= =QWERTY= layout.
+keyboard layouts that differ from the traditional =en-us= =QWERTY= layout.
 
 Features:
 - Support alternative keyboard layouts within Spacemacs
@@ -998,6 +1000,16 @@ This layer integrates an online music service into Spacemacs.
 Features:
 - Support for listening to music from within Emacs via [[https://www.spotify.com][Spotify]].
 
+** TidalCycles
+[[file:+music/tidalcycles/README.org][+music/tidalcycles/README.org]]
+
+This layer adds a major mode to control [[https://tidalcycles.org][TidalCycles]], a programming language
+for live coding.
+
+Features:
+- =tidal-mode= to interact with TidalCycles
+- Spacemacs friendly key bindings
+
 * Operating systems
 ** Kubernetes
 [[file:+tools/kubernetes/README.org][+tools/kubernetes/README.org]]
@@ -1011,6 +1023,8 @@ Features:
 - Switching contexts and namespaces.
 - Showing logs and exec'ing into containers
 - Describing pods
+- Tramp support for pods
+- Evil bindings
 
 ** NixOS
 [[file:+os/nixos/README.org][+os/nixos/README.org]]
@@ -2931,6 +2945,19 @@ This layer provides basic support for Terraform =.tf= files.
 Features:
 - Basic syntax highlighting via [[https://github.com/syohex/emacs-terraform-mode][terraform-mode]]
 - Auto formatting on save via =terraform fmt=
+
+** Tide Layer
+[[file:+tools/tide/README.org][+tools/tide/README.org]]
+
+This layer installs [[https://github.com/ananthakumaran/tide][tide]] package which allows communication with 
+[[https://github.com/Microsoft/TypeScript/wiki/Standalone-Server-%28tsserver%29][standalone typescript server]] =tsserver= for JavaScript/TypeScript development.
+
+Features:
+- First class support from =tsserver= just like =vscode=: speed and accuracy
+- Linter 
+- Refactor
+- Go to definition
+- Find references
 
 ** Tmux
 [[file:+tools/tmux/README.org][+tools/tmux/README.org]]
