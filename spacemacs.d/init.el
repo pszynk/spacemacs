@@ -64,6 +64,7 @@ This function should only modify configuration layer settings."
 
      ;;  - programming languages
      emacs-lisp
+     ;;TODO fix this config
      (c-c++ :variables
      ;;       c-c++-backend 'lsp-ccls
            c-c++-default-mode-for-headers 'c++-mode
@@ -73,7 +74,8 @@ This function should only modify configuration layer settings."
            c-c++-adopt-subprojects t
            c-c++-lsp-enable-semantic-highligh 'rainbow)
      (python :variables
-             python-backend 'lsp
+             ;; this is the default when lsp layer is enabled
+             ;; python-backend 'lsp
              python-test-runner '(pytest nose))
      lua
      sql
@@ -121,12 +123,14 @@ This function should only modify configuration layer settings."
      docker
      fasd
      lsp
-     neotree
      puppet
      ranger
      speed-reading
      systemd
      topcoder
+     ;; try it instead of neotree
+     (treemacs :variables
+               treemacs-use-git-mode 'deferred)
      )
 
    ;; List of additional packages that will be installed without being
