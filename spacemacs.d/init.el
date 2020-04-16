@@ -81,6 +81,7 @@ This function should only modify configuration layer settings."
      sql
      html
      javascript
+     restructuredtext
      shell-scripts
      ;;  - other languages (i.e. pkgbuild)
      major-modes
@@ -125,6 +126,7 @@ This function should only modify configuration layer settings."
      lsp
      puppet
      ranger
+     sphinx
      speed-reading
      systemd
      topcoder
@@ -623,6 +625,34 @@ before packages are loaded."
   ;; Javascript + React
   (require 'config-javascript)
 
+  ;;TODO put to config-sth
+  ;; vvvvvvvvvvv
+  (defun psz/dir-locals--reload-current-buffer ()
+  "reload dir locals for the current buffer"
+  (interactive)
+  (let ((enable-local-variables :all))
+    (hack-dir-local-variables-non-file-buffer)))
+
+  (defun psz/dir-locals--reload-all-buffers ()
+    "For every buffer with the same `default-directory`
+ as the current buffer's, reload dir-locals."
+  (interactive)
+  (let ((dir default-directory))
+    (dolist (buffer (buffer-list))
+      (with-current-buffer buffer
+        (when (equal default-directory dir))
+        (my-reload-dir-locals-for-current-buffer)))))
+
+  ;; TODO - can be usefull, maybe add to toggle?
+  ;; (add-hook 'emacs-lisp-mode-hook
+  ;;         (defun enable-autoreload-for-dir-locals ()
+  ;;           (when (and (buffer-file-name)
+  ;;                      (equal dir-locals-file
+  ;;                             (file-name-nondirectory (buffer-file-name))))
+  ;;             (add-hook (make-variable-buffer-local 'after-save-hook)
+  ;;                       'my-reload-dir-locals-for-all-buffer-in-this-directory))))
+
+  ;; ^^^^^^^^^^^
 
   ;; Semantic adviser
   ;; (defun inside-string-q ()
@@ -667,6 +697,18 @@ before packages are loaded."
     ;; (define-key helm-map (kbd "C-u") 'helm-previous-page)
     ;; )
 
+  ;; ReStructuredText header symbols consistent with the guide
+  ;; https://developer.lsst.io/index.html
+  (setq rst-preferred-adornments
+    (quote
+     ((35 over-and-under 1)
+      (61 simple 0)
+      (45 simple 0)
+      (94 simple 0)
+      (34 simple 0)
+      (126 simple 0)
+      (58 simple 0)
+      (46 simple 0))))
 
   ;; Enable editorconfig-mode, to ensure we apply project-provided settings.
   ;; This automatically sets up indentation depth, type, evil-shift-width, etc.
