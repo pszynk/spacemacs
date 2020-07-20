@@ -14,7 +14,7 @@
 ;; ---------------------------------------------------------------------------
 
 ;; We define prefix commands only for the sake of which-key
-(setq spacemacs/key-binding-prefixes '(("SPC" "M-x")
+(setq spacemacs/key-binding-prefixes `((,dotspacemacs-emacs-command-key "M-x")
                                        ("!"   "shell cmd")
                                        ("*"   "search project w/input")
                                        ("/"   "search project")
@@ -23,9 +23,11 @@
                                        ("ac"   "chat")
                                        ("ae"   "email")
                                        ("af"   "fun")
+                                       ("ar"   "readers")
+                                       ("am"   "music")
                                        ("at"  "tools")
-                                       ("atg" "geolocation")
-                                       ("A"   "other applications")
+                                       ("ats"  "shells")
+                                       ("aw"  "web-services")
                                        ("c"   "compile/comments")
                                        ("C"   "capture/colors")
                                        ("d"   "documentation")
