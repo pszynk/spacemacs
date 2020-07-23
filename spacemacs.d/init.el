@@ -64,15 +64,15 @@ This function should only modify configuration layer settings."
 
      ;;  - programming languages
      emacs-lisp
-     ;;TODO fix this config
-     (c-c++ :variables
-     ;;       c-c++-backend 'lsp-ccls
-           c-c++-default-mode-for-headers 'c++-mode
-           ;; c++-enable-organize-includes-on-save t
-           ;; c-c++-enable-clang-format-on-save t
-           c-c++-enable-auto-newline t
-           c-c++-adopt-subprojects t
-           c-c++-lsp-enable-semantic-highligh 'rainbow)
+     ;;TODO lsp shouldn't start by default!
+     ;; (c-c++ :variables
+     ;; ;;       c-c++-backend 'lsp-ccls
+     ;;       c-c++-default-mode-for-headers 'c++-mode
+     ;;       ;; c++-enable-organize-includes-on-save t
+     ;;       ;; c-c++-enable-clang-format-on-save t
+     ;;       c-c++-enable-auto-newline t
+     ;;       c-c++-adopt-subprojects t
+     ;;       c-c++-lsp-enable-semantic-highligh 'rainbow)
      (python :variables
              ;; this is the default when lsp layer is enabled
              ;; python-backend 'lsp
